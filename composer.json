@@ -1,6 +1,6 @@
 {
 	"name": "srcspider/kohana4/cfs",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "Kohana4 CFS prototype",
 	"keywords": ["autoloading"],
 	"homepage": "https://github.com/srcspider/Cascading-File-System",
@@ -17,7 +17,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"kohana4": "src/"
+			"kohana4/cfs": ""
 		}
 	}
 }
