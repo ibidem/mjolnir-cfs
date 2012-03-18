@@ -17,7 +17,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"kohana4/cfs": ""
+			"kohana4\\cfs": ""
 		}
 	}
 }
