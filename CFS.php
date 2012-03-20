@@ -5,56 +5,112 @@ if ( ! \defined('EXT'))
 {
 	\define('EXT', '.php');
 }
-	
+
+if ( ! \interface_exists('CFSCompatible', false))
+{
+	require 'CFSCompatible.php';
+}
+
 /**
  * Cascading File System
  * 
  * Class cascading based on: 
  * https://github.com/srcspider/Cascading-Class-System/blob/master/CCS-Standard.md
- * Supports namespaces as well as is PSR-0 compatible. Designed to work with 
- * packages and modules and compatible, but seperate entities.
+ * Supports namespaces as well as PSR-0 compatible. Designed to work with 
+ * packages and modules. This class is for PHP5.4. It does not load classes, but
+ * symbols (classes, traits, interfaces).
  * 
  * Configuration and File cascading is based on Kohana3.
  * 
  * @version 1.0
  */
-final class CFS
+class CFS implements \kohana4\cfs\CFSCompatible
 {
-	const APPDIR = 'App';
-	const CNFDIR = 'config';
-	
 	/**
 	 * System module paths.
 	 *
 	 * @var array paths
 	 */
-	private static $modules = array();
+	protected static $modules = array();
 	
 	/**
 	 * System namespaces
 	 *
 	 * @var array namespaces to path association
 	 */
-	private static $namespaces = array();
+	protected static $namespaces = array();
 	
 	/**
 	 * System paths
 	 * 
 	 * @var array paths 
 	 */
-	private static $paths = array();
+	protected static $paths = array();
+	
+	/**
+	 * @var \kohana4\types\Cache
+	 */
+	protected static $cache;
+	
+	/**
+	 * @var array
+	 */
+	protected static $cache_load_symbol = array();
+	
+	/**
+	 * @var array
+	 */
+	protected static $cache_file = array();
+	
+	/**
+	 * @var array
+	 */
+	protected static $cache_file_list = array();
+	
+	/**
+	 * Currently loaded configuration files. Or, actual cached configuration 
+	 * files.
+	 * 
+	 * @var array 
+	 */
+	protected static $cache_config = array();
+	
+	/**
+	 * @var int
+	 */
+	protected static $cache_file_duration;
+	
+	/**
+	 * @var int
+	 */
+	protected static $cache_config_duration;
+	
+	/**
+	 * @var \kohana4\types\Storage
+	 */
+	protected static $storage;
+	
+	/**
+	 * @var string 
+	 */
+	protected static $storage_config_key;
+	
+	/**
+	 * @var string 
+	 */
+	protected static $storage_value_key;
 	
 	/**
 	 * @param string symbol
 	 * @param boolean autoload while checking?
-	 * @return boolean symbol exists as class, interface, trait?
+	 * @return boolean symbol exists as class, interface, or trait?
 	 */
 	public static function symbol_exists($symbol, $autoload = false)
 	{
 		return 
 			\class_exists($symbol, $autoload) || 
 			\interface_exists($symbol, $autoload) ||
-			(PHP_VERSION_ID >= 50400 && \trait_exists($symbol, $autoload));
+			\trait_exists($symbol, $autoload);
 	}
 	
 	/**
@@ -67,84 +123,24 @@ final class CFS
 	 */
 	public static function modules(array $modules)
 	{
-		self::$modules = $modules;
+		static::$modules = $modules;
 
 		// namespace mapping
-		self::$namespaces = \array_flip($modules);
-		if (isset(self::$namespaces['app']))
+		static::$namespaces = \array_flip($modules);
+		if (isset(static::$namespaces['app']))
 		{
 			// we consider the app value special, so it's invalid for our
 			// namespace mapping
-			unset(self::$namespaces['app']);
+			unset(static::$namespaces['app']);
 		}
 		
 		// compute paths;
 		$paths = \array_keys($modules);
-		self::$paths = array();
+		static::$paths = array();
 		foreach ($paths as $path)
 		{
-			self::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR
-				. self::APPDIR.DIRECTORY_SEPARATOR;
-		}
-	}
-	
-	/**
-	 * @return array paths
-	 */
-	public static function paths()
-	{
-		return self::$paths;
-	}
-	
-	/**
-	 * @return array namespae to path map
-	 */
-	public static function namespaces()
-	{
-		return self::$namespaces;
-	}
-	
-	/**
-	 * Appends extra paths to front of current paths.
-	 * 
-	 * @param array paths
-	 */
-	public static function add_frontpaths(array $paths)
-	{
-		$new_paths = $paths;
-		foreach (self::$paths as $path)
-		{
-			$new_paths[] = $path;
-		}
-		self::$paths = $new_paths;
-	}
-	
-	/**
-	 * Appends extra paths to back of current paths.
-	 * 
-	 * @param array paths
-	 */
-	public static function add_backpaths(array $paths)
-	{
-		foreach ($paths as $path)
-		{
-			self::$paths[] = $path;
-		}
-	}
-	
-	/**
-	 * Specifies some special namespaces that are not suppose to map as modules.
-	 * A very simple example of this are interface modules. Interfaces are 
-	 * suppose to be unique; you're not suppose to overwrite them. So it makes
-	 * no sense to search for them as modules; wasted checks.
-	 * 
-	 * @param array namespace paths 
-	 */
-	public static function add_namespaces(array $namespace_paths)
-	{
-		foreach ($namespace_paths as $namespace => $path)
-		{
-			self::$namespaces[$namespace] = $path;
+			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
+				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
 	}
 	
@@ -154,8 +150,9 @@ final class CFS
 	 */
 	public static function load_symbol($symbol)
 	{	
+		// normalize
 		$symbol_name = \ltrim($symbol, '\\');
-		
+
 		if ($ns_pos = \strripos($symbol_name, '\\')) 
 		{
 			$namespace = \substr($symbol_name, 0, $ns_pos);
@@ -169,18 +166,27 @@ final class CFS
 		
 		if ($namespace === 'app')
 		{
-			$target = DIRECTORY_SEPARATOR.\str_replace('_', DIRECTORY_SEPARATOR, $symbol_name).EXT;
-
-			foreach (static::$modules as $path => $ns)
+			$target = DIRECTORY_SEPARATOR.
+				\str_replace('_', DIRECTORY_SEPARATOR, $symbol_name).EXT;
+			
+			// cached?
+			if (isset(static::$cache_load_symbol[$symbol]))
 			{
-				if (\file_exists($path.$target))
+				$path = static::$cache_load_symbol[$symbol];
+				if ($path === null)
 				{
+					// failed to load
+					return false;
+				}
+				else # found path last time
+				{
+					$ns = static::$modules[$path];
 					if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
 					{
 						// found a matching file
 						require $path.$target;
 					}
-					
+
 					if ($ns !== 'app')
 					{
 						// alias to app namespace
@@ -191,19 +197,66 @@ final class CFS
 					return true;
 				}
 			}
+			else # not cached; searching...
+			{
+				foreach (static::$modules as $path => $ns)
+				{
+					if (\file_exists($path.$target))
+					{
+						if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+						{
+							// found a matching file
+							require $path.$target;
+						}
+						// module's namespace is app?
+						if ($ns !== 'app')
+						{
+							// alias to app namespace
+							\class_alias($ns.'\\'.$symbol_name, $symbol);
+						}
+						
+						// cache?
+						if (static::$cache)
+						{
+							$cache_load_symbol[$symbol] = $path;
+							static::$cache->store
+								(
+									'\kohana4\cfs\CFS::load_symbol', 
+									static::$cache_load_symbol, 
+									static::$cache_file_duration
+								);
+						}
 
-			// didn't find the file
-			return false;
+						// success
+						return true;
+					}
+				}
+
+				// cache?
+				if (static::$cache)
+				{
+					$cache_load_symbol[$symbol] = null;
+					static::$cache->store
+						(
+							'\kohana4\cfs\CFS::load_symbol', 
+							static::$cache_load_symbol, 
+							static::$cache_file_duration
+						);
+				}
+				
+				// didn't find the file
+				return false;
+			}
 		}
 		else # non \app namespace
 		{
 
-			if (isset(self::$namespaces[$namespace]))
+			if (isset(static::$namespaces[$namespace]))
 			{
 				// Normally this file check wouldn't be required but we want to
 				// support bridging for backwards compatiblity, which breaks
 				// the normal logic of "unique namespaces".
-				$file = self::$namespaces[$namespace].DIRECTORY_SEPARATOR
+				$file = static::$namespaces[$namespace].DIRECTORY_SEPARATOR
 					. \str_replace('_', DIRECTORY_SEPARATOR, $symbol_name).EXT;
 
 				if (\file_exists($file))
@@ -233,46 +286,81 @@ final class CFS
 	 * 
 	 * @param string relative file path
 	 * @param string file extention
-	 * @return bool|string path to file
+	 * @return string path to file; or null
 	 */
 	public static function file($file, $ext = EXT)
 	{
-		// append extention
 		$file .= $ext;
-		// find file
-		foreach (self::$paths as $path)
+		// check if we didn't get asked for it last time; or if it's cached
+		if (isset(static::$cache_file[$file]))
 		{
-			if (\file_exists($path.$file))
+			return static::$cache_file[$file];
+		}
+		else # no file cache entry
+		{
+			// find file
+			foreach (static::$paths as $path)
 			{
-				// success
-				return $path.$file;
+				if (\file_exists($path.$file))
+				{
+					static::$cache_file[$file] = $path.$file;
+					// cache?
+					if (static::$cache)
+					{
+						static::$cache->store
+							(
+								'\kohana4\cfs\CFS::file', 
+								static::$cache_file, 
+								static::$cache_file_duration
+							);
+					}
+					// success
+					return $path.$file;
+				}
 			}
 		}
 		
 		// failed
-		return false;
+		return null;
 	}
 	
 	/**
 	 * @param string relative file path
 	 * @param string file extention
-	 * @return array files or empty array
+	 * @return array files (or empty array)
 	 */
 	public static function file_list($file, $ext = EXT)
 	{
 		// append extention
 		$file = $file.$ext;
 		// find files
-		$files = array();
-		foreach (self::$paths as $path)
+		if (isset(static::$cache_file_list[$file]))
 		{
-			if (\file_exists($path.$file))
-			{
-				$files[] = $path.$file;
-			}
+			return static::$cache_file_list[$file];
 		}
-		
-		return $files;
+		else # no cache entry
+		{
+			$files = array();
+			foreach (static::$paths as $path)
+			{
+				if (\file_exists($path.$file))
+				{
+					$files[] = $path.$file;
+				}
+			}
+			// cache?
+			if (static::$cache)
+			{
+				static::$cache->store
+					(
+						'\kohana4\cfs\CFS::file_list', 
+						static::$cache_file_list, 
+						static::$cache_file_duration
+					);
+			}
+			
+			return $files;
+		}
 	}
 	
 	/**
@@ -299,31 +387,55 @@ final class CFS
 	 */
 	public static function config($key, $ext = EXT)
 	{
-		// we assume configuration files are not dynamic
-		static $loaded = array();
-		
-		// check if we didn't get asked for it last time
-		if (isset($loaded[$key.$ext]))
+		// check if we didn't get asked for it last time; or if it's cached
+		if (isset(static::$cache_config[$key.$ext]))
 		{
-			return $loaded[$key.$ext]; 
+			return static::$cache_config[$key.$ext];
 		}
-		else # not loaded
+		else # not cached
 		{
 			// we start at the bottom since we merge up
 			$files = \array_reverse
 				(
-					self::file_list(self::CNFDIR.DIRECTORY_SEPARATOR.$key, $ext)
+					static::file_list
+						(static::CNFDIR.DIRECTORY_SEPARATOR.$key, $ext)
 				);
 			// merge everything
 			$key .= $ext;
-			$loaded[$key] = array();
+			static::$cache_config[$key] = array();
 			foreach ($files as $file)
 			{
-				self::config_merge($loaded[$key], (include $file));
+				static::config_merge
+					(static::$cache_config[$key], (include $file));
+			}
+			// storage support?
+			if (static::$storage)
+			{
+				$serialized_config = \array_pop
+					(
+						static::$storage->fetch
+							(array(static::$storage_config_key => $key))
+					);
+				static::config_merge
+					(
+						static::$cache_config[$key], 
+						\unserialize
+							($serialized_config[static::$storage_value_key])
+					);
+			}
+			// cache?
+			if (static::$cache)
+			{
+				static::$cache->store
+					(
+						'\kohana4\cfs\CFS::config',    # key
+						static::$cache_config,         # value
+						static::$cache_config_duration # duration
+					);
 			}
 
 			// if there were no files this will be empty; which is fine
-			return $loaded[$key];
+			return static::$cache_config[$key];
 		}
 	}
 	
@@ -339,7 +451,7 @@ final class CFS
 	 * @param array base
 	 * @param array overwrite
 	 */
-	private static function config_merge(array & $base, array & $overwrite)
+	protected static function config_merge(array & $base, array & $overwrite)
 	{	
 		foreach ($overwrite as $key => & $value)
 		{
@@ -355,7 +467,7 @@ final class CFS
 			{
 				if (isset($base[$key]) && \is_array($base[$key]))
 				{
-					self::config_merge($base[$key], $value);
+					static::config_merge($base[$key], $value);
 				}
 				else # does not exist or it's a non-array
 				{
@@ -366,6 +478,127 @@ final class CFS
 			{
 				$base[$key] = $value;	
 			}
+		}
+	}
+	
+	/**
+	 * Sets local persistent storage object to use when retrieving 
+	 * configurations files. The object should be preconfigured.
+	 * 
+	 * @param \kohana4\types\Storage
+	 * @param string key that identifies configuration name (no EXT)
+	 * @param string key that identifies serialized object
+	 */
+	public static function storage
+	(
+		\kohana4\types\Storage $storage = null, 
+		$config_key = 'config', 
+		$value_key = 'serialized'
+	)
+	{
+		static::$storage = $storage;
+		// got storage? or reset?
+		if ($storage)
+		{
+			static::$storage_config_key = $config_key;
+			static::$storage_value_key = $value_key;
+		}
+	}
+	
+	/**
+	 * Cache object is used on symbol, configuration and file system caching. Or
+	 * at least that's the intention.
+	 * 
+	 * @param \kohana4\types\Cache
+	 * @param int duration for files
+	 * @param int duration for configs
+	 */
+	public static function cache
+	(
+		\kohana4\types\Cache $cache = null, 
+		$file_duration = 1800 /* 30 minutes */, 
+		$config_duration = 300 /* 5 minutes */
+	)
+	{
+		static::$cache = $cache;
+		// got cache? or reset?
+		if ($cache)
+		{
+			static::$cache_config = $cache->fetch
+				('\kohana4\cfs\CFS::config', array());
+
+			static::$cache_file = $cache->fetch
+				('\kohana4\cfs\CFS::file', array());
+
+			static::$cache_file_list = $cache->fetch
+				('\kohana4\cfs\CFS::file_list', array());
+
+			static::$cache_load_symbol = $cache->fetch
+				('\kohana4\cfs\CFS::load_symbol', array());
+
+			static::$cache_file_duration = $file_duration;
+			static::$cache_config_duration = $config_duration;
+		}
+	}
+	
+	
+	/**
+	 * @return array all known paths
+	 */
+	public static function paths()
+	{
+		return static::$paths;
+	}
+	
+	/**
+	 * @return array namespace to path map
+	 */
+	public static function namespaces()
+	{
+		return static::$namespaces;
+	}
+	
+	/**
+	 * Appends extra paths to front of current paths.
+	 * 
+	 * @param array paths
+	 */
+	public static function add_frontpaths(array $paths)
+	{
+		$new_paths = $paths;
+		foreach (static::$paths as $path)
+		{
+			$new_paths[] = $path;
+		}
+		static::$paths = $new_paths;
+	}
+	
+	/**
+	 * Appends extra paths to back of current paths.
+	 * 
+	 * @param array paths
+	 */
+	public static function add_backpaths(array $paths)
+	{
+		foreach ($paths as $path)
+		{
+			static::$paths[] = $path;
+		}
+	}
+	
+	/**
+	 * Specifies some special namespaces that are not suppose to map as modules.
+	 * A very simple example of this are interface modules. Interfaces are 
+	 * suppose to be unique; you're not suppose to overwrite them. So it makes
+	 * no sense to search for them as modules; wasted checks.
+	 * 
+	 * @param array namespace paths 
+	 */
+	public static function add_namespaces(array $namespace_paths)
+	{
+		foreach ($namespace_paths as $namespace => $path)
+		{
+			static::$namespaces[$namespace] = $path;
 		}
 	}
 	
