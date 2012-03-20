@@ -68,7 +68,7 @@ if ( ! \defined('KOHANA_START_MEMORY'))
  * 
  * @see  http://php.net/spl_autoload_register
  */
-require '..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
+require \realpath(\dirname(__FILE__)).$ds.'..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
 
 \spl_autoload_register(array('\\kohana4\\cfs\\CFS', 'load_symbol'));
 
