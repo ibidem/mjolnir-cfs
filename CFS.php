@@ -145,6 +145,16 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	}
 	
 	/**
+	 * Current module declarations.
+	 * 
+	 * @return array
+	 */
+	static function get_modules()
+	{
+		return static::$modules;
+	}
+	
+	/**
 	 * @param string symbol name with namespace
 	 * @return bool successfully loaded?
 	 */
@@ -433,7 +443,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 						static::$cache_config_duration # duration
 					);
 			}
-
+			
 			// if there were no files this will be empty; which is fine
 			return static::$cache_config[$key];
 		}
@@ -451,7 +461,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	 * @param array base
 	 * @param array overwrite
 	 */
-	protected static function config_merge(array & $base, array & $overwrite)
+	public static function config_merge(array & $base, array & $overwrite)
 	{	
 		foreach ($overwrite as $key => & $value)
 		{
@@ -479,6 +489,19 @@ class CFS implements \kohana4\cfs\CFSCompatible
 				$base[$key] = $value;	
 			}
 		}
+	}
+	
+	/**
+	 * Applies config_merge, but returns array and doesn't alter base.
+	 * 
+	 * @param array base
+	 * @param array overwrite
+	 * @return array merged configuration
+	 */
+	static function merge(array $base, array & $overwrite)
+	{
+		static::config_merge($base, $overwrite);
+		return $base;
 	}
 	
 	/**

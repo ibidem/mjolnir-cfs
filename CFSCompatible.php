@@ -29,6 +29,13 @@ interface CFSCompatible
 	static function modules(array $modules);
 	
 	/**
+	 * Current module declarations.
+	 * 
+	 * @return array
+	 */
+	static function get_modules();
+	
+	/**
 	 * @return array all known paths
 	 */
 	static function paths();
@@ -107,6 +114,29 @@ interface CFSCompatible
 	 * @return array configuration or empty array
 	 */
 	static function config($key, $ext = EXT);
+	
+	/**
+	 * Merge configuration arrays. 
+	 * 
+	 * This function does not return a new array, the first array is simply 
+	 * processed directly; for effeciency.
+	 * 
+	 * Behaviour: numeric key arrays are appended to one another, any other key 
+	 * and the values will overwrite.
+	 * 
+	 * @param array base
+	 * @param array overwrite
+	 */
+	static function config_merge(array & $base, array & $overwrite);
+	
+	/**
+	 * Applies config_merge, but returns array and doesn't alter base.
+	 * 
+	 * @param array base
+	 * @param array overwrite
+	 * @return array merged configuration
+	 */
+	static function merge(array $base, array & $overwrite);
 	
 	/**
 	 * Sets local persistent storage object to use when retrieving 
