@@ -465,7 +465,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	{	
 		foreach ($overwrite as $key => & $value)
 		{
-			if (\is_numeric($key))
+			if (\is_int($key))
 			{
 				// add only if it doesn't exist
 				if ( ! \in_array($overwrite[$key], $base))
