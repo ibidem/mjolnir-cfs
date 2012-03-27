@@ -299,7 +299,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	 * @return string path to file; or null
 	 */
 	public static function file($file, $ext = EXT)
-	{
+	{		
 		$file .= $ext;
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_file[$file]))
@@ -325,7 +325,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 							);
 					}
 					// success
-					return $path.$file;
+					return \realpath($path.$file);
 				}
 			}
 		}
