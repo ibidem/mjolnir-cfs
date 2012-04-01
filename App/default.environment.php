@@ -48,28 +48,12 @@ if ( ! \defined('PLGPATH'))
 \error_reporting(E_ALL | E_STRICT);
 
 /**
- * Define the start time of the application, used for profiling.
- */
-if ( ! \defined('KOHANA_START_TIME'))
-{
-	\define('KOHANA_START_TIME', \microtime(TRUE));
-}
-
-/**
- * Define the memory usage at the start of the application, used for profiling.
- */
-if ( ! \defined('KOHANA_START_MEMORY'))
-{
-	\define('KOHANA_START_MEMORY', \memory_get_usage());
-}
-
-/**
  * Setup the autoloader
  * 
  * @see  http://php.net/spl_autoload_register
  */
 require \realpath(\dirname(__FILE__)).$ds.'..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
 
-\spl_autoload_register(array('\\kohana4\\cfs\\CFS', 'load_symbol'));
+\spl_autoload_register(array('\\ibidem\\cfs\\CFS', 'load_symbol'));
 
-\class_alias('\\kohana4\\cfs\\CFS', 'app\\CFS');
+\class_alias('\\ibidem\\cfs\\CFS', 'app\\CFS');

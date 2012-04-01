@@ -1,4 +1,4 @@
-<?php namespace kohana4\cfs;
+<?php namespace ibidem\cfs;
 
 // make sure EXT is defined
 if ( ! \defined('EXT'))
@@ -144,13 +144,13 @@ interface CFSCompatible
 	 * 
 	 * Passing null will remove the component.
 	 * 
-	 * @param \kohana4\types\Storage
+	 * @param \ibidem\types\Storage
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
 	static function storage
 	(
-		\kohana4\types\Storage $storage = null, 
+		\ibidem\types\Storage $storage = null, 
 		$config_key = 'config', 
 		$value_key = 'serialized'
 	);
@@ -161,13 +161,13 @@ interface CFSCompatible
 	 * 
 	 * Passing null will remove the component.
 	 * 
-	 * @param \kohana4\types\Cache preconfigured cache object
+	 * @param \ibidem\types\Cache preconfigured cache object
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
 	static function cache
 	(
-		\kohana4\types\Cache $cache = null, 
+		\ibidem\types\Cache $cache = null, 
 		$file_duration = 1800 /* 30 minutes */, 
 		$config_duration = 300 /* 5 minutes */
 	);

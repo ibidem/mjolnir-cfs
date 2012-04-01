@@ -1,4 +1,4 @@
-<?php namespace kohana4\cfs;
+<?php namespace ibidem\cfs;
 
 // make sure EXT is defined
 if ( ! \defined('EXT'))

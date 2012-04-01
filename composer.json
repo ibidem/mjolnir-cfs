@@ -1,7 +1,7 @@
 {
-	"name": "srcspider/kohana4/cfs",
+	"name": "ibidem/cfs",
 	"version": "1.0.0",
-	"description": "Kohana4 cfs module prototype",
+	"description": "ibidem cfs module prototype",
 	"keywords": ["autoloader"],
 	"homepage": "https://github.com/srcspider",
 	"type": "library",
@@ -17,7 +17,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"kohana4\\cfs": "../.."
+			"ibidem\\cfs": "../.."
 		}
 	}
 }

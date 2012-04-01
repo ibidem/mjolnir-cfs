@@ -1,8 +1,8 @@
 <?php namespace app;
 
 // Custom Instantiation class for testing
-class Instantiatable extends \kohana4\base\Instantiatable
-	implements \kohana4\types\Instantiatable
+class Instantiatable extends \ibidem\base\Instantiatable
+	implements \ibidem\types\Instantiatable
 {
 	/**
 	 * @var array 

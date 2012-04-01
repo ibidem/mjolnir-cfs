@@ -1,4 +1,4 @@
-<?php namespace kohana4\cfs;
+<?php namespace ibidem\cfs;
 
 // make sure EXT is defined
 if ( ! \defined('EXT'))
@@ -24,7 +24,7 @@ if ( ! \interface_exists('CFSCompatible', false))
  * 
  * @version 1.0
  */
-class CFS implements \kohana4\cfs\CFSCompatible
+class CFS implements \ibidem\cfs\CFSCompatible
 {
 	/**
 	 * System module paths.
@@ -48,7 +48,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	protected static $paths = array();
 	
 	/**
-	 * @var \kohana4\types\Cache
+	 * @var \ibidem\types\Cache
 	 */
 	protected static $cache;
 	
@@ -86,7 +86,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	protected static $cache_config_duration;
 	
 	/**
-	 * @var \kohana4\types\Storage
+	 * @var \ibidem\types\Storage
 	 */
 	protected static $storage;
 	
@@ -231,7 +231,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 							$cache_load_symbol[$symbol] = $path;
 							static::$cache->store
 								(
-									'\kohana4\cfs\CFS::load_symbol', 
+									'\ibidem\cfs\CFS::load_symbol', 
 									static::$cache_load_symbol, 
 									static::$cache_file_duration
 								);
@@ -248,7 +248,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 					$cache_load_symbol[$symbol] = null;
 					static::$cache->store
 						(
-							'\kohana4\cfs\CFS::load_symbol', 
+							'\ibidem\cfs\CFS::load_symbol', 
 							static::$cache_load_symbol, 
 							static::$cache_file_duration
 						);
@@ -319,7 +319,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 					{
 						static::$cache->store
 							(
-								'\kohana4\cfs\CFS::file', 
+								'\ibidem\cfs\CFS::file', 
 								static::$cache_file, 
 								static::$cache_file_duration
 							);
@@ -363,7 +363,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 			{
 				static::$cache->store
 					(
-						'\kohana4\cfs\CFS::file_list', 
+						'\ibidem\cfs\CFS::file_list', 
 						static::$cache_file_list, 
 						static::$cache_file_duration
 					);
@@ -438,7 +438,7 @@ class CFS implements \kohana4\cfs\CFSCompatible
 			{
 				static::$cache->store
 					(
-						'\kohana4\cfs\CFS::config',    # key
+						'\ibidem\cfs\CFS::config',    # key
 						static::$cache_config,         # value
 						static::$cache_config_duration # duration
 					);
@@ -508,13 +508,13 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	 * Sets local persistent storage object to use when retrieving 
 	 * configurations files. The object should be preconfigured.
 	 * 
-	 * @param \kohana4\types\Storage
+	 * @param \ibidem\types\Storage
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
 	public static function storage
 	(
-		\kohana4\types\Storage $storage = null, 
+		\ibidem\types\Storage $storage = null, 
 		$config_key = 'config', 
 		$value_key = 'serialized'
 	)
@@ -532,13 +532,13 @@ class CFS implements \kohana4\cfs\CFSCompatible
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 * 
-	 * @param \kohana4\types\Cache
+	 * @param \ibidem\types\Cache
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
 	public static function cache
 	(
-		\kohana4\types\Cache $cache = null, 
+		\ibidem\types\Cache $cache = null, 
 		$file_duration = 1800 /* 30 minutes */, 
 		$config_duration = 300 /* 5 minutes */
 	)
@@ -548,16 +548,16 @@ class CFS implements \kohana4\cfs\CFSCompatible
 		if ($cache)
 		{
 			static::$cache_config = $cache->fetch
-				('\kohana4\cfs\CFS::config', array());
+				('\ibidem\cfs\CFS::config', array());
 
 			static::$cache_file = $cache->fetch
-				('\kohana4\cfs\CFS::file', array());
+				('\ibidem\cfs\CFS::file', array());
 
 			static::$cache_file_list = $cache->fetch
-				('\kohana4\cfs\CFS::file_list', array());
+				('\ibidem\cfs\CFS::file_list', array());
 
 			static::$cache_load_symbol = $cache->fetch
-				('\kohana4\cfs\CFS::load_symbol', array());
+				('\ibidem\cfs\CFS::load_symbol', array());
 
 			static::$cache_file_duration = $file_duration;
 			static::$cache_config_duration = $config_duration;
