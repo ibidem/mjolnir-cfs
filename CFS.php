@@ -110,7 +110,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 		return 
 			\class_exists($symbol, $autoload) || 
 			\interface_exists($symbol, $autoload) ||
-			\trait_exists($symbol, $autoload);
+			(PHP_VERSION_ID >= 50400 && \trait_exists($symbol, $autoload));
 	}
 	
 	/**

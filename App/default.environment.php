@@ -52,7 +52,8 @@ if ( ! \defined('PLGPATH'))
  * 
  * @see  http://php.net/spl_autoload_register
  */
-require \realpath(\dirname(__FILE__)).$ds.'..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
+require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
+	. '..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
 
 \spl_autoload_register(array('\\ibidem\\cfs\\CFS', 'load_symbol'));
 
