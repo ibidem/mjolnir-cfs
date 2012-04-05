@@ -58,3 +58,23 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 \spl_autoload_register(array('\\ibidem\\cfs\\CFS', 'load_symbol'));
 
 \class_alias('\\ibidem\\cfs\\CFS', 'app\\CFS');
+
+
+# ---- Additional Configuration ---------------------------------------------- #
+
+// Global exception handler should never be called. It is a global function and
+// abusing it to manage your exception will get progressively more convoluted. 
+// Handling your exception on the spot in a try / catch or at an abstract level 
+// (ie. Layer_* level) is recomended. Sometimes some exceptions just slip 
+// though; especially in development. This function outputs a readable version 
+// of the message.
+\set_exception_handler
+	(
+		function ($exception)
+		{
+			echo $exception->getMessage()
+				. ' @ line '.$exception->getLine()
+				. ' '.$exception->getFile();
+		
+		}
+	);
