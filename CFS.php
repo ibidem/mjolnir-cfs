@@ -292,7 +292,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	}
 
 	/**
-	 * Returns the first file in the file system that matches. Or false.
+	 * Returns the first file in the file system that matches. Or null.
 	 * 
 	 * @param string relative file path
 	 * @param string file extention
@@ -372,6 +372,51 @@ class CFS implements \ibidem\cfs\CFSCompatible
 			return $files;
 		}
 	}
+	
+	/**
+	 * Returns the first directory in the file system that matches. Or false.
+	 * 
+	 * [!!] use this method only when you need paths to resources that require
+	 * static file relationships; ie. sass scripts style folder, coffee script
+	 * folders, etc. 
+	 * 
+	 * @param string relative dir path
+	 * @return string path to dir; or null
+	 */
+	public static function dir($dir_path)
+	{
+		// check if we didn't get asked for it last time; or if it's cached
+		if (isset(static::$cache_file[$dir_path]))
+		{
+			return static::$cache_file[$dir_path];
+		}
+		else # no file cache entry
+		{
+			// find file
+			foreach (static::$paths as $path)
+			{
+				if (\file_exists($path.$dir_path))
+				{
+					static::$cache_file[$dir_path] = $path.$dir_path;
+					// cache?
+					if (static::$cache)
+					{
+						static::$cache->store
+							(
+								'\ibidem\cfs\CFS::file', 
+								static::$cache_file, 
+								static::$cache_file_duration
+							);
+					}
+					// success
+					return \realpath($path.$dir_path).DIRECTORY_SEPARATOR;
+				}
+			}
+		}
+		
+		// failed
+		return null;
+	}	
 	
 	/**
 	 * Loads a configuration based on key given. All configuration files 

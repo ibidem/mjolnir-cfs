@@ -76,11 +76,11 @@ interface CFSCompatible
 	static function load_symbol($symbol);
 	
 	/**
-	 * Returns the first file in the file system that matches. Or false.
+	 * Returns the first file in the file system that matches. Or null.
 	 * 
 	 * @param string relative file path
 	 * @param string file extention
-	 * @return string|bool path to file; or false
+	 * @return string path to file; or null
 	 */
 	static function file($file, $ext = EXT);
 	
@@ -90,6 +90,18 @@ interface CFSCompatible
 	 * @return array files (or empty array)
 	 */
 	static function file_list($file, $ext = EXT);
+	
+	/**
+	 * Returns the first directory in the file system that matches. Or false.
+	 * 
+	 * [!!] use this method only when you need paths to resources that require
+	 * static file relationships; ie. sass scripts style folder, coffee script
+	 * folders, etc. 
+	 * 
+	 * @param string relative dir path
+	 * @return string path to dir; or null
+	 */
+	static function dir($directory);
 	
 	/**
 	 * Loads a configuration based on key given. All configuration files 
