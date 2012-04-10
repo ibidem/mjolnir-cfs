@@ -74,7 +74,7 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 		{
 			echo $exception->getMessage()
 				. ' @ line '.$exception->getLine()
-				. ' '.$exception->getFile();
+				. ', '.\str_replace(DOCROOT, '', $exception->getFile());
 		
 		}
 	);
