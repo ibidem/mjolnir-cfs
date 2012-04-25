@@ -8,7 +8,7 @@ if ( ! \defined('EXT'))
 
 interface CFSCompatible
 {
-	const APPDIR = 'App';
+	const APPDIR = '+App';
 	const CNFDIR = 'config';
 	
 	/**
