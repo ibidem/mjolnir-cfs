@@ -5,7 +5,7 @@
  */
 if ( ! \defined('APPPATH'))
 {
-	\define('APPPATH', \realpath(DOCROOT.'App').DIRECTORY_SEPARATOR);
+	\define('APPPATH', \realpath(DOCROOT.'+App').DIRECTORY_SEPARATOR);
 }
 
 /**
