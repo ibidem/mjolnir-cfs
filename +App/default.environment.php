@@ -72,6 +72,6 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 	(
 		function ($exception)
 		{
-			echo $exception->getMessage();
+			echo $exception->getMessage().' -- Line: '.$exception->getLine().', File: '.$exception->getFile();
 		}
 	);
