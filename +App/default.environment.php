@@ -70,8 +70,14 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 // of the message.
 \set_exception_handler
 	(
-		function ($exception)
+		function (\Exception $exception)
 		{
-			echo $exception->getMessage().' -- Line: '.$exception->getLine().', File: '.$exception->getFile();
+			if (\app\Layer::find('http'))
+			{
+				echo "<pre>\n";
+			}
+			
+			echo $exception->getMessage()
+				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
 		}
 	);
