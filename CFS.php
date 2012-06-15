@@ -313,7 +313,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 			{
 				if (\file_exists($path.$file))
 				{
-					static::$cache_file[$file] = $path.$file;
+					static::$cache_file[$file] = \realpath($path.$file);
 					// cache?
 					if (static::$cache)
 					{
