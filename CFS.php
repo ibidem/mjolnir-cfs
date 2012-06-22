@@ -6,7 +6,7 @@ if ( ! \defined('EXT'))
 	\define('EXT', '.php');
 }
 
-if ( ! \interface_exists('CFSCompatible', false))
+if ( ! \interface_exists('\ibidem\cfs\CFSCompatible', false))
 {
 	require 'CFSCompatible.php';
 }
