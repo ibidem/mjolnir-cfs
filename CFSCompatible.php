@@ -128,6 +128,14 @@ interface CFSCompatible
 	static function config($key, $ext = EXT);
 	
 	/**
+	 * Same as config, only it explicitly only handles files.
+	 * 
+	 * @param string configuration key (any valid file syntax)
+	 * @return array configuration or empty array
+	 */
+	static function config_file($key, $ext = EXT);
+	
+	/**
 	 * Merge configuration arrays. 
 	 * 
 	 * This function does not return a new array, the first array is simply 

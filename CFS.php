@@ -416,7 +416,16 @@ class CFS implements \ibidem\cfs\CFSCompatible
 		
 		// failed
 		return null;
-	}	
+	}
+	
+	/**
+	 * @param string configuration key (any valid file syntax)
+	 * @return array configuration or empty array
+	 */
+	public static function config($key, $ext = EXT)
+	{
+		return static::config_file($key, $ext);
+	}
 	
 	/**
 	 * Loads a configuration based on key given. All configuration files 
@@ -440,7 +449,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	public static function config($key, $ext = EXT)
+	public static function config_file($key, $ext = EXT)
 	{
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_config[$key.$ext]))
