@@ -55,9 +55,9 @@ if ( ! \defined('PLGPATH'))
 require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 	. '..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
 
-\spl_autoload_register(array('\\ibidem\\cfs\\CFS', 'load_symbol'));
+\spl_autoload_register(array('\ibidem\cfs\CFS', 'load_symbol'));
 
-\class_alias('\\ibidem\\cfs\\CFS', 'app\\CFS');
+\class_alias('\ibidem\cfs\CFS', 'app\CFS');
 
 
 # ---- Additional Configuration ---------------------------------------------- #
@@ -76,7 +76,7 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 			{
 				echo "<pre>\n";
 			}
-			
+
 			echo $exception->getMessage()
 				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
 		}

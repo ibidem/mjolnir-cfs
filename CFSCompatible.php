@@ -92,6 +92,24 @@ interface CFSCompatible
 	static function file_list($file, $ext = EXT);
 	
 	/**
+	 * @param string namespace
+	 * @return string path
+	 */
+	static function modulepath($namespace);
+	
+	/**
+	 * @param string namespace
+	 * @return string class path
+	 */
+	static function classpath($namespace);	
+	
+	/**
+	 * @param string namespace
+	 * @return string file path
+	 */
+	static function filepath($namespace);
+	
+	/**
 	 * Returns the first directory in the file system that matches. Or false.
 	 * 
 	 * [!!] use this method only when you need paths to resources that require

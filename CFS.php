@@ -374,6 +374,35 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	}
 	
 	/**
+	 * @param string namespace
+	 * @return string path
+	 */
+	public static function modulepath($namespace)
+	{
+		return static::$namespaces[\ltrim($namespace, '\\')].DIRECTORY_SEPARATOR;
+	}
+	
+	/**
+	 * @param string namespace
+	 * @return string class path
+	 */
+	public static function classpath($namespace)
+	{
+		return static::modulepath($namespace);
+	}
+	
+	/**
+	 * @param string namespace
+	 * @return string file path
+	 */
+	public static function filepath($namespace)
+	{
+		return static::modulepath($namespace)
+			. \ibidem\cfs\CFSCompatible::APPDIR
+			. DIRECTORY_SEPARATOR;
+	}
+	
+	/**
 	 * Returns the first directory in the file system that matches. Or false.
 	 * 
 	 * [!!] use this method only when you need paths to resources that require
