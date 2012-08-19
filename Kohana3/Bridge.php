@@ -30,7 +30,7 @@ final class Kohana3_Bridge
 	/**
 	 * @param array modules
 	 */
-	public static function bridges(array $bridges)
+	static function bridges(array $bridges)
 	{
 		self::$bridges = $bridges;
 	}
@@ -84,7 +84,7 @@ final class Kohana3_Bridge
 	 * @param string class name with namespace
 	 * @return bool successfully loaded?
 	 */
-	public static function load_class($class)
+	static function load_class($class)
 	{	
 		$class_name = \ltrim($class, '\\');
 		
@@ -206,7 +206,7 @@ final class Kohana3_Bridge
 	/**
 	 * @return array paths
 	 */
-	public static function paths()
+	static function paths()
 	{
 		$paths = \array_keys(self::$bridges);
 		$dir_paths = array();

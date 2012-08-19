@@ -105,7 +105,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param boolean autoload while checking?
 	 * @return boolean symbol exists as class, interface, or trait?
 	 */
-	public static function symbol_exists($symbol, $autoload = false)
+	static function symbol_exists($symbol, $autoload = false)
 	{
 		return 
 			\class_exists($symbol, $autoload) || 
@@ -121,7 +121,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 *
 	 * @param array modules
 	 */
-	public static function modules(array $modules)
+	static function modules(array $modules)
 	{
 		static::$modules = $modules;
 
@@ -158,7 +158,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string symbol name with namespace
 	 * @return bool successfully loaded?
 	 */
-	public static function load_symbol($symbol)
+	static function load_symbol($symbol)
 	{	
 		// normalize
 		$symbol_name = \ltrim($symbol, '\\');
@@ -298,7 +298,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string file extention
 	 * @return string path to file; or null
 	 */
-	public static function file($file, $ext = EXT)
+	static function file($file, $ext = EXT)
 	{		
 		$file .= $ext;
 		// check if we didn't get asked for it last time; or if it's cached
@@ -339,7 +339,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string file extention
 	 * @return array files (or empty array)
 	 */
-	public static function file_list($file, $ext = EXT)
+	static function file_list($file, $ext = EXT)
 	{
 		// append extention
 		$file = $file.$ext;
@@ -377,7 +377,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string namespace
 	 * @return string path
 	 */
-	public static function modulepath($namespace)
+	static function modulepath($namespace)
 	{
 		return static::$namespaces[\ltrim($namespace, '\\')].DIRECTORY_SEPARATOR;
 	}
@@ -386,7 +386,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string namespace
 	 * @return string class path
 	 */
-	public static function classpath($namespace)
+	static function classpath($namespace)
 	{
 		return static::modulepath($namespace);
 	}
@@ -395,7 +395,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string namespace
 	 * @return string file path
 	 */
-	public static function filepath($namespace)
+	static function filepath($namespace)
 	{
 		return static::modulepath($namespace)
 			. \ibidem\cfs\CFSCompatible::APPDIR
@@ -412,7 +412,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string relative dir path
 	 * @return string path to dir; or null
 	 */
-	public static function dir($dir_path)
+	static function dir($dir_path)
 	{
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_file[$dir_path]))
@@ -451,7 +451,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	public static function config($key, $ext = EXT)
+	static function config($key, $ext = EXT)
 	{
 		return static::config_file($key, $ext);
 	}
@@ -478,7 +478,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	public static function config_file($key, $ext = EXT)
+	static function config_file($key, $ext = EXT)
 	{
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_config[$key.$ext]))
@@ -544,7 +544,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param array base
 	 * @param array overwrite
 	 */
-	public static function config_merge(array & $base, array & $overwrite)
+	static function config_merge(array & $base, array & $overwrite)
 	{	
 		foreach ($overwrite as $key => & $value)
 		{
@@ -595,7 +595,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
-	public static function storage
+	static function storage
 	(
 		\ibidem\types\Storage $storage = null, 
 		$config_key = 'config', 
@@ -619,7 +619,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
-	public static function cache
+	static function cache
 	(
 		\ibidem\types\Cache $cache = null, 
 		$file_duration = 1800 /* 30 minutes */, 
@@ -651,7 +651,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	/**
 	 * @return array all known paths
 	 */
-	public static function paths()
+	static function paths()
 	{
 		return static::$paths;
 	}
@@ -659,7 +659,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	/**
 	 * @return array namespace to path map
 	 */
-	public static function namespaces()
+	static function namespaces()
 	{
 		return static::$namespaces;
 	}
@@ -669,7 +669,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * 
 	 * @param array paths
 	 */
-	public static function add_frontpaths(array $paths)
+	static function add_frontpaths(array $paths)
 	{
 		$new_paths = $paths;
 		foreach (static::$paths as $path)
@@ -684,7 +684,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * 
 	 * @param array paths
 	 */
-	public static function add_backpaths(array $paths)
+	static function add_backpaths(array $paths)
 	{
 		foreach ($paths as $path)
 		{
@@ -700,7 +700,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * 
 	 * @param array namespace paths 
 	 */
-	public static function add_namespaces(array $namespace_paths)
+	static function add_namespaces(array $namespace_paths)
 	{
 		foreach ($namespace_paths as $namespace => $path)
 		{
