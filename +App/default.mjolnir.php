@@ -30,7 +30,10 @@ if ( ! \defined('PLGPATH'))
  *
  * @see  http://kohanaframework.org/guide/about.install#ext
  */
-\define('EXT', '.php');
+if ( ! \defined('EXT'))
+{
+	\define('EXT', '.php');
+}
 
 /**
  * Set the PHP error reporting level. If you set this in php.ini, you remove this.
