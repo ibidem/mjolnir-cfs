@@ -665,6 +665,37 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	}
 	
 	/**
+	 * Prepend extra modules. For use in conditional module includes such as the
+	 * case of development-only modules.
+	 * 
+	 * @param array modules
+	 */
+	static function add_frontmodules(array $modules)
+	{
+		static::$modules = \array_reverse(static::$modules, true);
+		foreach (\array_reverse($modules, true) as $path => $namespace)
+		{
+			static::$modules[$path] = $namespace;
+		}
+		
+		static::$modules = \array_reverse(static::$modules);
+	}
+	
+	/**
+	 * Append extra modules. For use in conditional module includes such as the
+	 * case of development-only modules.
+	 * 
+	 * @param array modules
+	 */
+	static function add_backmodules(array $modules)
+	{
+		foreach ($modules as $path => $namespace)
+		{
+			static::$modules[$path] = $namespace;
+		}
+	}
+	
+	/**
 	 * Appends extra paths to front of current paths.
 	 * 
 	 * @param array paths

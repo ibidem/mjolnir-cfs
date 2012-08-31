@@ -60,6 +60,16 @@ interface CFSCompatible
 	static function add_backpaths(array $paths);
 	
 	/**
+	 * @param array modules
+	 */
+	static function add_frontmodules(array $modules);
+	
+	/**
+	 * @param array modules
+	 */
+	static function add_backmodules(array $modules);
+	
+	/**
 	 * Specifies some special namespaces that are not suppose to map as modules.
 	 * A very simple example of this are interface modules. Interfaces are 
 	 * suppose to be unique; you're not suppose to overwrite them. So it makes
