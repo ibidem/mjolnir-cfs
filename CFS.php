@@ -673,12 +673,16 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	static function add_frontmodules(array $modules)
 	{
 		static::$modules = \array_reverse(static::$modules, true);
+		static::$paths = \array_reverse(static::$paths);
 		foreach (\array_reverse($modules, true) as $path => $namespace)
 		{
 			static::$modules[$path] = $namespace;
+			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
+				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
 		
-		static::$modules = \array_reverse(static::$modules);
+		static::$modules = \array_reverse(static::$modules, true);
+		static::$paths = \array_reverse(static::$paths);
 	}
 	
 	/**
@@ -692,7 +696,13 @@ class CFS implements \ibidem\cfs\CFSCompatible
 		foreach ($modules as $path => $namespace)
 		{
 			static::$modules[$path] = $namespace;
+			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
+				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
+		
+		
+			
+		
 	}
 	
 	/**
