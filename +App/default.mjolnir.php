@@ -75,12 +75,15 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 	(
 		function (\Exception $exception)
 		{
-			if (\app\Layer::find('http'))
+			if (\app\CFS::config('ibidem/base')['development'])
 			{
-				echo "<pre>\n";
-			}
+				if (\app\Layer::find('http'))
+				{
+					echo "<pre>\n";
+				}
 
-			echo $exception->getMessage()
-				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
+				echo $exception->getMessage()
+					. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
+			}
 		}
 	);
