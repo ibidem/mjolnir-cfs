@@ -1,4 +1,4 @@
-<?php namespace ibidem\cfs;
+<?php namespace mjolnir\cfs;
 
 // make sure EXT is defined
 if ( ! \defined('EXT'))
@@ -6,7 +6,7 @@ if ( ! \defined('EXT'))
 	\define('EXT', '.php');
 }
 
-if ( ! \interface_exists('\ibidem\cfs\CFSCompatible', false))
+if ( ! \interface_exists('\mjolnir\cfs\CFSCompatible', false))
 {
 	require 'CFSCompatible.php';
 }
@@ -24,7 +24,7 @@ if ( ! \interface_exists('\ibidem\cfs\CFSCompatible', false))
  * 
  * @version 1.0
  */
-class CFS implements \ibidem\cfs\CFSCompatible
+class CFS implements \mjolnir\cfs\CFSCompatible
 {
 	/**
 	 * System module paths.
@@ -48,7 +48,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	protected static $paths = array();
 	
 	/**
-	 * @var \ibidem\types\Cache
+	 * @var \mjolnir\types\Cache
 	 */
 	protected static $cache;
 	
@@ -86,7 +86,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	protected static $cache_config_duration;
 	
 	/**
-	 * @var \ibidem\types\Storage
+	 * @var \mjolnir\types\Storage
 	 */
 	protected static $storage;
 	
@@ -231,7 +231,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 							$cache_load_symbol[$symbol] = $path;
 							static::$cache->store
 								(
-									'\ibidem\cfs\CFS::load_symbol', 
+									'\mjolnir\cfs\CFS::load_symbol', 
 									static::$cache_load_symbol, 
 									static::$cache_file_duration
 								);
@@ -248,7 +248,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 					$cache_load_symbol[$symbol] = null;
 					static::$cache->store
 						(
-							'\ibidem\cfs\CFS::load_symbol', 
+							'\mjolnir\cfs\CFS::load_symbol', 
 							static::$cache_load_symbol, 
 							static::$cache_file_duration
 						);
@@ -319,7 +319,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 					{
 						static::$cache->store
 							(
-								'\ibidem\cfs\CFS::file', 
+								'\mjolnir\cfs\CFS::file', 
 								static::$cache_file, 
 								static::$cache_file_duration
 							);
@@ -363,7 +363,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 			{
 				static::$cache->store
 					(
-						'\ibidem\cfs\CFS::file_list', 
+						'\mjolnir\cfs\CFS::file_list', 
 						static::$cache_file_list, 
 						static::$cache_file_duration
 					);
@@ -398,7 +398,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	static function filepath($namespace)
 	{
 		return static::modulepath($namespace)
-			. \ibidem\cfs\CFSCompatible::APPDIR
+			. \mjolnir\cfs\CFSCompatible::APPDIR
 			. DIRECTORY_SEPARATOR;
 	}
 	
@@ -432,7 +432,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 					{
 						static::$cache->store
 							(
-								'\ibidem\cfs\CFS::file', 
+								'\mjolnir\cfs\CFS::file', 
 								static::$cache_file, 
 								static::$cache_file_duration
 							);
@@ -521,7 +521,7 @@ class CFS implements \ibidem\cfs\CFSCompatible
 			{
 				static::$cache->store
 					(
-						'\ibidem\cfs\CFS::config',    # key
+						'\mjolnir\cfs\CFS::config',    # key
 						static::$cache_config,         # value
 						static::$cache_config_duration # duration
 					);
@@ -591,13 +591,13 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * Sets local persistent storage object to use when retrieving 
 	 * configurations files. The object should be preconfigured.
 	 * 
-	 * @param \ibidem\types\Storage
+	 * @param \mjolnir\types\Storage
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
 	static function storage
 	(
-		\ibidem\types\Storage $storage = null, 
+		\mjolnir\types\Storage $storage = null, 
 		$config_key = 'config', 
 		$value_key = 'serialized'
 	)
@@ -615,13 +615,13 @@ class CFS implements \ibidem\cfs\CFSCompatible
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 * 
-	 * @param \ibidem\types\Cache
+	 * @param \mjolnir\types\Cache
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
 	static function cache
 	(
-		\ibidem\types\Cache $cache = null, 
+		\mjolnir\types\Cache $cache = null, 
 		$file_duration = 1800 /* 30 minutes */, 
 		$config_duration = 300 /* 5 minutes */
 	)
@@ -631,16 +631,16 @@ class CFS implements \ibidem\cfs\CFSCompatible
 		if ($cache)
 		{
 			static::$cache_config = $cache->fetch
-				('\ibidem\cfs\CFS::config', array());
+				('\mjolnir\cfs\CFS::config', array());
 
 			static::$cache_file = $cache->fetch
-				('\ibidem\cfs\CFS::file', array());
+				('\mjolnir\cfs\CFS::file', array());
 
 			static::$cache_file_list = $cache->fetch
-				('\ibidem\cfs\CFS::file_list', array());
+				('\mjolnir\cfs\CFS::file_list', array());
 
 			static::$cache_load_symbol = $cache->fetch
-				('\ibidem\cfs\CFS::load_symbol', array());
+				('\mjolnir\cfs\CFS::load_symbol', array());
 
 			static::$cache_file_duration = $file_duration;
 			static::$cache_config_duration = $config_duration;

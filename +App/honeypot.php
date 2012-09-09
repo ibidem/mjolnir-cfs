@@ -2,5 +2,5 @@
 
 namespace app;
 
-class CFS extends \ibidem\cfs\CFS {}
-class Kohana3_Bridge extends \ibidem\cfs\Kohana3_Bridge {}
+class CFS extends \mjolnir\cfs\CFS {}
+class Kohana3_Bridge extends \mjolnir\cfs\Kohana3_Bridge {}

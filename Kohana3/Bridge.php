@@ -1,4 +1,4 @@
-<?php namespace ibidem\cfs;
+<?php namespace mjolnir\cfs;
 
 // make sure EXT is defined
 if ( ! \defined('EXT'))

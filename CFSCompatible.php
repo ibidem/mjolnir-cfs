@@ -1,4 +1,4 @@
-<?php namespace ibidem\cfs;
+<?php namespace mjolnir\cfs;
 
 // make sure EXT is defined
 if ( ! \defined('EXT'))
@@ -192,13 +192,13 @@ interface CFSCompatible
 	 * 
 	 * Passing null will remove the component.
 	 * 
-	 * @param \ibidem\types\Storage
+	 * @param \mjolnir\types\Storage
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
 	static function storage
 	(
-		\ibidem\types\Storage $storage = null, 
+		\mjolnir\types\Storage $storage = null, 
 		$config_key = 'config', 
 		$value_key = 'serialized'
 	);
@@ -209,13 +209,13 @@ interface CFSCompatible
 	 * 
 	 * Passing null will remove the component.
 	 * 
-	 * @param \ibidem\types\Cache preconfigured cache object
+	 * @param \mjolnir\types\Cache preconfigured cache object
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
 	static function cache
 	(
-		\ibidem\types\Cache $cache = null, 
+		\mjolnir\types\Cache $cache = null, 
 		$file_duration = 1800 /* 30 minutes */, 
 		$config_duration = 300 /* 5 minutes */
 	);

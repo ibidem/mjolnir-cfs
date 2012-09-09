@@ -1,8 +1,8 @@
 <?php namespace app;
 
 // Custom Instantiation class for testing
-class Instantiatable extends \ibidem\base\Instantiatable
-	implements \ibidem\types\Instantiatable
+class Instantiatable extends \mjolnir\base\Instantiatable
+	implements \mjolnir\types\Instantiatable
 {
 	/**
 	 * @var array 

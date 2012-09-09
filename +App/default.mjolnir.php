@@ -25,6 +25,14 @@ if ( ! \defined('PLGPATH'))
 }
 
 /**
+ * The directory in which your mjolnir framework modules are located.
+ */
+if ( ! \defined('MJLPATH'))
+{
+	\define('MJLPATH', \realpath(PLGPATH.'mjolnir').DIRECTORY_SEPARATOR);
+}
+
+/**
  * The default extension of resource files. If you change this, all resources
  * must be renamed to use the new extension.
  *
@@ -58,9 +66,9 @@ if ( ! \defined('EXT'))
 require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 	. '..'.DIRECTORY_SEPARATOR.'CFS'.EXT;
 
-\spl_autoload_register(array('\ibidem\cfs\CFS', 'load_symbol'));
+\spl_autoload_register(array('\mjolnir\cfs\CFS', 'load_symbol'));
 
-\class_alias('\ibidem\cfs\CFS', 'app\CFS');
+\class_alias('\mjolnir\cfs\CFS', 'app\CFS');
 
 
 # ---- Additional Configuration ---------------------------------------------- #
