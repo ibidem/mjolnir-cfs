@@ -84,7 +84,7 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 		function (\Exception $exception)
 		{
 			echo 'Uncaught Exception';
-			if (\app\CFS::config('ibidem/base')['development'])
+			if (\app\CFS::config('mjolnir/base')['development'])
 			{
 				if (\app\Layer::find('http'))
 				{
