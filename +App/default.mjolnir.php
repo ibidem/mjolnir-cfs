@@ -56,7 +56,8 @@ if ( ! \defined('EXT'))
  * When using a legacy application with PHP >= 5.3, it is recommended to disable
  * deprecated notices. Disable with: E_ALL & ~E_DEPRECATED
  */
-\error_reporting(E_ALL | E_STRICT);
+\error_reporting(-1); # everything under the sun
+# \error_reporting(E_ALL | E_STRICT);
 
 /**
  * Setup the autoloader
@@ -78,7 +79,7 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 // Handling your exception on the spot in a try / catch or at an abstract level 
 // (ie. Layer_* level) is recomended. Sometimes some exceptions just slip 
 // though; especially in development. This function outputs a readable version 
-// of the message.
+// of the message; assuming the environment is not borked.
 \set_exception_handler
 	(
 		function (\Exception $exception)
@@ -94,5 +95,13 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 				echo $exception->getMessage()
 					. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
 			}
+		}
+	);	
+	
+\set_error_handler
+	(
+		function ($errno, $errstr, $errfile, $errline)
+		{
+			 throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
 		}
 	);
