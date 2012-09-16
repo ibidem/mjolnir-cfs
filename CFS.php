@@ -13,15 +13,15 @@ if ( ! \interface_exists('\mjolnir\cfs\CFSCompatible', false))
 
 /**
  * Cascading File System
- * 
- * Class cascading based on: 
+ *
+ * Class cascading based on:
  * https://github.com/srcspider/Cascading-Class-System/blob/master/CCS-Standard.md
- * Supports namespaces as well as PSR-0 compatible. Designed to work with 
+ * Supports namespaces as well as PSR-0 compatible. Designed to work with
  * packages and modules. This class is for PHP5.4. It does not load classes, but
  * symbols (classes, traits, interfaces).
- * 
+ *
  * Configuration and File cascading is based on Kohana3.
- * 
+ *
  * @version 1.0
  */
 class CFS implements \mjolnir\cfs\CFSCompatible
@@ -32,74 +32,74 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @var array paths
 	 */
 	protected static $modules = array();
-	
+
 	/**
 	 * System namespaces
 	 *
 	 * @var array namespaces to path association
 	 */
 	protected static $namespaces = array();
-	
+
 	/**
 	 * System paths
-	 * 
-	 * @var array paths 
+	 *
+	 * @var array paths
 	 */
 	protected static $paths = array();
-	
+
 	/**
 	 * @var \mjolnir\types\Cache
 	 */
 	protected static $cache;
-	
+
 	/**
 	 * @var array
 	 */
 	protected static $cache_load_symbol = array();
-	
+
 	/**
 	 * @var array
 	 */
 	protected static $cache_file = array();
-	
+
 	/**
 	 * @var array
 	 */
 	protected static $cache_file_list = array();
-	
+
 	/**
-	 * Currently loaded configuration files. Or, actual cached configuration 
+	 * Currently loaded configuration files. Or, actual cached configuration
 	 * files.
-	 * 
-	 * @var array 
+	 *
+	 * @var array
 	 */
 	protected static $cache_config = array();
-	
+
 	/**
 	 * @var int
 	 */
 	protected static $cache_file_duration;
-	
+
 	/**
 	 * @var int
 	 */
 	protected static $cache_config_duration;
-	
+
 	/**
 	 * @var \mjolnir\types\Storage
 	 */
 	protected static $storage;
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected static $storage_config_key;
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected static $storage_value_key;
-	
+
 	/**
 	 * @param string symbol
 	 * @param boolean autoload while checking?
@@ -107,15 +107,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 */
 	static function symbol_exists($symbol, $autoload = false)
 	{
-		return 
-			\class_exists($symbol, $autoload) || 
+		return
+			\class_exists($symbol, $autoload) ||
 			\interface_exists($symbol, $autoload) ||
 			(PHP_VERSION_ID >= 50400 && \trait_exists($symbol, $autoload));
 	}
-	
+
 	/**
 	 * Defines modules with which the autoloaded will work with. Modules are an
-	 * array of paths pointing to namespaces. Each namespace must be unique, 
+	 * array of paths pointing to namespaces. Each namespace must be unique,
 	 * except when using the namespace "app" which may be mapped to any number
 	 * of paths.
 	 *
@@ -133,7 +133,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			// namespace mapping
 			unset(static::$namespaces['app']);
 		}
-		
+
 		// compute paths;
 		$paths = \array_keys($modules);
 		static::$paths = array();
@@ -143,27 +143,27 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
 	}
-	
+
 	/**
 	 * Current module declarations.
-	 * 
+	 *
 	 * @return array
 	 */
 	static function get_modules()
 	{
 		return static::$modules;
 	}
-	
+
 	/**
 	 * @param string symbol name with namespace
 	 * @return bool successfully loaded?
 	 */
 	static function load_symbol($symbol)
-	{	
+	{
 		// normalize
 		$symbol_name = \ltrim($symbol, '\\');
 
-		if ($ns_pos = \strripos($symbol_name, '\\')) 
+		if ($ns_pos = \strripos($symbol_name, '\\'))
 		{
 			$namespace = \substr($symbol_name, 0, $ns_pos);
 			$symbol_name = \substr($symbol_name, $ns_pos + 1);
@@ -173,12 +173,12 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			// we don't handle classes of the global namespace
 			return false;
 		}
-		
+
 		if ($namespace === 'app')
 		{
 			$target = DIRECTORY_SEPARATOR.
 				\str_replace('_', DIRECTORY_SEPARATOR, $symbol_name).EXT;
-			
+
 			// cached?
 			if (isset(static::$cache_load_symbol[$symbol]))
 			{
@@ -224,15 +224,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 							// alias to app namespace
 							\class_alias($ns.'\\'.$symbol_name, $symbol);
 						}
-						
+
 						// cache?
 						if (static::$cache)
 						{
 							$cache_load_symbol[$symbol] = $path;
 							static::$cache->store
 								(
-									'\mjolnir\cfs\CFS::load_symbol', 
-									static::$cache_load_symbol, 
+									'\mjolnir\cfs\CFS::load_symbol',
+									static::$cache_load_symbol,
 									static::$cache_file_duration
 								);
 						}
@@ -248,12 +248,12 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					$cache_load_symbol[$symbol] = null;
 					static::$cache->store
 						(
-							'\mjolnir\cfs\CFS::load_symbol', 
-							static::$cache_load_symbol, 
+							'\mjolnir\cfs\CFS::load_symbol',
+							static::$cache_load_symbol,
 							static::$cache_file_duration
 						);
 				}
-				
+
 				// didn't find the file
 				return false;
 			}
@@ -293,13 +293,13 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 
 	/**
 	 * Returns the first file in the file system that matches. Or null.
-	 * 
+	 *
 	 * @param string relative file path
 	 * @param string file extention
 	 * @return string path to file; or null
 	 */
 	static function file($file, $ext = EXT)
-	{		
+	{
 		$file .= $ext;
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_file[$file]))
@@ -319,8 +319,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					{
 						static::$cache->store
 							(
-								'\mjolnir\cfs\CFS::file', 
-								static::$cache_file, 
+								'\mjolnir\cfs\CFS::file',
+								static::$cache_file,
 								static::$cache_file_duration
 							);
 					}
@@ -329,11 +329,11 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				}
 			}
 		}
-		
+
 		// failed
 		return null;
 	}
-	
+
 	/**
 	 * @param string relative file path
 	 * @param string file extention
@@ -363,16 +363,16 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			{
 				static::$cache->store
 					(
-						'\mjolnir\cfs\CFS::file_list', 
-						static::$cache_file_list, 
+						'\mjolnir\cfs\CFS::file_list',
+						static::$cache_file_list,
 						static::$cache_file_duration
 					);
 			}
-			
+
 			return $files;
 		}
 	}
-	
+
 	/**
 	 * @param string namespace
 	 * @return string path
@@ -381,7 +381,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	{
 		return static::$namespaces[\ltrim($namespace, '\\')].DIRECTORY_SEPARATOR;
 	}
-	
+
 	/**
 	 * @param string namespace
 	 * @return string class path
@@ -390,7 +390,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	{
 		return static::modulepath($namespace);
 	}
-	
+
 	/**
 	 * @param string namespace
 	 * @return string file path
@@ -401,14 +401,14 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			. \mjolnir\cfs\CFSCompatible::APPDIR
 			. DIRECTORY_SEPARATOR;
 	}
-	
+
 	/**
 	 * Returns the first directory in the file system that matches. Or false.
-	 * 
+	 *
 	 * [!!] use this method only when you need paths to resources that require
 	 * static file relationships; ie. sass scripts style folder, coffee script
-	 * folders, etc. 
-	 * 
+	 * folders, etc.
+	 *
 	 * @param string relative dir path
 	 * @return string path to dir; or null
 	 */
@@ -432,8 +432,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					{
 						static::$cache->store
 							(
-								'\mjolnir\cfs\CFS::file', 
-								static::$cache_file, 
+								'\mjolnir\cfs\CFS::file',
+								static::$cache_file,
 								static::$cache_file_duration
 							);
 					}
@@ -442,11 +442,11 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				}
 			}
 		}
-		
+
 		// failed
 		return null;
 	}
-	
+
 	/**
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
@@ -455,26 +455,26 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	{
 		return static::config_file($key, $ext);
 	}
-	
+
 	/**
-	 * Loads a configuration based on key given. All configuration files 
+	 * Loads a configuration based on key given. All configuration files
 	 * matching the key are merged down and the resulting array is returned.
-	 * 
+	 *
 	 * In the case of numeric key arrays, ie. array(1, 2, 3), the unique values,
-	 * as determined by \in_array will be appended. [!!] This means that key 
-	 * order is guranteed but numeric keys will be in proper order if the 
+	 * as determined by \in_array will be appended. [!!] This means that key
+	 * order is guranteed but numeric keys will be in proper order if the
 	 * bottom configuration file itself didn't have explicit numeric keys.
-	 * 
-	 * The function does not gurantee the configuration keys and values in the 
-	 * case of numeric key arrays will be in any specific order in the final 
-	 * output. If you wish to store the order of keys then it is recomended you 
+	 *
+	 * The function does not gurantee the configuration keys and values in the
+	 * case of numeric key arrays will be in any specific order in the final
+	 * output. If you wish to store the order of keys then it is recomended you
 	 * store a sort order hint and apply a sorting function on retrieval.
-	 * 
-	 * This function does not support dynamicly altered configuration files 
-	 * during the application execution. It will not process a key it has 
-	 * already loaded once, but instead return the previously computed 
+	 *
+	 * This function does not support dynamicly altered configuration files
+	 * during the application execution. It will not process a key it has
+	 * already loaded once, but instead return the previously computed
 	 * configuration.
-	 * 
+	 *
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
@@ -496,11 +496,25 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			// merge everything
 			$key .= $ext;
 			static::$cache_config[$key] = array();
+
 			foreach ($files as $file)
 			{
-				static::config_merge
-					(static::$cache_config[$key], (include $file));
+				$file_contents = include $file;
+
+				if (\is_array($file_contents))
+				{
+					static::config_merge
+						(static::$cache_config[$key], $file_contents);
+				}
+				else # not array
+				{
+					$corrupt_file = \str_replace(DOCROOT, '', $file);
+					echo 'configuration file ['.$corrupt_file.'] is corrupt';
+					throw new \app\Exception
+						('Corrupt configuration file ['.$corrupt_file.']');
+				}
 			}
+
 			// storage support?
 			if (static::$storage)
 			{
@@ -511,7 +525,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					);
 				static::config_merge
 					(
-						static::$cache_config[$key], 
+						static::$cache_config[$key],
 						\unserialize
 							($serialized_config[static::$storage_value_key])
 					);
@@ -526,26 +540,26 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 						static::$cache_config_duration # duration
 					);
 			}
-			
+
 			// if there were no files this will be empty; which is fine
 			return static::$cache_config[$key];
 		}
 	}
-	
+
 	/**
-	 * Merge configuration arrays. 
-	 * 
-	 * This function does not return a new array, the first array is simply 
+	 * Merge configuration arrays.
+	 *
+	 * This function does not return a new array, the first array is simply
 	 * processed directly; for effeciency.
-	 * 
-	 * Behaviour: numeric key arrays are appended to one another, any other key 
+	 *
+	 * Behaviour: numeric key arrays are appended to one another, any other key
 	 * and the values will overwrite.
-	 * 
+	 *
 	 * @param array base
 	 * @param array overwrite
 	 */
 	static function config_merge(array & $base, array & $overwrite)
-	{	
+	{
 		foreach ($overwrite as $key => & $value)
 		{
 			if (\is_int($key))
@@ -569,14 +583,14 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			}
 			else # not an array and not numeric key
 			{
-				$base[$key] = $value;	
+				$base[$key] = $value;
 			}
 		}
 	}
-	
+
 	/**
 	 * Applies config_merge, but returns array and doesn't alter base.
-	 * 
+	 *
 	 * @param array base
 	 * @param array overwrite
 	 * @return array merged configuration
@@ -586,19 +600,19 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		static::config_merge($base, $overwrite);
 		return $base;
 	}
-	
+
 	/**
-	 * Sets local persistent storage object to use when retrieving 
+	 * Sets local persistent storage object to use when retrieving
 	 * configurations files. The object should be preconfigured.
-	 * 
+	 *
 	 * @param \mjolnir\types\Storage
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
 	static function storage
 	(
-		\mjolnir\types\Storage $storage = null, 
-		$config_key = 'config', 
+		\mjolnir\types\Storage $storage = null,
+		$config_key = 'config',
 		$value_key = 'serialized'
 	)
 	{
@@ -610,19 +624,19 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$storage_value_key = $value_key;
 		}
 	}
-	
+
 	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
-	 * 
+	 *
 	 * @param \mjolnir\types\Cache
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
 	static function cache
 	(
-		\mjolnir\types\Cache $cache = null, 
-		$file_duration = 1800 /* 30 minutes */, 
+		\mjolnir\types\Cache $cache = null,
+		$file_duration = 1800 /* 30 minutes */,
 		$config_duration = 300 /* 5 minutes */
 	)
 	{
@@ -646,8 +660,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$cache_config_duration = $config_duration;
 		}
 	}
-	
-	
+
+
 	/**
 	 * @return array all known paths
 	 */
@@ -655,7 +669,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	{
 		return static::$paths;
 	}
-	
+
 	/**
 	 * @return array namespace to path map
 	 */
@@ -663,11 +677,11 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	{
 		return static::$namespaces;
 	}
-	
+
 	/**
 	 * Prepend extra modules. For use in conditional module includes such as the
 	 * case of development-only modules.
-	 * 
+	 *
 	 * @param array modules
 	 */
 	static function add_frontmodules(array $modules)
@@ -680,15 +694,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
 				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
-		
+
 		static::$modules = \array_reverse(static::$modules, true);
 		static::$paths = \array_reverse(static::$paths);
 	}
-	
+
 	/**
 	 * Append extra modules. For use in conditional module includes such as the
 	 * case of development-only modules.
-	 * 
+	 *
 	 * @param array modules
 	 */
 	static function add_backmodules(array $modules)
@@ -699,15 +713,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
 				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
-		
-		
-			
-		
+
+
+
+
 	}
-	
+
 	/**
 	 * Appends extra paths to front of current paths.
-	 * 
+	 *
 	 * @param array paths
 	 */
 	static function add_frontpaths(array $paths)
@@ -719,10 +733,10 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		}
 		static::$paths = $new_paths;
 	}
-	
+
 	/**
 	 * Appends extra paths to back of current paths.
-	 * 
+	 *
 	 * @param array paths
 	 */
 	static function add_backpaths(array $paths)
@@ -732,14 +746,14 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$paths[] = $path;
 		}
 	}
-	
+
 	/**
 	 * Specifies some special namespaces that are not suppose to map as modules.
-	 * A very simple example of this are interface modules. Interfaces are 
+	 * A very simple example of this are interface modules. Interfaces are
 	 * suppose to be unique; you're not suppose to overwrite them. So it makes
 	 * no sense to search for them as modules; wasted checks.
-	 * 
-	 * @param array namespace paths 
+	 *
+	 * @param array namespace paths
 	 */
 	static function add_namespaces(array $namespace_paths)
 	{
@@ -748,5 +762,5 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$namespaces[$namespace] = $path;
 		}
 	}
-	
+
 } # class
