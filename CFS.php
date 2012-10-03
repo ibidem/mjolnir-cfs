@@ -713,10 +713,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
 				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
 		}
-
-
-
-
 	}
 
 	/**
