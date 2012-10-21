@@ -1,7 +1,7 @@
 {
 	"name": "mjolnir/cfs",
-	"version": "0.0",
-	"description": "Mjolnir cfs module",
+	"version": "1.0",
+	"description": "Mjolnir Cascading File System Module",
 	"keywords": ["autoloader"],
 	"homepage": "https://github.com/ibidem",
 	"type": "library",

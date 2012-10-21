@@ -22,6 +22,7 @@ if ( ! \interface_exists('\mjolnir\cfs\CFSCompatible', false))
  *
  * Configuration and File cascading is based on Kohana3.
  *
+ * @author  Ibidem Team
  * @version 1.0
  */
 class CFS implements \mjolnir\cfs\CFSCompatible
@@ -31,74 +32,42 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 *
 	 * @var array paths
 	 */
-	protected static $modules = array();
+	protected static $modules = [];
 
 	/**
 	 * System namespaces
 	 *
 	 * @var array namespaces to path association
 	 */
-	protected static $namespaces = array();
+	protected static $namespaces = [];
 
 	/**
 	 * System paths
 	 *
 	 * @var array paths
 	 */
-	protected static $paths = array();
+	protected static $paths = [];
 
 	/**
-	 * @var \mjolnir\types\Cache
-	 */
-	protected static $cache;
-
-	/**
-	 * @var array
-	 */
-	protected static $cache_load_symbol = array();
-
-	/**
-	 * @var array
-	 */
-	protected static $cache_file = array();
-
-	/**
-	 * @var array
-	 */
-	protected static $cache_file_list = array();
-
-	/**
-	 * Currently loaded configuration files. Or, actual cached configuration
-	 * files.
+	 * Currently loaded configuration files.
+	 * Or, configuration files loaded from cache.
 	 *
 	 * @var array
 	 */
-	protected static $cache_config = array();
-
-	/**
-	 * @var int
-	 */
-	protected static $cache_file_duration;
-
-	/**
-	 * @var int
-	 */
-	protected static $cache_config_duration;
+	protected static $cache_config = [];
 
 	/**
 	 * @var \mjolnir\types\Storage
 	 */
-	protected static $storage;
+	protected static $storage = null;
 
 	/**
-	 * @var string
+	 * @var \mjolnir\types\Cache
 	 */
-	protected static $storage_config_key;
+	protected static $cache = null;
 
-	/**
-	 * @var string
-	 */
-	protected static $storage_value_key;
+	// ------------------------------------------------------------------------
+	// Inspection & Loading
 
 	/**
 	 * @param string symbol
@@ -110,49 +79,13 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		return
 			\class_exists($symbol, $autoload) ||
 			\interface_exists($symbol, $autoload) ||
-			(PHP_VERSION_ID >= 50400 && \trait_exists($symbol, $autoload));
+			\trait_exists($symbol, $autoload);
 	}
 
 	/**
-	 * Defines modules with which the autoloaded will work with. Modules are an
-	 * array of paths pointing to namespaces. Each namespace must be unique,
-	 * except when using the namespace "app" which may be mapped to any number
-	 * of paths.
-	 *
-	 * @param array modules
+	 * @var array
 	 */
-	static function modules(array $modules)
-	{
-		static::$modules = $modules;
-
-		// namespace mapping
-		static::$namespaces = \array_flip($modules);
-		if (isset(static::$namespaces['app']))
-		{
-			// we consider the app value special, so it's invalid for our
-			// namespace mapping
-			unset(static::$namespaces['app']);
-		}
-
-		// compute paths;
-		$paths = \array_keys($modules);
-		static::$paths = array();
-		foreach ($paths as $path)
-		{
-			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
-				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
-		}
-	}
-
-	/**
-	 * Current module declarations.
-	 *
-	 * @return array
-	 */
-	static function get_modules()
-	{
-		return static::$modules;
-	}
+	private static $cache_load_symbol = [];
 
 	/**
 	 * @param string symbol name with namespace
@@ -260,7 +193,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		}
 		else # non \app namespace
 		{
-
 			if (isset(static::$namespaces[$namespace]))
 			{
 				// Normally this file check wouldn't be required but we want to
@@ -290,6 +222,129 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			}
 		}
 	}
+
+	// ------------------------------------------------------------------------
+	// Configuration
+
+	/**
+	 * Defines modules with which the autoloaded will work with. Modules are an
+	 * array of paths pointing to namespaces. Each namespace must be unique,
+	 * except when using the namespace "app" which may be mapped to any number
+	 * of paths.
+	 *
+	 * @param array modules
+	 */
+	static function modules(array $modules)
+	{
+		static::$modules = $modules;
+
+		// namespace mapping
+		static::$namespaces = \array_flip($modules);
+		if (isset(static::$namespaces['app']))
+		{
+			// we consider the app value special, so it's invalid for our
+			// namespace mapping
+			unset(static::$namespaces['app']);
+		}
+
+		// compute paths;
+		$paths = \array_keys($modules);
+		static::$paths = array();
+		foreach ($paths as $path)
+		{
+			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
+				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
+		}
+	}
+
+	/**
+	 * Prepend extra modules. For use in conditional module includes such as the
+	 * case of development-only modules.
+	 *
+	 * @param array modules
+	 */
+	static function frontmodules(array $modules)
+	{
+		static::$modules = \array_reverse(static::$modules, true);
+		static::$paths = \array_reverse(static::$paths);
+		foreach (\array_reverse($modules, true) as $path => $namespace)
+		{
+			static::$modules[$path] = $namespace;
+			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
+				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
+		}
+
+		static::$modules = \array_reverse(static::$modules, true);
+		static::$paths = \array_reverse(static::$paths);
+	}
+
+	/**
+	 * Append extra modules. For use in conditional module includes such as the
+	 * case of development-only modules.
+	 *
+	 * @param array modules
+	 */
+	static function backmodules(array $modules)
+	{
+		foreach ($modules as $path => $namespace)
+		{
+			static::$modules[$path] = $namespace;
+			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
+				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
+		}
+	}
+
+	/**
+	 * Specifies some special namespaces that are not suppose to map as modules.
+	 * A very simple example of this are interface modules. Interfaces are
+	 * suppose to be unique; you're not suppose to overwrite them. So it makes
+	 * no sense to search for them as modules; wasted checks.
+	 *
+	 * @param array namespace paths
+	 */
+	static function namespacepaths(array $namespace_paths)
+	{
+		foreach ($namespace_paths as $namespace => $path)
+		{
+			static::$namespaces[$namespace] = $path;
+		}
+	}
+
+	/**
+	 * Appends extra paths to front of current paths.
+	 *
+	 * @param array paths
+	 */
+	static function frontpaths(array $paths)
+	{
+		$new_paths = $paths;
+		foreach (static::$paths as $path)
+		{
+			$new_paths[] = $path;
+		}
+		static::$paths = $new_paths;
+	}
+
+	/**
+	 * Appends extra paths to back of current paths.
+	 *
+	 * @param array paths
+	 */
+	static function backpaths(array $paths)
+	{
+		foreach ($paths as $path)
+		{
+			static::$paths[] = $path;
+		}
+	}
+
+	// ------------------------------------------------------------------------
+	// Paths Retrieval
+
+	/**
+	 * @var array
+	 */
+	private static $cache_file = [];
 
 	/**
 	 * Returns the first file in the file system that matches. Or null.
@@ -333,6 +388,11 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		// failed
 		return null;
 	}
+
+	/**
+	 * @var array
+	 */
+	private static $cache_file_list = [];
 
 	/**
 	 * @param string relative file path
@@ -447,6 +507,9 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		return null;
 	}
 
+	// ------------------------------------------------------------------------
+	// Configuration Files
+
 	/**
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
@@ -546,6 +609,38 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		}
 	}
 
+	// ------------------------------------------------------------------------
+	// System Information
+
+	/**
+	 * Current module declarations.
+	 *
+	 * @return array
+	 */
+	static function system_modules()
+	{
+		return static::$modules;
+	}
+
+	/**
+	 * @return array all known paths
+	 */
+	static function paths()
+	{
+		return static::$paths;
+	}
+
+	/**
+	 * @return array namespace to path map
+	 */
+	static function namespaces()
+	{
+		return static::$namespaces;
+	}
+
+	// ------------------------------------------------------------------------
+	// General Helpers
+
 	/**
 	 * Merge configuration arrays.
 	 *
@@ -601,6 +696,19 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		return $base;
 	}
 
+	// ------------------------------------------------------------------------
+	// Utility
+
+	/**
+	 * @var string
+	 */
+	private static $storage_config_key;
+
+	/**
+	 * @var string
+	 */
+	private static $storage_value_key;
+
 	/**
 	 * Sets local persistent storage object to use when retrieving
 	 * configurations files. The object should be preconfigured.
@@ -609,12 +717,11 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @param string key that identifies configuration name (no EXT)
 	 * @param string key that identifies serialized object
 	 */
-	static function storage
-	(
-		\mjolnir\types\Storage $storage = null,
-		$config_key = 'config',
-		$value_key = 'serialized'
-	)
+	static function storage	(
+			\mjolnir\types\Storage $storage = null,
+			$config_key = 'config',
+			$value_key = 'serialized'
+		)
 	{
 		static::$storage = $storage;
 		// got storage? or reset?
@@ -626,6 +733,16 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	}
 
 	/**
+	 * @var int
+	 */
+	private static $cache_file_duration;
+
+	/**
+	 * @var int
+	 */
+	private static $cache_config_duration;
+
+	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 *
@@ -633,12 +750,11 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @param int duration for files
 	 * @param int duration for configs
 	 */
-	static function cache
-	(
-		\mjolnir\types\Cache $cache = null,
-		$file_duration = 1800 /* 30 minutes */,
-		$config_duration = 300 /* 5 minutes */
-	)
+	static function cache (
+			\mjolnir\types\Cache $cache = null,
+			$file_duration = 1800 /* 30 minutes */,
+			$config_duration = 300 /* 5 minutes */
+		)
 	{
 		static::$cache = $cache;
 		// got cache? or reset?
@@ -658,104 +774,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 
 			static::$cache_file_duration = $file_duration;
 			static::$cache_config_duration = $config_duration;
-		}
-	}
-
-
-	/**
-	 * @return array all known paths
-	 */
-	static function paths()
-	{
-		return static::$paths;
-	}
-
-	/**
-	 * @return array namespace to path map
-	 */
-	static function namespaces()
-	{
-		return static::$namespaces;
-	}
-
-	/**
-	 * Prepend extra modules. For use in conditional module includes such as the
-	 * case of development-only modules.
-	 *
-	 * @param array modules
-	 */
-	static function add_frontmodules(array $modules)
-	{
-		static::$modules = \array_reverse(static::$modules, true);
-		static::$paths = \array_reverse(static::$paths);
-		foreach (\array_reverse($modules, true) as $path => $namespace)
-		{
-			static::$modules[$path] = $namespace;
-			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
-				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
-		}
-
-		static::$modules = \array_reverse(static::$modules, true);
-		static::$paths = \array_reverse(static::$paths);
-	}
-
-	/**
-	 * Append extra modules. For use in conditional module includes such as the
-	 * case of development-only modules.
-	 *
-	 * @param array modules
-	 */
-	static function add_backmodules(array $modules)
-	{
-		foreach ($modules as $path => $namespace)
-		{
-			static::$modules[$path] = $namespace;
-			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
-				DIRECTORY_SEPARATOR.static::APPDIR.DIRECTORY_SEPARATOR;
-		}
-	}
-
-	/**
-	 * Appends extra paths to front of current paths.
-	 *
-	 * @param array paths
-	 */
-	static function add_frontpaths(array $paths)
-	{
-		$new_paths = $paths;
-		foreach (static::$paths as $path)
-		{
-			$new_paths[] = $path;
-		}
-		static::$paths = $new_paths;
-	}
-
-	/**
-	 * Appends extra paths to back of current paths.
-	 *
-	 * @param array paths
-	 */
-	static function add_backpaths(array $paths)
-	{
-		foreach ($paths as $path)
-		{
-			static::$paths[] = $path;
-		}
-	}
-
-	/**
-	 * Specifies some special namespaces that are not suppose to map as modules.
-	 * A very simple example of this are interface modules. Interfaces are
-	 * suppose to be unique; you're not suppose to overwrite them. So it makes
-	 * no sense to search for them as modules; wasted checks.
-	 *
-	 * @param array namespace paths
-	 */
-	static function add_namespaces(array $namespace_paths)
-	{
-		foreach ($namespace_paths as $namespace => $path)
-		{
-			static::$namespaces[$namespace] = $path;
 		}
 	}
 

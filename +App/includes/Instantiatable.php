@@ -1,18 +1,20 @@
 <?php namespace app;
 
-// Custom Instantiation class for testing
+/**
+ * Custom Instantiation class for testing purposes.
+ */
 class Instantiatable extends \mjolnir\base\Instantiatable
 	implements \mjolnir\types\Instantiatable
 {
 	/**
-	 * @var array 
+	 * @var array
 	 */
-	protected static $test_redirects = array();
-	
+	protected static $test_redirects = [];
+
 	/**
-	 * This function can be used to redirect all instances of a class to a 
+	 * This function can be used to redirect all instances of a class to a
 	 * mockup version for testing purposes.
-	 * 
+	 *
 	 * @param string from class
 	 * @param string to class
 	 */
@@ -20,11 +22,11 @@ class Instantiatable extends \mjolnir\base\Instantiatable
 	{
 		static::$test_redirects[$from_class] = $to_class;
 	}
-	
+
 	/**
-	 * This function can be used to redirect all instances of a class to a 
+	 * This function can be used to redirect all instances of a class to a
 	 * mockup version for testing purposes.
-	 * 
+	 *
 	 * @param string from class
 	 * @param string to class
 	 */
@@ -32,7 +34,7 @@ class Instantiatable extends \mjolnir\base\Instantiatable
 	{
 		static::$test_redirects = $redirects;
 	}
-	
+
 	/**
 	 * @return \app\Instantiatable
 	 */
@@ -47,7 +49,7 @@ class Instantiatable extends \mjolnir\base\Instantiatable
 
         return parent::instance();
     }
-	
+
 	/**
 	 * Reset all class redirects so any tests that don't need the mockups don't
 	 * get corrupted.
@@ -56,5 +58,5 @@ class Instantiatable extends \mjolnir\base\Instantiatable
 	{
 		static::$test_redirects = array();
 	}
-	
+
 } # class
