@@ -80,28 +80,8 @@ require \realpath(\dirname(__FILE__)).DIRECTORY_SEPARATOR
 // (ie. Layer_* level) is recomended. Sometimes some exceptions just slip 
 // though; especially in development. This function outputs a readable version 
 // of the message; assuming the environment is not borked.
-\set_exception_handler
-	(
-		function (\Exception $exception)
-		{
-			echo 'Uncaught Exception';
-			if (\app\CFS::config('mjolnir/base')['development'])
-			{
-				if (\app\Layer::find('http'))
-				{
-					echo "<pre>\n";
-				}
-
-				echo $exception->getMessage()
-					. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
-			}
-		}
-	);	
+\set_exception_handler('\mjolnir\exception_handler');	
 	
-\set_error_handler
-	(
-		function ($errno, $errstr, $errfile, $errline)
-		{
-			 throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-		}
-	);
+\set_error_handler('\mjolnir\error_handler');
+
+\register_shutdown_function('\mjolnir\shutdown_error_checks');
