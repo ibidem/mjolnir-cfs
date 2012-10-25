@@ -2,8 +2,8 @@
 
 if ( ! \function_exists('\mjolnir\log_exception'))
 {
-	function log_exception($exception, $replication_path = 'Exceptions/')
-	{		
+	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
+	{
 		$error_diagnostic = $exception->getMessage().' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ '.$exception->getLine().')';
 
 		// include trace
@@ -70,7 +70,7 @@ if ( ! \function_exists('\mjolnir\log_error'))
 				\mjolnir\log_exception($error);
 				return;
 			}
-			
+
 			if (\in_array('getMessage', $error_methods))
 			{
 				\mjolnir\log('Error', $error->getMesssage(), 'Errors/');
@@ -85,7 +85,7 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 if ( ! \function_exists('\mjolnir\exception_handler'))
 {
-	function exception_handler(\Exception $exception)
+	function exception_handler($exception)
 	{
 		$base_config = \app\CFS::config('mjolnir/base');
 
@@ -135,11 +135,11 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 	function shutdown_error_checks()
 	{
 		$exception = \error_get_last();
-		
+
 		if ($exception !== null)
 		{
 			\mjolnir\log_error($exception);
-			
+
 			try
 			{
 				if (\defined('PUBDIR'))

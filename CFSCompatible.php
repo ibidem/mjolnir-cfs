@@ -259,7 +259,7 @@ interface CFSCompatible
 	 * @param int duration for configs
 	 */
 	static function cache (
-			\mjolnir\types\Cache $cache = null,
+			\mjolnir\types\Stash $cache = null,
 			$file_duration = 1800 /* 30 minutes */,
 			$config_duration = 300 /* 5 minutes */
 		);

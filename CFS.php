@@ -161,8 +161,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 						// cache?
 						if (static::$cache)
 						{
-							$cache_load_symbol[$symbol] = $path;
-							static::$cache->store
+							static::$cache_load_symbol[$symbol] = $path;
+							static::$cache->set
 								(
 									'\mjolnir\cfs\CFS::load_symbol',
 									static::$cache_load_symbol,
@@ -178,8 +178,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				// cache?
 				if (static::$cache)
 				{
-					$cache_load_symbol[$symbol] = null;
-					static::$cache->store
+					static::$cache_load_symbol[$symbol] = null;
+					static::$cache->set
 						(
 							'\mjolnir\cfs\CFS::load_symbol',
 							static::$cache_load_symbol,
@@ -249,7 +249,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 
 		// compute paths;
 		$paths = \array_keys($modules);
-		static::$paths = array();
+		static::$paths = [];
 		foreach ($paths as $path)
 		{
 			static::$paths[] = \rtrim($path, DIRECTORY_SEPARATOR).
@@ -372,7 +372,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					// cache?
 					if (static::$cache)
 					{
-						static::$cache->store
+						static::$cache->set
 							(
 								'\mjolnir\cfs\CFS::file',
 								static::$cache_file,
@@ -410,7 +410,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		}
 		else # no cache entry
 		{
-			$files = array();
+			$files = [];
 			foreach (static::$paths as $path)
 			{
 				if (\file_exists($path.$file))
@@ -418,10 +418,12 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					$files[] = $path.$file;
 				}
 			}
+
 			// cache?
 			if (static::$cache)
 			{
-				static::$cache->store
+				static::$cache_file_list[$file] = $files;
+				static::$cache->set
 					(
 						'\mjolnir\cfs\CFS::file_list',
 						static::$cache_file_list,
@@ -490,7 +492,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					// cache?
 					if (static::$cache)
 					{
-						static::$cache->store
+						static::$cache->set
 							(
 								'\mjolnir\cfs\CFS::file',
 								static::$cache_file,
@@ -558,7 +560,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				);
 			// merge everything
 			$key .= $ext;
-			static::$cache_config[$key] = array();
+			static::$cache_config[$key] = [];
 
 			foreach ($files as $file)
 			{
@@ -596,7 +598,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			// cache?
 			if (static::$cache)
 			{
-				static::$cache->store
+				static::$cache->set
 					(
 						'\mjolnir\cfs\CFS::config',    # key
 						static::$cache_config,         # value
@@ -735,12 +737,12 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	/**
 	 * @var int
 	 */
-	private static $cache_file_duration;
+	private static $cache_file_duration = null;
 
 	/**
 	 * @var int
 	 */
-	private static $cache_config_duration;
+	private static $cache_config_duration = null;
 
 	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
@@ -751,30 +753,43 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @param int duration for configs
 	 */
 	static function cache (
-			\mjolnir\types\Cache $cache = null,
+			\mjolnir\types\Stash $cache = null,
 			$file_duration = 1800 /* 30 minutes */,
 			$config_duration = 300 /* 5 minutes */
 		)
 	{
-		static::$cache = $cache;
 		// got cache? or reset?
 		if ($cache)
 		{
-			static::$cache_config = $cache->fetch
-				('\mjolnir\cfs\CFS::config', array());
+			static::$cache_config = $cache->get
+				('\mjolnir\cfs\CFS::config', []);
 
-			static::$cache_file = $cache->fetch
-				('\mjolnir\cfs\CFS::file', array());
+			static::$cache_file = $cache->get
+				('\mjolnir\cfs\CFS::file', []);
 
-			static::$cache_file_list = $cache->fetch
-				('\mjolnir\cfs\CFS::file_list', array());
+			static::$cache_file_list = $cache->get
+				('\mjolnir\cfs\CFS::file_list', []);
 
-			static::$cache_load_symbol = $cache->fetch
-				('\mjolnir\cfs\CFS::load_symbol', array());
+			static::$cache_load_symbol = $cache->get
+				('\mjolnir\cfs\CFS::load_symbol', []);
 
 			static::$cache_file_duration = $file_duration;
 			static::$cache_config_duration = $config_duration;
+
+			static::$cache = $cache;
 		}
+		else # reset cache
+		{
+			static::$cache_config = [];
+			static::$cache_file = [];
+			static::$cache_file_list = [];
+			static::$cache_load_symbol = [];
+			static::$cache_file_duration = null;
+			static::$cache_config_duration = null;
+
+			static::$cache = null;
+		}
+
 	}
 
 } # class

@@ -1,5 +1,11 @@
 <?php namespace app;
 
+/// The default extension of resource files.
+if ( ! \defined('EXT'))
+{
+	\define('EXT', '.php');
+}
+
 /// The directory in which your application specific resources are located.
 if ( ! \defined('APPPATH'))
 {
@@ -24,12 +30,6 @@ if ( ! \defined('MJLPATH'))
 	\define('MJLPATH', \realpath(PLGPATH.'mjolnir').'/');
 }
 
-/// The default extension of resource files.
-if ( ! \defined('EXT'))
-{
-	\define('EXT', '.php');
-}
-
 /// @see http://php.net/error_reporting
 \error_reporting(-1); # report everything under the sun
 
@@ -52,3 +52,64 @@ require \realpath(\dirname(__FILE__)).'/../CFS'.EXT;
 \set_error_handler('\mjolnir\error_handler');
 
 \register_shutdown_function('\mjolnir\shutdown_error_checks');
+
+
+# ---- Modules --------------------------------------------------------------- #
+
+if (\defined('PUBDIR'))
+{
+	$pubdir_config = include PUBDIR.'config'.EXT;
+}
+
+$env_config = include DOCROOT.'environment'.EXT;
+
+// setup the modules
+CFS::modules($env_config['modules']);
+
+// allow application to store and overwrite config files, routes, etc;
+// everything except classes. You should always define your classes in
+// appropriate modules in the MODPATH
+CFS::frontpaths([APPPATH]);
+
+// attempt to load private configuration
+if (\defined('PUBDIR'))
+{
+	$pubdir_config = include PUBDIR.'config'.EXT;
+	if (isset($pubdir_config['private.files']) && \file_exists($pubdir_config['private.files']))
+	{
+		CFS::frontpaths([$pubdir_config['private.files']]);
+	}
+}
+else # console or other
+{
+	$base_config = include APPPATH.'config/mjolnir/base'.EXT;
+	if (\file_exists($base_config['private.files']))
+	{
+		CFS::frontpaths([$base_config['private.files']]);
+	}
+}
+
+// you are not suppose to overwrite namespaces and abstracts; that's a misuse.
+// hence it makes no sense to search for them in \app\Class calls. Namespaces
+// should always be explicit
+CFS::namespacepaths($env_config['namespaces']);
+
+$base_config = CFS::config('mjolnir/base');
+
+// cache paths
+CFS::cache(\app\Stash_File::instance());
+
+// see: http://php.net/timezones
+\date_default_timezone_set($base_config['timezone']);
+
+// see: http://php.net/setlocale
+\setlocale(LC_ALL, $base_config['locale.lang'].$base_config['charset']);
+
+
+# ---- Composer Autoloaders -------------------------------------------------- #
+
+if (\file_exists(PLGPATH.'/autoload'.EXT))
+{
+	// composer setup
+	require PLGPATH.'/autoload'.EXT;
+}
