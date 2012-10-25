@@ -217,6 +217,67 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			}
 			else # unknown namespace
 			{
+
+				$target = DIRECTORY_SEPARATOR.
+					\str_replace('_', DIRECTORY_SEPARATOR, $symbol_name).EXT;
+
+				if (isset(static::$cache_load_symbol[$symbol]))
+				{
+					$path = static::$cache_load_symbol[$symbol];
+					if ($path === null)
+					{
+						// failed to load
+						return false;
+					}
+					else # found path last time
+					{
+						$ns = static::$modules[$path];
+						if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+						{
+							// found a matching file
+							require $path.$target;
+						}
+
+						\class_alias($ns.'\\'.$symbol_name, $symbol);
+
+						// success
+						return true;
+					}
+				}
+				else # not cached
+				{
+					// attempt to locate in subnamespaces
+					$parent_ns = $namespace.'\\';
+					foreach (static::$modules as $path => $ns)
+					{
+						if (\strripos($ns, $parent_ns) === 0 && \file_exists($path.$target))
+						{
+							if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+							{
+								// found a matching file
+								require $path.$target;
+							}
+
+							\class_alias($ns.'\\'.$symbol_name, $symbol);
+
+							// cache?
+							if (static::$cache)
+							{
+								static::$cache_load_symbol[$symbol] = $path;
+								static::$cache->set
+									(
+										'\mjolnir\cfs\CFS::load_symbol',
+										static::$cache_load_symbol,
+										static::$cache_file_duration
+									);
+							}
+
+							// success
+							return true;
+						}
+					}
+				}
+
 				// failed to find class
 				return false;
 			}
