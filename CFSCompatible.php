@@ -260,8 +260,7 @@ interface CFSCompatible
 	 */
 	static function cache (
 			\mjolnir\types\Stash $cache = null,
-			$file_duration = 1800 /* 30 minutes */,
-			$config_duration = 300 /* 5 minutes */
+			$file_duration = 1800 /* 30 minutes */
 		);
 
 } # interface

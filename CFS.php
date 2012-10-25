@@ -417,7 +417,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	static function file($file, $ext = EXT)
 	{
 		$file .= $ext;
-		// check if we didn't get asked for it last time; or if it's cached
+		// check if we didn't get asked for it already
 		if (isset(static::$cache_file[$file]))
 		{
 			return static::$cache_file[$file];
@@ -430,16 +430,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				if (\file_exists($path.$file))
 				{
 					static::$cache_file[$file] = \realpath($path.$file);
-					// cache?
-					if (static::$cache)
-					{
-						static::$cache->set
-							(
-								'\mjolnir\cfs\CFS::file',
-								static::$cache_file,
-								static::$cache_file_duration
-							);
-					}
+
 					// success
 					return \realpath($path.$file);
 				}
@@ -656,16 +647,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 							($serialized_config[static::$storage_value_key])
 					);
 			}
-			// cache?
-			if (static::$cache)
-			{
-				static::$cache->set
-					(
-						'\mjolnir\cfs\CFS::config',    # key
-						static::$cache_config,         # value
-						static::$cache_config_duration # duration
-					);
-			}
 
 			// if there were no files this will be empty; which is fine
 			return static::$cache_config[$key];
@@ -801,11 +782,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	private static $cache_file_duration = null;
 
 	/**
-	 * @var int
-	 */
-	private static $cache_config_duration = null;
-
-	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 *
@@ -815,16 +791,12 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 */
 	static function cache (
 			\mjolnir\types\Stash $cache = null,
-			$file_duration = 1800 /* 30 minutes */,
-			$config_duration = 300 /* 5 minutes */
+			$file_duration = 1800 /* 30 minutes */
 		)
 	{
 		// got cache? or reset?
 		if ($cache)
 		{
-			static::$cache_config = $cache->get
-				('\mjolnir\cfs\CFS::config', []);
-
 			static::$cache_file = $cache->get
 				('\mjolnir\cfs\CFS::file', []);
 
@@ -835,22 +807,18 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				('\mjolnir\cfs\CFS::load_symbol', []);
 
 			static::$cache_file_duration = $file_duration;
-			static::$cache_config_duration = $config_duration;
 
 			static::$cache = $cache;
 		}
 		else # reset cache
 		{
-			static::$cache_config = [];
 			static::$cache_file = [];
 			static::$cache_file_list = [];
 			static::$cache_load_symbol = [];
 			static::$cache_file_duration = null;
-			static::$cache_config_duration = null;
 
 			static::$cache = null;
 		}
-
 	}
 
 } # class

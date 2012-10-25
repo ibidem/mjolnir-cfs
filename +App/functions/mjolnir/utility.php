@@ -4,10 +4,37 @@
 # Functions used in critical sections where autoloading can not be relied on.
 #
 
+if ( ! \function_exists('\mjolnir\stringify'))
+{
+	function stringify($source, $serialize = true)
+	{
+		if (\is_array($source))
+		{
+			foreach ($source as $key => $value)
+			{
+				$source[$key] = \mjolnir\stringify($value, false);
+			}
+		}
+		else if (\is_callable($source))
+		{
+			$source = '[callback]';
+		}
+
+		if ($serialize)
+		{
+			return \serialize($source);
+		}
+		else # recursive call
+		{
+			return $source;
+		}
+	}
+}
+
 if ( ! \function_exists('\mjolnir\append_to_file'))
 {
 	function append_to_file($path, $file, $data)
-	{		
+	{
 		if ( ! \file_exists($path))
 		{
 			@\mkdir($path, 02775, true);
@@ -36,9 +63,9 @@ if ( ! \function_exists('\mjolnir\implode'))
 		{
 			$glued .= $glue.$f_key_values($key, $value);
 		}
-		
+
 		$glued = \substr($glued, \strlen($glue));
-		
+
 		return $glued;
 	}
 }
