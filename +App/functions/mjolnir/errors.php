@@ -4,7 +4,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 {
 	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
 	{
-		$error_diagnostic = $exception->getMessage().' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ '.$exception->getLine().')';
+		$error_diagnostic = $exception->getMessage().' ('.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $exception->getFile()), '/\\').' @ '.$exception->getLine().')';
 
 		// include trace
 		$error_diagnostic .= "\n";
@@ -25,11 +25,11 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 					}).' }';
 				}
 
-				return "\t\t".\sprintf('%2d. %s', $idx+1, \str_replace(DOCROOT, '', $step['file']).' @ Line '.$step['line'].$info);
+				return "\t\t".\sprintf('%2d. %s', $idx+1, \ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $step['file']), '/\\').' @ Line '.$step['line'].$info);
 			}
 			else # anonymous function
 			{
-				return "\t\t".\sprintf('%2d. %s', $idx+1, '[anonymous function]');
+				return "\t\t".\sprintf('%2d. %s', $idx+1, '[Closure]');
 			}
 		});
 		$error_diagnostic .= "\n";
@@ -50,7 +50,7 @@ if ( ! \function_exists('\mjolnir\log_error'))
 		{
 			if (isset($error['message'], $error['file'], $error['line']))
 			{
-				\mjolnir\log('Error', $error['message'].' In "'.\str_replace(DOCROOT, '', $error['file']).'" @ Line '.$error['line'], 'Errors/');
+				\mjolnir\log('Error', $error['message'].' In "'.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $error['file']), '/\\').'" @ Line '.$error['line'], 'Errors/');
 			}
 			else # unknown format
 			{
@@ -96,7 +96,7 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 			{
 				echo "<pre>\n";
 			}
-
+			
 			echo $exception->getMessage()
 				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
 		}
