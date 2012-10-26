@@ -17,7 +17,21 @@ if ( ! \function_exists('\mjolnir\stringify'))
 		}
 		else if (\is_callable($source))
 		{
-			$source = '[callback]';
+			$source = '[Closure]';
+		}
+		else if (\is_object($source))
+		{
+			// the object can be serializable but may contain unserializable 
+			// parts; so we need to just brute force check it
+			
+			try 
+			{
+				$source = \serialize($source);
+			} 
+			catch(\Exception $e) 
+			{
+				$source = 'Object('.\get_class($source).')';
+			}
 		}
 
 		if ($serialize)
