@@ -96,9 +96,6 @@ CFS::namespacepaths($env_config['namespaces']);
 
 $base_config = CFS::config('mjolnir/base');
 
-// cache paths
-CFS::cache(\app\Stash_File::instance());
-
 // see: http://php.net/timezones
 \date_default_timezone_set($base_config['timezone']);
 
