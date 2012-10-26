@@ -2,8 +2,14 @@
 
 if ( ! \function_exists('\mjolnir\log_exception'))
 {
-	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
+	function log_exception($exception, $replication_path = 'Exceptions/')
 	{
+		if (\is_array($exception))
+		{
+			\mjolnir\log_error($exception);
+			return;
+		}
+		
 		$error_diagnostic = $exception->getMessage().' ('.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $exception->getFile()), '/\\').' @ '.$exception->getLine().')';
 
 		// include trace
