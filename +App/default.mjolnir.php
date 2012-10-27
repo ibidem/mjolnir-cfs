@@ -110,3 +110,6 @@ if (\file_exists(PLGPATH.'/autoload'.EXT))
 	// composer setup
 	require PLGPATH.'/autoload'.EXT;
 }
+
+// cleanup
+unset($env_config, $base_config);

@@ -488,6 +488,54 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	}
 
 	/**
+	 * Find all files matching the pattern.
+	 *
+	 * If context is provided uses that as base for searching, if context is not
+	 * provided the function will search all module files (which is to say no
+	 * class files will be searched) for the given pattern.
+	 *
+	 * This function is recursive and both returns an array of matches as well
+	 * as populate a matches variable if provided (internally it will use a
+	 * matches variable anyway).
+	 *
+	 * @return array matched files
+	 */
+	static function find_files($pattern, array $contexts = null, array & $matches = [])
+	{
+		if ($contexts === null)
+		{
+			$contexts = static::paths();
+		}
+
+		foreach ($contexts as $path)
+		{
+			$subdirs = [];
+
+			// clenaup path
+			$path = \rtrim($path, '\\/').'/';
+
+			$dir = \dir($path);
+			while (false !== ($entry = $dir->read()))
+			{
+				$entrypath = $path.$entry;
+				if ($entry != '.' && $entry != '..' && \is_dir($entrypath))
+				{
+					$subdirs[] = $entrypath;
+				}
+				else if (\is_file($entrypath) && \preg_match($pattern, $entry))
+				{
+					$matches[] = $entrypath;
+				}
+			}
+			$dir->close();
+
+			static::find_files($pattern, $subdirs, $matches);
+		}
+
+		return $matches;
+	}
+
+	/**
 	 * @param string namespace
 	 * @return string path
 	 */

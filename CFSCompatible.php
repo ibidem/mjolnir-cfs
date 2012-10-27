@@ -110,6 +110,20 @@ interface CFSCompatible
 	static function file_list($file, $ext = EXT);
 
 	/**
+	 * Find all files matching the pattern.
+	 *
+	 * If context is provided uses that as base for searching, if context is not
+	 * provided the function will search all module files (which is to say no
+	 * class files will be searched) for the given pattern.
+	 *
+	 * This function both returns an array of matches as well as populate a
+	 * matches variable if provided.
+	 *
+	 * @return array matched files
+	 */
+	static function find_files($pattern, array $contexts = null, array & $matches = []);
+
+	/**
 	 * Retrieves the module's root path.
 	 *
 	 * @param string namespace
