@@ -50,11 +50,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 		{
 			if (isset($error['message'], $error['file'], $error['line']))
 			{
-				\mjolnir\log('Error', $error['message'].' In "'.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $error['file']), '/\\').'" @ Line '.$error['line'], 'Errors/');
+				\mjolnir\log('Error', $error['message'].' In "'.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $error['file']), '/\\').'" @ Line '.$error['line'], 'FatalErrors/');
 			}
 			else # unknown format
 			{
-				\mjolnir\log('Error', \serialize($error), 'Errors/');
+				\mjolnir\log('Error', \serialize($error), 'FatalErrors/');
 			}
 		}
 		else if (\is_a('\Exception', $error))
@@ -73,11 +73,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 			if (\in_array('getMessage', $error_methods))
 			{
-				\mjolnir\log('Error', $error->getMesssage(), 'Errors/');
+				\mjolnir\log('Error', $error->getMesssage(), 'FatalErrors/');
 			}
 			else # unprocessable
 			{
-				\mjolnir\log('Error', 'Unprocessable error. Serialization: '.\serialize($error), 'Errors/');
+				\mjolnir\log('Error', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
 			}
 		}
 	}
