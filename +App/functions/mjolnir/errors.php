@@ -2,14 +2,8 @@
 
 if ( ! \function_exists('\mjolnir\log_exception'))
 {
-	function log_exception($exception, $replication_path = 'Exceptions/')
+	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
 	{
-		if (\is_array($exception))
-		{
-			\mjolnir\log_error($exception);
-			return;
-		}
-		
 		$error_diagnostic = $exception->getMessage().' ('.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $exception->getFile()), '/\\').' @ '.$exception->getLine().')';
 
 		// include trace
@@ -102,7 +96,7 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 			{
 				echo "<pre>\n";
 			}
-			
+
 			echo $exception->getMessage()
 				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
 		}
@@ -152,12 +146,14 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 				{
 					$base_config = include PUBDIR.'config'.EXT;
 					$error_page = '//'.$base_config['domain'].$base_config['path'].'error'.EXT;
-					\header('Location: '.$error_page) ;
+					\header('Location: '.$error_page);
 				}
 			}
 			catch (\Exception $e)
 			{
-				\mjolnir\log_exception($exception);
+				\mjolnir\log_exception($e);
+				// potentially headers already sent; attempt to redirect via javascript
+				echo '<script type="text/javascript">window.location = "'.$error_page.'"</script>';
 			}
 		}
 	}
