@@ -87,6 +87,8 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 {
 	function exception_handler($exception)
 	{
+		\mjolnir\log_exception($exception);
+
 		$base_config = \app\CFS::config('mjolnir/base');
 
 		if ( ! empty($base_config) && \app\CFS::config('mjolnir/base')['development'])
@@ -117,8 +119,6 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 				echo 'Uncaught Exception';
 			}
 		}
-
-		\mjolnir\log_exception($exception);
 	}
 }
 
