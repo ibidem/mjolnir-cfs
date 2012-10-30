@@ -283,6 +283,48 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			}
 		}
 	}
+	
+	/**
+	 * Given a regex pattern, the function will return all classes within the
+	 * system who's name (excluding namespace) matches the pattern. The returned
+	 * associative array contains the class name (with no namespace) followed by
+	 * the namespace for it. Only the top version of all classes is returned.
+	 * 
+	 * @return array classes
+	 */
+	static function classmatches($pattern)
+	{
+		$classmatches = [];
+		
+		foreach (static::$modules as $path => $namespace)
+		{
+			$realpath = \realpath($path);
+			
+			$raw_class_files = static::find_files('#'.\str_replace('.', '\\.', EXT).'#', [$realpath]);
+			
+			// filter out non-class files; and cleanup class files
+			foreach ($raw_class_files as $file)
+			{
+				$file = \ltrim(\str_replace($realpath, '', \realpath($file)), '\\/');
+				if (\strpos($file, static::APPDIR) !== 0)
+				{
+					// convert file to class
+					$file = \substr($file, 0, \strlen($file) - \strlen(EXT));
+					$class = \preg_replace('#[/\\\\]#', '_', $file);
+					
+					if (\preg_match($pattern, $class))
+					{
+						if ( ! isset($classmatches[$class]))
+						{
+							$classmatches[$class] = $namespace;
+						}
+					}
+				}
+			}
+		}
+		
+		return $classmatches;
+	}
 
 	// ------------------------------------------------------------------------
 	// Configuration

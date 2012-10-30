@@ -40,6 +40,16 @@ interface CFSCompatible
 	 * @return bool successfully loaded?
 	 */
 	static function load_symbol($symbol);
+	
+	/**
+	 * Given a regex pattern, the function will return all classes within the
+	 * system who's name (excluding namespace) matches the pattern. The returned
+	 * array contains the class name (with no namespace) and the namespace for 
+	 * it. Only the top version of all classes is returned.
+	 * 
+	 * @return array classes
+	 */
+	static function classmatches($pattern);
 
 	// ------------------------------------------------------------------------
 	// Configuration
