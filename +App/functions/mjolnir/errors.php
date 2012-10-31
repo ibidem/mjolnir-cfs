@@ -6,7 +6,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 	{
 		$error_diagnostic 
 			= $exception->getMessage()
-			. ' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ '.$exception->getLine().')'
+			. ' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ Ln '.$exception->getLine().')'
 			;
 		
 		\mjolnir\shortlog('Exception', $error_diagnostic);
@@ -47,7 +47,7 @@ if ( ! \function_exists('\mjolnir\log_error'))
 					= $error['message']
 					. '('
 					. \str_replace(DOCROOT, '', $error['file'])
-					. ' @ '.$error['line']
+					. ' @ Ln '.$error['line']
 					. ')'
 					;
 
