@@ -4,41 +4,34 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 {
 	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
 	{
-		$error_diagnostic = $exception->getMessage().' ('.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $exception->getFile()), '/\\').' @ '.$exception->getLine().')';
+		$error_diagnostic 
+			= $exception->getMessage()
+			. ' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ '.$exception->getLine().')'
+			;
+		
+		\mjolnir\shortlog('Exception', $error_diagnostic);
+		
+		// compute stack trace
+		
+		$trace = $exception->getTraceAsString();
+		
+		$error_diagnostic 
+			.= \str_replace
+				(
+					DOCROOT, 
+					'', 
+					\str_replace
+						(
+							PHP_EOL, 
+							PHP_EOL."\t\t", 
+							PHP_EOL.\trim($trace, '\'')
+						)
+				)
+			. PHP_EOL # extra line for clear seperation of traces
+			;
 
-		// include trace
-		$error_diagnostic .= "\n";
-		$error_diagnostic .= \mjolnir\implode("\n", \array_reverse($exception->getTrace()), function ($idx, $step) {
-			if (isset($step['file'], $step['line']))
-			{
-				// build info
-				$info = '';
-				if (isset($step['function']))
-				{
-					$info = ', Function: '.$step['function'];
-				}
-
-				if (isset($step['args']))
-				{
-					$info = ', Arguments: { '.\mjolnir\implode(', ', $step['args'], function ($key, $v) {
-						return $key.' => '. \preg_replace("#[\r\n]+#", '\n', \mjolnir\stringify($v));
-					}).' }';
-				}
-
-				return "\t\t".\sprintf('%2d. %s', $idx+1, \ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $step['file']), '/\\').' @ Line '.$step['line'].$info);
-			}
-			else # anonymous function
-			{
-				return "\t\t".\sprintf('%2d. %s', $idx+1, '[Closure]');
-			}
-		});
-		$error_diagnostic .= "\n";
-
-		if (\class_exists('\app\Log'))
-		{
-			// log the error
-			\mjolnir\log('Exception', $error_diagnostic, $replication_path);
-		}
+		// main log
+		\mjolnir\log('Exception', $error_diagnostic, $replication_path);
 	}
 }
 
@@ -50,11 +43,21 @@ if ( ! \function_exists('\mjolnir\log_error'))
 		{
 			if (isset($error['message'], $error['file'], $error['line']))
 			{
-				\mjolnir\log('Error', $error['message'].' In "'.\ltrim(\str_replace(\rtrim(DOCROOT, '/\\'), '', $error['file']), '/\\').'" @ Line '.$error['line'], 'FatalErrors/');
+				$error_diagnostic 
+					= $error['message']
+					. '('
+					. \str_replace(DOCROOT, '', $error['file'])
+					. ' @ '.$error['line']
+					. ')'
+					;
+
+				\mjolnir\shortlog('FatalError', $error_diagnostic);
+				\mjolnir\log('FatalError', $error_diagnostic, 'FatalErrors/');
 			}
 			else # unknown format
 			{
-				\mjolnir\log('Error', \serialize($error), 'FatalErrors/');
+				\mjolnir\shortlog('FatalError', \serialize($error));
+				\mjolnir\log('FatalError', \serialize($error), 'FatalErrors/');
 			}
 		}
 		else if (\is_a('\Exception', $error))
@@ -73,11 +76,13 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 			if (\in_array('getMessage', $error_methods))
 			{
-				\mjolnir\log('Error', $error->getMesssage(), 'FatalErrors/');
+				\mjolnir\shortlog('FatalError', $error->getMesssage());				
+				\mjolnir\log('FatalError', $error->getMesssage(), 'FatalErrors/');
 			}
 			else # unprocessable
 			{
-				\mjolnir\log('Error', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
+				\mjolnir\shortlog('FatalError', 'Unprocessable error. Serialization: '.\serialize($error));	
+				\mjolnir\log('FatalError', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
 			}
 		}
 	}

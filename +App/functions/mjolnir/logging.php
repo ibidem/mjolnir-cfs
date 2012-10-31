@@ -33,3 +33,16 @@ if ( ! \function_exists('\mjolnir\log'))
 		}
 	}
 }
+
+if ( ! \function_exists('\mjolnir\shortlog'))
+{
+	function shortlog($level, $message)
+	{
+		$time = \date('Y-m-d H:i:s');
+		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
+		$message = \sprintf(" %s --- %-10s | %s", $time, $level, $message);
+		
+		// append message to master log
+		\mjolnir\append_to_file($logs_path, 'short.log', PHP_EOL.$message);
+	}
+}
