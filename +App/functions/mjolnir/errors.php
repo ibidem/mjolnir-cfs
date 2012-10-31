@@ -21,7 +21,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 				if (isset($step['args']))
 				{
 					$info = ', Arguments: { '.\mjolnir\implode(', ', $step['args'], function ($key, $v) {
-						return $key.' => '. \mjolnir\stringify($v);
+						return $key.' => '. \preg_replace("#[\r\n]+#", '\n', \mjolnir\stringify($v));
 					}).' }';
 				}
 
