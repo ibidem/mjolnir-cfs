@@ -51,13 +51,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 					. ')'
 					;
 
-				\mjolnir\shortlog('FatalError', $error_diagnostic);
-				\mjolnir\log('FatalError', $error_diagnostic, 'FatalErrors/');
+				\mjolnir\quicklog('FatalError', $error_diagnostic, 'FatalErrors/');
 			}
 			else # unknown format
 			{
-				\mjolnir\shortlog('FatalError', \serialize($error));
-				\mjolnir\log('FatalError', \serialize($error), 'FatalErrors/');
+				\mjolnir\quicklog('FatalError', \serialize($error), 'FatalErrors/');
 			}
 		}
 		else if (\is_a('\Exception', $error))
@@ -76,13 +74,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 			if (\in_array('getMessage', $error_methods))
 			{
-				\mjolnir\shortlog('FatalError', $error->getMesssage());				
-				\mjolnir\log('FatalError', $error->getMesssage(), 'FatalErrors/');
+				\mjolnir\quicklog('FatalError', $error->getMesssage(), 'FatalErrors/');
 			}
 			else # unprocessable
 			{
-				\mjolnir\shortlog('FatalError', 'Unprocessable error. Serialization: '.\serialize($error));	
-				\mjolnir\log('FatalError', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
+				\mjolnir\quicklog('FatalError', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
 			}
 		}
 	}
