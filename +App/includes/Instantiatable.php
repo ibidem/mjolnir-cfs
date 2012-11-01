@@ -3,7 +3,7 @@
 /**
  * Custom Instantiation class for testing purposes.
  */
-class Instantiatable extends \mjolnir\base\Instantiatable
+class Instantiatable extends \mjolnir\Instantiatable
 	implements \mjolnir\types\Instantiatable
 {
 	/**
