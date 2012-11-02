@@ -7,14 +7,14 @@
 
 require __DIR__.'/utility'.EXT;
 
-if ( ! \function_exists('\mjolnir\log'))
+if ( ! \function_exists('\mjolnir\masterlog'))
 {
 	/**
 	 * Bread and butter log function. Will always log to the master log, if a
 	 * relative path is provided the log entry will be duplicated there as well
 	 * for easier reading.
 	 */
-	function log($level, $message, $replication_path = null, $relative_path = true)
+	function masterlog($level, $message, $replication_path = null, $relative_path = true)
 	{
 		$time = \date('Y-m-d H:i:s');
 		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
@@ -51,6 +51,7 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 	{
 		$time = \date('Y-m-d H:i:s');
 		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
+		$message = \str_replace(DOCROOT, '', $message);
 		$message = \sprintf(" %s --- %-10s | %s", $time, $level, $message);
 		
 		// append message to master log
@@ -58,15 +59,15 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 	}
 }
 
-if ( ! \function_exists('\mjolnir\quicklog'))
+if ( ! \function_exists('\mjolnir\log'))
 {
 	/**
-	 * Quicklog is a shorthand for quick shortlog followed by log with the same
+	 * Log is a shorthand for quick shortlog followed by masterlog with the same
 	 * parameters.
 	 */
-	function quicklog($level, $message, $replication_path = null, $relative_path = true)
+	function log($level, $message, $replication_path = null, $relative_path = true)
 	{
 		\mjolnir\shortlog($level, $message);
-		\mjolnir\log($level, $message, $replication_path, $relative_path);
+		\mjolnir\masterlog($level, $message, $replication_path, $relative_path);
 	}
 }

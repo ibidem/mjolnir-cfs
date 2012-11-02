@@ -31,7 +31,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 			;
 
 		// main log
-		\mjolnir\log('Exception', $error_diagnostic, $replication_path);
+		\mjolnir\masterlog('Exception', $error_diagnostic, $replication_path);
 	}
 }
 
@@ -51,11 +51,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 					. ')'
 					;
 
-				\mjolnir\quicklog('FatalError', $error_diagnostic, 'FatalErrors/');
+				\mjolnir\log('FatalError', $error_diagnostic, 'FatalErrors/');
 			}
 			else # unknown format
 			{
-				\mjolnir\quicklog('FatalError', \serialize($error), 'FatalErrors/');
+				\mjolnir\log('FatalError', \serialize($error), 'FatalErrors/');
 			}
 		}
 		else if (\is_a('\Exception', $error))
@@ -74,11 +74,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 			if (\in_array('getMessage', $error_methods))
 			{
-				\mjolnir\quicklog('FatalError', $error->getMesssage(), 'FatalErrors/');
+				\mjolnir\log('FatalError', $error->getMesssage(), 'FatalErrors/');
 			}
 			else # unprocessable
 			{
-				\mjolnir\quicklog('FatalError', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
+				\mjolnir\log('FatalError', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
 			}
 		}
 	}
