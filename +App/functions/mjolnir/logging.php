@@ -20,7 +20,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
 		$date_path = \date('Y').DIRECTORY_SEPARATOR.\date('m').DIRECTORY_SEPARATOR;
 		$master_logs_path = $logs_path.$date_path;
-		$message = \sprintf(" %s --- %-10s | %s", $time, $level, $message);
+		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 		
 		// append message to master log
 		\mjolnir\append_to_file($master_logs_path, \date('d').'.log', PHP_EOL.$message);
@@ -52,7 +52,7 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 		$time = \date('Y-m-d H:i:s');
 		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
 		$message = \str_replace(DOCROOT, '', $message);
-		$message = \sprintf(" %s --- %-10s | %s", $time, $level, $message);
+		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 		
 		// append message to master log
 		\mjolnir\append_to_file($logs_path, 'short.log', PHP_EOL.$message);
