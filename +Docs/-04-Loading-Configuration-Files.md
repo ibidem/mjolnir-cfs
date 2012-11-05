@@ -83,12 +83,12 @@ complexity in it. Here are just a few tips:
  directly in the configuration file and output the translation; this means that
  if the source configuration is updated your configuration is updates as well;
  which is useful for capturing changes to defaults or extra options that become
- available; this may be a json, yaml, another php file, or if necesary the
- application might even resort to goign to the web to get updates (eg. list of
+ available; this may be a json, yaml, another php file, etc, or if necessary the
+ application might even resort to going to the web to get updates (eg. list of
  countries, cities, etc).
 
 *Configuration files are resolved once. Any subsequent calls to `CFS::config`
-with the same parameters merely results in outputing the previous result. This
+with the same parameters merely results in the previous (cached) result. This
 means you can abuse calls, but it also means you should treat values from
 configuration files as static. A "timer" value will not update for example; but
 you can always use a closure within the configuration for those cases.*
