@@ -57,6 +57,7 @@ complexity in it. Here are just a few tips:
  is extremely useful when dealing with 40+ routes (as is the case a lot of the
  time). Example:
 
+
 	<?php
 
 	// segments
@@ -74,6 +75,7 @@ complexity in it. Here are just a few tips:
 			"/example/{$resource}"
 				=> [ 'example', $id + $slug + ['action' => '(insert)'], $control ],
 		);
+
 
  * you can place closures within configuration files; allowing you to create
  a dynamic collection of them for easy management (eg. url generators, such as a
