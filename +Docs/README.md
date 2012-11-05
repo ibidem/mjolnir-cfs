@@ -1,7 +1,7 @@
 Cascading File System
 =====================
 
-2012 Edition, by Ibidem Team
+by Ibidem Team
 
 **Table of contents**
 
