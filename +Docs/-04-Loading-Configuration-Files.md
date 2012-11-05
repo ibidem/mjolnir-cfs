@@ -3,8 +3,8 @@ Loading Configuration Files
 
 To load a configuration "files" the function `CFS::config($key, $ext = EXT)` is
 primarily used. In certain extreme cases you may want to explicitly make sure
-the configuration you are loading is comming from a file on the harddist (and
-not something like a database) in which case you would use
+the configuration you are loading is coming from a physical file (and not
+something like a database) in which case you would use
 `config_file($key, $ext = EXT)`.
 
 By default configuration files are mere PHP files which return an array. If
@@ -13,7 +13,7 @@ follows:
 
 	$config = include 'path/to/configuration.php';
 
-This however will rerely be equivalent to the result of
+This however will rarely be equivalent to the result of
 `CFS:config('path/to/configuration')` due to how configurations are managed.
 
 In the cascading file system the values for a configuration file is obtained as
@@ -23,21 +23,21 @@ follows.
  specifically the search will match the given pattern to `+App/config` of all
  modules, and just `config` for any explicit paths (such as private files).
 
- 2. the resulting arrays will be merged starting from the values obtained from
- the bottom modules and going up, so values you place in top modules will always
- overwrite values in lower modules.
+ 2. the resulting arrays will be recursively merged starting from the values
+ obtained from the bottom modules and going up. So values you place in top
+ modules will always overwrite values in lower modules.
 
  3. if no configuration files were present an empty array is returned
 
-Thus, the value a single configuration file is not necessarily representative of
-the whole.
+So the value of a single configuration file is not necessarily representative of
+the result value.
 
 Typically you will place defaults in the module which implements the
 configuration and overwrite as needed in the modules that use the configured
 implementation.
 
 Because configuration files are plain old PHP code, you can have any amount of
-complexity in it. Here are just a few tips:
+complexity in it. Here are just a few examples:
 
  * you can generate a configuration dynamically; for example if PUBDIR is not
  defined you may attempt to resolve the configuration to some other more useful
@@ -92,3 +92,18 @@ with the same parameters merely results in the previous (cached) result. This
 means you can abuse calls, but it also means you should treat values from
 configuration files as static. A "timer" value will not update for example; but
 you can always use a closure within the configuration for those cases.*
+
+Please **DO NOT** store security keys, passwords and other sensitive information
+in configuration files located in your source repositories. Not only is it a
+security liability, but it is also a pain for any development outside your
+production server (unless all your test servers, along with every site you
+ever built somehow has the same keys; which would be nonsensical).
+
+The correct way of dealing with sensitive configuration entries is to place them
+in a separate file path that sits at the top of the cascading file system and
+outside your DOCROOT. The
+[mjolnir-template-app](https://github.com/ibidem/mjolnir-template-app.git) shows
+an example of this: you specify the path to the private files via a
+`private.files` entry in `PUBDIR/config.php` and a `DOCROOT/privatefiles` file
+for CLI access. The `DOCROOT/privatefiles` is ignored via your `.gitignore` and
+merely contains a path.
