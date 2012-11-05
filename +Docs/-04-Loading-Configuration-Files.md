@@ -103,7 +103,7 @@ ever built somehow has the same keys; which would be nonsensical).
 
 The correct way of dealing with sensitive configuration entries is to place them
 in a separate file path that sits at the top of the cascading file system and
-outside your DOCROOT. The
+outside your `DOCROOT`. The
 [mjolnir-template-app](https://github.com/ibidem/mjolnir-template-app.git) shows
 an example of this: you specify the path to the private files via a
 `private.files` entry in `PUBDIR/config.php` and a `DOCROOT/privatefiles` file
