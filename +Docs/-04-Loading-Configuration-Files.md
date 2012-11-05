@@ -93,6 +93,8 @@ means you can abuse calls, but it also means you should treat values from
 configuration files as static. A "timer" value will not update for example; but
 you can always use a closure within the configuration for those cases.*
 
+-
+
 Please **DO NOT** store security keys, passwords and other sensitive information
 in configuration files located in your source repositories. Not only is it a
 security liability, but it is also a pain for any development outside your
