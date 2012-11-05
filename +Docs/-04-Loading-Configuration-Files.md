@@ -57,25 +57,23 @@ complexity in it. Here are just a few tips:
  is extremely useful when dealing with 40+ routes (as is the case a lot of the
  time). Example:
 
+		<?php
 
-	<?php
+		// segments
+		$id = ['id' => '[0-9]+'];
+		$slug = ['slug' => '[a-z0-9-]+'];
 
-	// segments
-	$id = ['id' => '[0-9]+'];
-	$slug = ['slug' => '[a-z0-9-]+'];
+		// mixins
+		$resource = '<id>/<slug>(/<action>)';
 
-	// mixins
-	$resource = '<id>/<slug>(/<action>)';
+		// access
+		$control = ['GET, 'POST'];
 
-	// access
-	$control = ['GET, 'POST'];
-
-	return array
-		(
-			"/example/{$resource}"
-				=> [ 'example', $id + $slug + ['action' => '(insert)'], $control ],
-		);
-
+		return array
+			(
+				"/example/{$resource}"
+					=> [ 'example', $id + $slug + ['action' => '(insert)'], $control ],
+			);
 
  * you can place closures within configuration files; allowing you to create
  a dynamic collection of them for easy management (eg. url generators, such as a
