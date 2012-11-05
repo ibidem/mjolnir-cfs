@@ -13,7 +13,9 @@
 		}
 	],
 	"require": {
-		"php": ">=5.4.4"
+		"php": ">=5.4.4",
+		"mjolnir/types"   : "dev-wip/v1.0",
+		"mjolnir/testing" : "dev-wip/v1.0"
 	},
 	"autoload": {
 		"psr-0": {
