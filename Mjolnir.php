@@ -102,7 +102,7 @@ class Mjolnir
 					(
 						\app\Layer_HTTP::instance(),
 						\app\Layer_HTML::instance(),
-						\app\Layer_Sandbox::instance()
+						\app\Layer_ErrorHandler::instance()
 							->caller
 							(
 								function ()
