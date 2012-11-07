@@ -76,10 +76,9 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 */
 	static function symbol_exists($symbol, $autoload = false)
 	{
-		return
-			\class_exists($symbol, $autoload) ||
-			\interface_exists($symbol, $autoload) ||
-			\trait_exists($symbol, $autoload);
+		return \class_exists($symbol, $autoload) 
+			|| \interface_exists($symbol, $autoload) 
+			|| \trait_exists($symbol, $autoload);
 	}
 
 	/**
