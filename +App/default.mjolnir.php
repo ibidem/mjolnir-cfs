@@ -1,6 +1,6 @@
 <?php namespace app;
 
-/// The default extension of resource files.
+/// The default extension for files.
 if ( ! \defined('EXT'))
 {
 	\define('EXT', '.php');
@@ -9,25 +9,31 @@ if ( ! \defined('EXT'))
 /// The directory in which your application specific resources are located.
 if ( ! \defined('APPPATH'))
 {
-	\define('APPPATH', \realpath(DOCROOT.'+App').'/');
+	\define('APPPATH', \realpath(DOCROOT.'+App').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which the modules for the current project are located.
 if ( ! \defined('MODPATH'))
 {
-	\define('MODPATH', \realpath(DOCROOT.'modules').'/');
+	\define('MODPATH', \realpath(DOCROOT.'modules').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which your plugins are located. (typically vendor)
 if ( ! \defined('PLGPATH'))
 {
-	\define('PLGPATH', \realpath(DOCROOT.'vendor').'/');
+	\define('PLGPATH', \realpath(DOCROOT.'vendor').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which your mjolnir framework modules are located.
 if ( ! \defined('MJLPATH'))
 {
-	\define('MJLPATH', \realpath(PLGPATH.'mjolnir').'/');
+	\define('MJLPATH', \realpath(PLGPATH.'mjolnir').DIRECTORY_SEPARATOR);
+}
+
+/// The directory in which your mjolnir framework modules are located.
+if ( ! \defined('DRAFTPATH'))
+{
+	\define('DRAFTPATH', \realpath(APPPATH.'drafts').DIRECTORY_SEPARATOR);
 }
 
 /// @see http://php.net/error_reporting
