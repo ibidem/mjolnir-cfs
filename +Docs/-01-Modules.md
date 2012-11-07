@@ -1,17 +1,11 @@
-Modules
-=======
-
 In a cascading file system, modules are the foundation blocks for everything
 within the system. Without modules the systems has no function.
 
 A module can contain the following,
 
  1. Classes
-
  2. Configuration Files
-
  3. Files, such as Views, Themes, Vendor/3rd-party code, etc
-
  4. Anything else ("if it fits, it's okey", eg. documentation, drafts, etc)
 
 Classes and configuration files are the primary citizens in a module. The entire
@@ -21,7 +15,6 @@ loaded and interpreted in a way different to other files (including classes).
 Assuming default structure is used, a module works as follows:
 
  1. all files are located in directories prefixed with a "+"
-
  2. all configuration files and (files known by the loading process) are stored
  in the directory "+App", any other directories (eg. "+Docs") are not available
  in the file system.

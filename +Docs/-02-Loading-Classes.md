@@ -1,6 +1,3 @@
-Loading Classes
-===============
-
 For a class (from a registered module) to be loadable the following conditions
 must be met.
 
@@ -9,7 +6,6 @@ must be met.
  file. If you are relying on a non-default structure this condition resumes to:
  it must somehow be included by `CFS::modules`, `CFS::frontmodules`,
  `CFS::backmodules`, or for namespace only access `CFS::namespacepaths`.
-
  2. If underscores within the class name are replaced with directory separators
  specific to the system, the class should result in a valid path segment and in
  combination with the path to the module itself and the current extention
@@ -18,11 +14,9 @@ must be met.
  it if `MODULE` is the path to the module, and `EXT` is `.php` is
  `MODULE/Controller/AcmeOrganization.php`. If the class is placed in any
  other file it will not be recognized.
-
  3. The full namespace of the class should correspond (exactly) to the namespace
  defined for the module. So as an example, the `\mjolnir\access\ReCaptcha` class
  resides in the `access` module, which has the namespace `mjolnir\access`.
-
  4. Another file with the same path segment pattern (ie. same class name) is not
  available in a higher module (this DOES NOT apply to namespace invocation;
  discussed bellow)
@@ -55,10 +49,8 @@ resolution:
 
  1. the full namespace must be a namespace known to the cascading file system;
  namespaces only known via composer will not resolve.
-
  2. you may only omit entire segments at a time; so
  `\acme\sec\Controller_AcmeOrgnaization` will not resolve to anything.
-
  3. the namespace you are using as a shorthand must not be registered in the
  cascading file system. This is purely by design to prevent false positives. If
  the namespace is registered and the class is not within it then the class will
@@ -82,7 +74,7 @@ framework. The only direct dependencies to the framework files are the
 interfaces which have been used with explicit namespaces to discourage bad
 patterns.
 
-## Namespaces must be unique
+#### Namespaces must be unique
 
 *Each module may have one namespace, and that namespace you choose must be
 unique.*
@@ -97,9 +89,7 @@ To understand why, you have to first understand what problems namespaces solve,
 and how they solve them. The are three main problems:
 
  1. name conflicts with other people's stuff
-
  2. name conflicts with your old stuff
-
  3. name conflicts with your yet to be created stuff
 
 Let's consider the earlier example

@@ -1,6 +1,3 @@
-Composer Integration
-====================
-
 First of all you may load and use any composer compatible projects. It is not
 recommended to configure them as modules; they should be used via namespace
 resolution only (so that they are handled by composer only).

@@ -1,6 +1,3 @@
-Loading Files
-=============
-
 There are a few ways to load files known by the system. The first way, which is
 most convenient for single files, is to use `CFS::file($file, $ext = EXT)` this
 will search all modules from top to bottom and stop when it finds a file; so it
