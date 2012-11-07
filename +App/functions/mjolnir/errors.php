@@ -22,7 +22,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 					'', 
 					\str_replace
 						(
-							PHP_EOL, 
+							"\n", 
 							PHP_EOL."\t\t", 
 							PHP_EOL.\trim($trace, '\'')
 						)
