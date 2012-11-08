@@ -112,7 +112,7 @@ class Mjolnir
 
 									throw new \app\Exception_NotFound
 										(
-											'The page you are trying to access doesn\'t appear to exist. Sorry!'
+											'The page "'.$_SERVER['REQUEST_URI'].'" doesn\'t appear to exist. Sorry!'
 										);
 								}
 							)
