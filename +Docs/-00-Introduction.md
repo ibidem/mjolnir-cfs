@@ -1,8 +1,3 @@
-DISCLAIMER: *This following documentation is work in progress and has yet to be
-properly formatted proof read, and completed. It is provided even in it's
-current state because having something is more useful then having nothing at
-all.*
-
 The Cascading File System (cfs) module allows the implementation of projects
 based on a modular pattern where points of interest in an application are split
 into modules (separate folders with a namespace) and stacked, with top modules
@@ -43,4 +38,4 @@ this class and related dependencies, just extend `\mjolnir\cfs\CFS` in your
 new class.
 
 For versioning information, see:
-https://github.com/ibidem/ibidem/blob/master/versioning.md
+[versioning methodology](https://github.com/ibidem/ibidem/blob/master/versioning.md)

@@ -30,6 +30,7 @@ Under normal conventions
  7. Functions are stored in `+App/functions`
  8. Special classes are stored in `+App/includes`
  9. Behavior tests are stored in `+App/features`
+ 10. Unit tests are stored in `+App/tests`
 
 *Note: The `+App/honeypot.php` files are designed to be read by your IDE to
 facilitate autocompletion, refactoring, etc; they serve no other purpose.*
