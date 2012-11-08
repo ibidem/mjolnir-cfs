@@ -37,5 +37,7 @@ class which extends this one; you can rely on composer to do the loading of
 this class and related dependencies, just extend `\mjolnir\cfs\CFS` in your
 new class.
 
-For versioning information, see:
+<hr/>
+
+For versioning information see:
 [versioning methodology](https://github.com/ibidem/ibidem/blob/master/versioning.md)
