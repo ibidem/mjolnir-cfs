@@ -107,7 +107,14 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 		{
 			if (\defined('PUBDIR'))
 			{
-				include PUBDIR.'error'.EXT;
+				if (\is_a($exception, '\app\Exception_NotFound'))
+				{
+					include PUBDIR.'404'.EXT;
+				}
+				else # general error
+				{
+					include PUBDIR.'error'.EXT;
+				}
 			}
 			else if (\php_sapi_name() === 'cli')
 			{
