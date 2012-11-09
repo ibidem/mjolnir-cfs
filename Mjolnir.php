@@ -109,6 +109,8 @@ class Mjolnir
 								{
 									try
 									{
+										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
+										
 										return \app\ThemeView::instance()
 											->errortarget('exception-NotFound')
 											->render();
