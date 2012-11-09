@@ -109,8 +109,6 @@ class Mjolnir
 								{
 									try
 									{
-										throw new \Exception('test');
-										
 										return \app\ThemeView::instance()
 											->errortarget('exception-NotFound')
 											->render();
