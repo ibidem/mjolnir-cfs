@@ -8,16 +8,17 @@ A module can contain the following,
  3. Files, such as Views, Themes, Vendor/3rd-party code, etc
  4. Anything else ("if it fits, it's okey", eg. documentation, drafts, etc)
 
-Classes and configuration files are the primary citizens in a module. The entire
-module structure is designed around classes, and configuration files are
-loaded and interpreted in a way different to other files (including classes).
+Classes and configuration files are the first class citizens in a module. The
+entire module structure is designed around classes, and configuration files are
+merged together, which is different to other files (including classes).
 
 Assuming default structure is used, a module works as follows:
 
- 1. all files are located in directories prefixed with a "+"
- 2. all configuration files and (files known by the loading process) are stored
- in the directory "+App", any other directories (eg. "+Docs") are not available
- in the file system.
+  1. all files are located in directories (on the module root) prefixed
+ with a "+"
+  2. all configuration files and (files known by the loading process) are stored
+ in the main application files directory (by default "+App"), any other
+ directories (eg. "+Docs") are not available in the file system.
 
 Under normal conventions
 
@@ -33,7 +34,8 @@ Under normal conventions
  10. Unit tests are stored in `+App/tests`
 
 *Note: The `+App/honeypot.php` files are designed to be read by your IDE to
-facilitate autocompletion, refactoring, etc; they serve no other purpose.*
+facilitate autocompletion, refactoring, etc; they serve no other purpose and the
+only time you should be opening them is when your IDE is failing to scan them.*
 
 To get started with a base structure go to:
 https://github.com/ibidem/mjolnir-template-app and follow the instructions

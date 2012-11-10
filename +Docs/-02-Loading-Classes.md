@@ -2,10 +2,11 @@ For a class (from a registered module) to be loadable the following conditions
 must be met.
 
  1. The module in which the class is present must be known by the autoloader;
- meaning, for the default structure you must specify it your `environment.php`
- file. If you are relying on a non-default structure this condition resumes to:
- it must somehow be included by `CFS::modules`, `CFS::frontmodules`,
- `CFS::backmodules`, or for namespace only access `CFS::namespacepaths`.
+ meaning, when using the recommended structure you must specify it in your
+ `environment.php` file. If you are relying on a non-default structure this
+ condition resumes to: it must be included by `CFS::modules`,
+ `CFS::frontmodules`, `CFS::backmodules`, or for namespace only access
+ `CFS::namespacepaths`.
  2. If underscores within the class name are replaced with directory separators
  specific to the system, the class should result in a valid path segment and in
  combination with the path to the module itself and the current extention
