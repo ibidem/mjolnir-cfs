@@ -107,20 +107,30 @@ class Mjolnir
 							(
 								function ()
 								{
-									\app\ThemeView::instance()
-										->errortarget('NotFound');
-
-									throw new \app\Exception_NotFound
-										(
-											'The page "'.$_SERVER['REQUEST_URI'].'" doesn\'t appear to exist. Sorry!'
-										);
+									try
+									{
+										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
+										
+										return \app\ThemeView::instance()
+											->errortarget('exception-NotFound')
+											->render();
+									}
+									catch (\Exception $exception)
+									{
+										\mjolnir\log_exception($exception);
+										
+										throw new \app\Exception_NotFound
+											(
+												'The page "'.$_SERVER['REQUEST_URI'].'" doesn\'t appear to exist on this server.'
+											);
+									}
 								}
 							)
 					);
 			}
-			catch (\Exception $e)
+			catch (\Exception $exception)
 			{
-				// do nothing
+				\mjolnir\log($exception);
 			}
 		}
 		else if (\file_exists(PUBDIR.'404'.EXT))
