@@ -31,5 +31,5 @@ in your new class.
 
 <hr/>
 
-For versioning information see:
-[versioning methodology](https://github.com/ibidem/ibidem/blob/master/versioning.md)
+For versioning information and methodology see
+<https://github.com/ibidem/ibidem/blob/master/versioning.md>

@@ -38,6 +38,6 @@ facilitate autocompletion, refactoring, etc; they serve no other purpose and the
 only time you should be opening them is when your IDE is failing to scan them.*
 
 To get started with a base structure go to:
-https://github.com/ibidem/mjolnir-template-app and follow the instructions
+<https://github.com/ibidem/mjolnir-template-app> and follow the instructions
 outlined in the `README.md` file (github should offer you a parsed version at
 the given link).
