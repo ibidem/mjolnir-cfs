@@ -629,7 +629,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			{
 				if (\file_exists($path.$dir_path))
 				{
-					static::$cache_file[$dir_path] = $path.$dir_path;
+					static::$cache_file[$dir_path] = $path.$dir_path.DIRECTORY_SEPARATOR;
 					// cache?
 					if (static::$cache)
 					{
