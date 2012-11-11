@@ -1,5 +1,5 @@
 First of all you may load and use any composer compatible projects. It is not
-recommended to configure them as modules; they should be used via namespace
+recommended to configure them as modules; they should be used via the namespace
 resolution only (so that they are handled by composer only).
 
 Modules, as previously described, are PSR-0 *compatible*, so as long as there
