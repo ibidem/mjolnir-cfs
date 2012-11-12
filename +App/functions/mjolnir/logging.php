@@ -21,14 +21,16 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		$date_path = \date('Y').DIRECTORY_SEPARATOR.\date('m').DIRECTORY_SEPARATOR;
 		$master_logs_path = $logs_path.$date_path;
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
-		
+
 		// append message to master log
 		\mjolnir\append_to_file($master_logs_path, \date('d').'.log', PHP_EOL.$message);
 
 		if ($replication_path)
 		{
+			$replication_path = \rtrim($replication_path, '\\/').DIRECTORY_SEPARATOR;
+			
 			if ($relative_path)
-			{
+			{	
 				\mjolnir\append_to_file($logs_path.$replication_path.$date_path, \date('d').'.log', PHP_EOL.$message);
 			}
 			else # absolute path
