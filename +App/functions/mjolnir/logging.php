@@ -20,6 +20,43 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
 		$date_path = \date('Y').DIRECTORY_SEPARATOR.\date('m').DIRECTORY_SEPARATOR;
 		$master_logs_path = $logs_path.$date_path;
+		
+		if (isset($_SERVER, $_SERVER['REMOTE_ADDR']))
+		{
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		else # no remote addr
+		{
+			$ip = 'n/a';
+		}
+		
+		if (isset($_SERVER, $_SERVER['HTTP_REFERER']))
+		{
+			$referer = $_SERVER['HTTP_REFERER'];
+		}
+		else # no referer
+		{
+			$referer = 'n/a';
+		}
+		
+		if (isset($_SERVER, $_SERVER['REQUEST_METHOD']))
+		{
+			$method = $_SERVER['REQUEST_METHOD'];
+		}
+		else # no method
+		{
+			$method = 'n/a';
+		}
+		
+		// include aditional diagnostic information
+		$message 
+			= \rtrim($message, "\n")
+			. "\t\t-\n"
+			. "\t\tMethod: $method\n"
+			. "\t\tReferer: $referer\n"
+			. "\t\tIP: $ip\n"
+			;
+		
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 
 		// append message to master log
