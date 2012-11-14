@@ -30,6 +30,15 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 			$ip = 'n/a';
 		}
 		
+		if (isset($_SERVER, $_SERVER['REQUEST_URI']))
+		{
+			$uri = $_SERVER['REQUEST_URI'];
+		}
+		else # no remote addr
+		{
+			$uri = 'n/a';
+		}
+		
 		if (isset($_SERVER, $_SERVER['HTTP_REFERER']))
 		{
 			$referer = $_SERVER['HTTP_REFERER'];
@@ -50,8 +59,9 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		
 		// include aditional diagnostic information
 		$message 
-			= \rtrim($message, "\n")
-			. "\t\t-\n"
+			= \rtrim($message, "\n\r")
+			. "\n\t\t-\n"
+			. "\t\tURI: $uri\n"
 			. "\t\tMethod: $method\n"
 			. "\t\tReferer: $referer\n"
 			. "\t\tIP: $ip\n"
