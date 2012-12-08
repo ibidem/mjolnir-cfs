@@ -21,7 +21,7 @@ concern for anyone who wishes to use only this module.
 
 For creating an application based on this module, but not on mjolnir as a whole
 the [mjolnir-template-app](https://github.com/ibidem/mjolnir-template-app) can
-still be used as guide. Note that aside from `DOCROOT/mjolnir.php` all the
+still be used as a guide. Note that aside from `DOCROOT/mjolnir.php` all the
 structure is merely a recommendation.
 
 If you wish to create your own version based on this module but keep most of it
