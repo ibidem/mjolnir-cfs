@@ -1,5 +1,5 @@
 In a cascading file system, modules are the foundation blocks for everything
-within the system. Without modules the systems has no function.
+within the system. Without modules the systems can not function.
 
 A module can contain the following,
 
