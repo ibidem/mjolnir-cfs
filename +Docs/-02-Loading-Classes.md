@@ -145,7 +145,7 @@ This is very impractical, and mostly abused for purely pointless sugarcoding
 purposes. If `Controller` there establishes a sub space and `Organization` is a
 controller, then what is a controller in a namespace other then `Controller` in
 the same `acme` namespace, other then confusing? In addition, if all controllers
-are meant to go into this `Controller` namespace how can you have a another
+are meant to go into this `Controller` namespace how can you have another
 `Organization` controller? The answer is "you can't", neither can you for
 practical applications but also mistakenly creating a class with the name
 `Organization` is errornous and means you have to be aware of problems 2 & 3
