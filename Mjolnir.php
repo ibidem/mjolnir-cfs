@@ -105,7 +105,7 @@ class Mjolnir
 						\app\Layer_ErrorHandler::instance()
 							->caller
 							(
-								function () use ($http_layer)
+								function ()
 								{
 									try
 									{
