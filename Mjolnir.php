@@ -132,7 +132,7 @@ class Mjolnir
 			}
 			catch (\Exception $exception)
 			{
-				\mjolnir\log($exception);
+				\mjolnir\log_exception($exception);
 			}
 		}
 		else if (\file_exists(PUBDIR.'404'.EXT))

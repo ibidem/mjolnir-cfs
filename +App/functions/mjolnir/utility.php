@@ -8,22 +8,55 @@ if ( ! \function_exists('\mjolnir\append_to_file'))
 {
 	function append_to_file($path, $file, $data)
 	{
-		if ( ! \file_exists($path))
+		try
 		{
-			@\mkdir($path, 02775, true);
-			@\chmod($path, 02775);
-
-			if ( ! \file_exists($path.$file))
+			if ( ! \file_exists($path))
 			{
-				// Create the log file
-				@\file_put_contents($path.$file, PHP_EOL);
+				@\mkdir($path, 02775, true);
+				@\chmod($path, 02775);
 
-				// Allow anyone to write to log files
-				@\chmod($path.$file, 0666);
+				if ( ! \file_exists($path.$file))
+				{
+					// Create the log file
+					@\file_put_contents($path.$file, PHP_EOL);
+
+					// Allow anyone to write to log files
+					@\chmod($path.$file, 0666);
+				}
+			}
+
+			@\file_put_contents($path.$file, $data, FILE_APPEND);
+		}
+		catch (\Exception $exception)
+		{
+			if (\defined('PUBDIR'))
+			{
+				// attempt to retrieve configuration
+				try
+				{
+					$config = \file_get_contents(PUBDIR.'config.php');
+					
+					if ($config['development'])
+					{
+						throw $exception;
+					}
+					
+					// non development environment; prevent catastrophic failure
+					return;
+				}
+				catch (\Exception $e)
+				{
+					// we can't do anything at this point but prevent 
+					// catastrophic failure
+					
+					return;
+				}
+			}
+			else # non-web context
+			{
+				throw $exception;
 			}
 		}
-
-		@\file_put_contents($path.$file, $data, FILE_APPEND);
 	}
 }
 
