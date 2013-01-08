@@ -105,11 +105,13 @@ class Mjolnir
 						\app\Layer_ErrorHandler::instance()
 							->caller
 							(
-								function ()
+								function () use ($http_layer)
 								{
 									try
 									{
 										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
+										
+										\app\GlobalEvent::fire('http:status', 'HTTP/1.0 404 Not Found');
 										
 										return \app\ThemeView::instance()
 											->errortarget('exception-NotFound')
