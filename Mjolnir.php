@@ -111,6 +111,8 @@ class Mjolnir
 									{
 										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
 										
+										\app\GlobalEvent::fire('http:status', 'HTTP/1.0 404 Not Found');
+										
 										return \app\ThemeView::instance()
 											->errortarget('exception-NotFound')
 											->render();
@@ -130,7 +132,7 @@ class Mjolnir
 			}
 			catch (\Exception $exception)
 			{
-				\mjolnir\log($exception);
+				\mjolnir\log_exception($exception);
 			}
 		}
 		else if (\file_exists(PUBDIR.'404'.EXT))

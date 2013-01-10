@@ -77,7 +77,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 			$replication_path = \rtrim($replication_path, '\\/').DIRECTORY_SEPARATOR;
 			
 			if ($relative_path)
-			{	
+			{
 				\mjolnir\append_to_file($logs_path.$replication_path.$date_path, \date('d').'.log', PHP_EOL.$message);
 			}
 			else # absolute path
