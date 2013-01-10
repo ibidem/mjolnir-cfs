@@ -16,8 +16,8 @@
 	
 	"require": {
 		"php": ">=5.4.4",
-		"mjolnir/types"   : "dev-wip/v1.0",
-		"mjolnir/testing" : "dev-wip/v1.0"
+		"mjolnir/types"   : "dev-wip/v1.0x2",
+		"mjolnir/testing" : "dev-wip/v1.0x2"
 	},
 	
 	"autoload": {
