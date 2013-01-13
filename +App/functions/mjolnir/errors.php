@@ -4,26 +4,26 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 {
 	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
 	{
-		$error_diagnostic 
+		$error_diagnostic
 			= $exception->getMessage()
 			. ' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ Ln '.$exception->getLine().')'
 			;
-		
+
 		\mjolnir\shortlog('Exception', $error_diagnostic);
-		
+
 		// compute stack trace
-		
+
 		$trace = $exception->getTraceAsString();
-		
-		$error_diagnostic 
+
+		$error_diagnostic
 			.= \str_replace
 				(
-					DOCROOT, 
-					'', 
+					DOCROOT,
+					'',
 					\str_replace
 						(
-							"\n", 
-							PHP_EOL."\t\t", 
+							"\n",
+							PHP_EOL."\t\t",
 							PHP_EOL.\trim($trace, '\'')
 						)
 				)
@@ -43,7 +43,7 @@ if ( ! \function_exists('\mjolnir\log_error'))
 		{
 			if (isset($error['message'], $error['file'], $error['line']))
 			{
-				$error_diagnostic 
+				$error_diagnostic
 					= $error['message']
 					. '('
 					. \str_replace(DOCROOT, '', $error['file'])
@@ -94,11 +94,7 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 
 		if ( ! empty($base_config) && \app\CFS::config('mjolnir/base')['development'])
 		{
-			echo 'Uncaught Exception';
-			if (\app\Layer::find('http'))
-			{
-				echo "<pre>\n";
-			}
+			echo 'Uncaught Exception'.PHP_EOL;
 
 			echo $exception->getMessage()
 				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());

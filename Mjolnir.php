@@ -5,7 +5,7 @@
  * otherwise go into public files, etc.
  *
  * @package    mjolnir
- * @category   Base
+ * @category   Cascading File System
  * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
@@ -110,9 +110,9 @@ class Mjolnir
 									try
 									{
 										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
-										
+
 										\app\GlobalEvent::fire('http:status', 'HTTP/1.0 404 Not Found');
-										
+
 										return \app\ThemeView::instance()
 											->errortarget('exception-NotFound')
 											->render();
@@ -120,7 +120,7 @@ class Mjolnir
 									catch (\Exception $exception)
 									{
 										\mjolnir\log_exception($exception);
-										
+
 										throw new \app\Exception_NotFound
 											(
 												'The page "'.$_SERVER['REQUEST_URI'].'" doesn\'t appear to exist on this server.'
@@ -192,12 +192,9 @@ class Mjolnir
 		// running on a the command line?
 		if (\php_sapi_name() === 'cli')
 		{
-			\app\Layer::stack
-				(
-					\app\Layer_TaskRunner::instance()
-						->writer(\app\Writer_Console::instance())
-						->args($_SERVER['argv'])
-				);
+			\app\Overlord::instance()
+				->args($_SERVER['argv'])
+				->run();
 		}
 	}
 
