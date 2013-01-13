@@ -17,7 +17,7 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 	function run()
 	{
 		\app\Task::consolewriter($this->writer);
-		
+
 		$feature = $this->get('feature', false);
 
 		if ($_SERVER['argc'] > 2)
@@ -32,7 +32,7 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 				\array_shift($args);
 			}
 
-			$behat_flags .= \app\Collection::implode(' ', $args, function ($i, $v) {
+			$behat_flags .= \app\Arr::implode(' ', $args, function ($i, $v) {
 				// is this a flag?
 				if ( ! \preg_match('#^-[a-z-]+$#', $v))
 				{

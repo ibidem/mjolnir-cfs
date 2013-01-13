@@ -58,7 +58,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 					{
 						// get method parameters
 						$reflection = new \ReflectionMethod('\\'.$ns.'\\'.$file, 'instance');
-						$params = \app\Collection::implode(', ', $reflection->getParameters(), function ($key, $param) {
+						$params = \app\Arr::implode(', ', $reflection->getParameters(), function ($key, $param) {
 							$param_str = '';
 							if ($param->isArray())
 							{
@@ -85,7 +85,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 							return $param_str;
 						});
 
-						$naked_params = \app\Collection::implode(', ', $reflection->getParameters(), function ($key, $param) {
+						$naked_params = \app\Arr::implode(', ', $reflection->getParameters(), function ($key, $param) {
 							return '$'.$param->getName();
 						});
 

@@ -240,7 +240,6 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	 * exception up to be processed by the layer above, if the layer has a
 	 * parent.
 	 *
-	 * @param \Exception
 	 * @param boolean layer is origin of exception?
 	 */
 	function exception(\Exception $exception)
@@ -439,12 +438,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	 * @param string description key
 	 * @return int
 	 */
-	protected function render_flags
-	(
-		$command,
-		$flagkeys = null,
-		$descriptionkey = 'description'
-	)
+	protected function render_flags($command, $flagkeys = null,	$descriptionkey = 'description')
 	{
 		if ($flagkeys === null)
 		{
