@@ -7,6 +7,11 @@ if ( ! \defined('EXT'))
 }
 
 /**
+ * This interface is the exception to the frameworks convention of all
+ * interfaces going into mjolnir/types. Also, because the autoloader can't
+ * autoload it's own resources the trait conventions also don't apply to this
+ * interface.
+ *
  * @author  Ibidem Team
  * @version 1.0
  */
@@ -261,30 +266,10 @@ interface CFSCompatible
 	// Utility
 
 	/**
-	 * Sets local persistent storage object to use when retrieving
-	 * configurations files. The object should be preconfigured.
-	 *
-	 * Passing null will remove the component.
-	 *
-	 * @param \mjolnir\types\Storage
-	 * @param string key that identifies configuration name (no EXT)
-	 * @param string key that identifies serialized object
-	 */
-	static function storage	(
-			\mjolnir\types\Storage $storage = null,
-			$config_key = 'config',
-			$value_key = 'serialized'
-		);
-
-	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 *
 	 * Passing null will remove the component.
-	 *
-	 * @param \mjolnir\types\Cache preconfigured cache object
-	 * @param int duration for files
-	 * @param int duration for configs
 	 */
 	static function cache (
 			\mjolnir\types\Stash $cache = null,

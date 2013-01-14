@@ -57,12 +57,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	protected static $cache_config = [];
 
 	/**
-	 * @var \mjolnir\types\Storage
-	 */
-	protected static $storage = null;
-
-	/**
-	 * @var \mjolnir\types\Cache
+	 * @var \mjolnir\types\Stash
 	 */
 	protected static $cache = null;
 
@@ -216,7 +211,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 			}
 			else # unknown namespace
 			{
-
 				$target = DIRECTORY_SEPARATOR.
 					\str_replace('_', DIRECTORY_SEPARATOR, $symbol_name).EXT;
 
@@ -245,34 +239,84 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				}
 				else # not cached
 				{
-					// attempt to locate in subnamespaces
-					$parent_ns = $namespace.'\\';
-					foreach (static::$modules as $path => $ns)
+					// we attempt to detect a parent namespace; a parent
+					// namespace is specified by following a valid namespace
+					// with the keyword segment "\parent", the symbol will then
+					// be defined as the first valid class bellow the namespace
+					// in the hirarchy
+
+					// recomended syntax: class A extends parent\A { }
+					// note: that's "parent\A" not "\parent\A"; the current
+					// namespace in the context will be autofilled in by PHP
+
+					if (\stripos($namespace, '\parent') + 7 == \strlen($namespace))
 					{
-						if (\strripos($ns, $parent_ns) === 0 && \file_exists($path.$target))
+						$pivot_ns = \substr($namespace, 0, \strlen($namespace) - 7);
+						$offset = \array_search($pivot_ns, \array_keys(static::$namespaces));
+
+						if ($offset !== false)
 						{
-							if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+							for ($idx = $offset + 1; $idx < \count(static::$paths); ++$idx)
 							{
-								// found a matching file
-								require $path.$target;
+								if (\file_exists(static::$paths[$idx].$target))
+								{
+									if ( ! static::symbol_exists(static::$namespaces[$idx].'\\'.$symbol_name, false))
+									{
+										// found a matching file
+										require static::$paths[$idx].$target;
+									}
+
+									\class_alias(static::$namespaces[$idx].'\\'.$symbol_name, $symbol);
+
+									// cache?
+									if (static::$cache)
+									{
+										static::$cache_load_symbol[$symbol] = static::$paths[$idx];
+										static::$cache->set
+											(
+												'\mjolnir\cfs\CFS::load_symbol',
+												static::$cache_load_symbol,
+												static::$cache_file_duration
+											);
+									}
+
+									// success
+									return true;
+								}
 							}
-
-							\class_alias($ns.'\\'.$symbol_name, $symbol);
-
-							// cache?
-							if (static::$cache)
+						}
+					}
+					else # non-parent namespace
+					{
+						// attempt to locate in subnamespaces
+						$parent_ns = $namespace.'\\';
+						foreach (static::$modules as $path => $ns)
+						{
+							if (\strripos($ns, $parent_ns) === 0 && \file_exists($path.$target))
 							{
-								static::$cache_load_symbol[$symbol] = $path;
-								static::$cache->set
-									(
-										'\mjolnir\cfs\CFS::load_symbol',
-										static::$cache_load_symbol,
-										static::$cache_file_duration
-									);
-							}
+								if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+								{
+									// found a matching file
+									require $path.$target;
+								}
 
-							// success
-							return true;
+								\class_alias($ns.'\\'.$symbol_name, $symbol);
+
+								// cache?
+								if (static::$cache)
+								{
+									static::$cache_load_symbol[$symbol] = $path;
+									static::$cache->set
+										(
+											'\mjolnir\cfs\CFS::load_symbol',
+											static::$cache_load_symbol,
+											static::$cache_file_duration
+										);
+								}
+
+								// success
+								return true;
+							}
 						}
 					}
 				}
@@ -723,22 +767,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				}
 			}
 
-			// storage support?
-			if (static::$storage)
-			{
-				$serialized_config = \array_pop
-					(
-						static::$storage->fetch
-							(array(static::$storage_config_key => $key))
-					);
-				static::config_merge
-					(
-						static::$cache_config[$key],
-						\unserialize
-							($serialized_config[static::$storage_value_key])
-					);
-			}
-
 			// if there were no files this will be empty; which is fine
 			return static::$cache_config[$key];
 		}
@@ -835,39 +863,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	// Utility
 
 	/**
-	 * @var string
-	 */
-	private static $storage_config_key;
-
-	/**
-	 * @var string
-	 */
-	private static $storage_value_key;
-
-	/**
-	 * Sets local persistent storage object to use when retrieving
-	 * configurations files. The object should be preconfigured.
-	 *
-	 * @param \mjolnir\types\Storage
-	 * @param string key that identifies configuration name (no EXT)
-	 * @param string key that identifies serialized object
-	 */
-	static function storage	(
-			\mjolnir\types\Storage $storage = null,
-			$config_key = 'config',
-			$value_key = 'serialized'
-		)
-	{
-		static::$storage = $storage;
-		// got storage? or reset?
-		if ($storage)
-		{
-			static::$storage_config_key = $config_key;
-			static::$storage_value_key = $value_key;
-		}
-	}
-
-	/**
 	 * @var int
 	 */
 	private static $cache_file_duration = null;
@@ -875,10 +870,6 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
-	 *
-	 * @param \mjolnir\types\Cache
-	 * @param int duration for files
-	 * @param int duration for configs
 	 */
 	static function cache (
 			\mjolnir\types\Stash $cache = null,
