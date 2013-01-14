@@ -69,13 +69,13 @@
 						'class' => array
 							(
 								'description' => 'Class; with namespace.',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'short' => 'c',
 							),
 						'category' => array
 							(
 								'description' => 'Class category.',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'short' => 'g',
 								'default' => false,
 							),
@@ -106,7 +106,7 @@
 						'trait' => array
 							(
 								'description' => 'Trait; with namespace.',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'short' => 't',
 							),
 						'forced' => array
@@ -126,12 +126,12 @@
 						'name' => array
 							(
 								'description' => 'Name of module',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 							),
 						'namespace' => array
 							(
 								'description' => 'Namespace of module.',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'short' => 'n',
 							),
 						'forced' => array
@@ -169,7 +169,7 @@
 							(
 								'description' => 'Namespace of target module.',
 								'short' => 'n',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'default' => '',
 							),
 					),
@@ -187,7 +187,7 @@
 							(
 								'description' => 'Configuration path.',
 								'short' => 'c',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 							),
 						'forced' => array
 							(
@@ -208,13 +208,13 @@
 							(
 								'description' => 'Path to match files to.',
 								'short' => 'p',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 							),
 						'ext' => array
 							(
 								'description' => 'File extention',
 								'short' => 'e',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'default' => EXT,
 							),
 					)
@@ -228,7 +228,7 @@
 							(
 								'description' => 'Class name for which to find files on the system.',
 								'short' => 'c',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 							)
 					)
 			),
@@ -244,7 +244,7 @@
 						'feature' => array
 							(
 								'description' => 'Target a specific feature.',
-								'type' => '\mjolnir\base\Flags::text',
+								'type' => 'text',
 								'default' => false,
 							),
 					),

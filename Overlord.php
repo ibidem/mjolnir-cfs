@@ -159,6 +159,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 			}
 			// check flags
 			$flags = \array_keys($tasks[$command]['flags']);
+			$task_flags = \app\CFS::config('mjolnir/task-flags');
 			foreach ($flags as $flagkey)
 			{
 				if ( ! isset($tasks[$command]['flags'][$flagkey]))
@@ -179,7 +180,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 						}
 						else # non-toggle type
 						{
-							$config[$flagkey] = \call_user_func($flag['type'], $i, $this->argv);
+							$config[$flagkey] = \call_user_func($task_flags[$flag['type']], $i, $this->argv);
 						}
 					}
 				}
@@ -327,7 +328,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				{
 					// the & is a placeholder for space to symbolize we don't
 					// want a break; see ->listwrite later
-					$helptext .= '&<'.\preg_replace('#^[^:]*::#', '', $command['flags'][$flag]['type']).'>';
+					$helptext .= '&<'.$command['flags'][$flag]['type'].'>';
 				}
 			}
 			else # optional paramter
@@ -335,7 +336,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				$helptext .= ' [--'.$flag;
 				if ($command['flags'][$flag]['type'] !== 'toggle')
 				{
-					$helptext .= '&<'.\preg_replace('#^[^:]*::#', '', $command['flags'][$flag]['type']).'>';
+					$helptext .= '&<'.$command['flags'][$flag]['type'].'>';
 				}
 				$helptext .= ']';
 			}
@@ -452,7 +453,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 			$length = \strlen($flag);
 			if ($command['flags'][$flag]['type'] !== 'toggle')
 			{
-				$clean_type = \preg_replace('#^[^:]*::#', '', $command['flags'][$flag]['type']);
+				$clean_type = $command['flags'][$flag]['type'];
 				$length += \strlen($clean_type) + 5;
 			}
 			if ($length > $max_flag_length)
@@ -468,7 +469,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 			// only display flags with description data
 			if ($flaginfo[$descriptionkey] !== null)
 			{
-				$clean_type = \preg_replace('#^[^:]*::#', '', $flaginfo['type']);
+				$clean_type = $flaginfo['type'];
 				$type = $clean_type === 'toggle' ? '' : '<'.$clean_type.'>';
 				$short = $flaginfo['short'] === null ? '' : '-'.$flaginfo['short'];
 				if (\is_bool($flaginfo[$descriptionkey]))
