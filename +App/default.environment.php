@@ -21,7 +21,7 @@ if ( ! \defined('MODPATH'))
  */
 if ( ! \defined('PLGPATH'))
 {
-	\define('PLGPATH', \realpath(DOCROOT.'plugins').DIRECTORY_SEPARATOR);
+	\define('PLGPATH', \realpath(DOCROOT.'vendor').DIRECTORY_SEPARATOR);
 }
 
 /**
