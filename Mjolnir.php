@@ -85,10 +85,10 @@ class Mjolnir
 		}
 
 		// set language
-		\app\Lang::lang($system_config['lang']);
+		\app\Lang::targetlang_is($system_config['lang']);
 
 		// check all routes
-		\app\Route::check_all();
+		\app\Router::check_all();
 
 		// go though all relays
 		\app\Relay::check_all();
@@ -155,26 +155,17 @@ class Mjolnir
 	 */
 	static function themes($system_config)
 	{
-		$stack = function ($relay, $target)
+		$theme = \app\CFS::config('mjolnir/layer-stacks')['theme'];
+		$drivers = \app\CFS::config('mjolnir/theme-drivers');
+		$url = \app\Server::request_uri();
+		
+		foreach ($drivers as $driver => $enabled)
+		{
+			if ($enabled)
 			{
-				\app\Layer::stack
-					(
-						\app\Layer_HTTP::instance(),
-						\app\Layer_Theme::instance()
-							->relay_config($relay)
-					);
-			};
-
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::complete-style', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::style', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::style-src', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::js-bootstrap', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::complete-script-map', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::script-map', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::script-src', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::complete-script', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::script', $stack);
-		\app\Relay::process('\mjolnir\theme\Layer_Theme::resource', $stack);
+				\app\Relay::process("mjolnir:theme/themedriver/$driver.route", $theme, null, $url);
+			}
+		}
 
 		// we failed relays
 		\header("HTTP/1.0 404 Not Found");

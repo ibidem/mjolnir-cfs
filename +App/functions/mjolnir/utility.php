@@ -62,12 +62,12 @@ if ( ! \function_exists('\mjolnir\append_to_file'))
 
 if ( ! \function_exists('\mjolnir\implode'))
 {
-	function implode($glue, array $list, $f_key_values)
+	function implode($glue, array $list, callable $manipulator)
 	{
 		$glued = '';
 		foreach ($list as $key => $value)
 		{
-			$glued .= $glue.$f_key_values($key, $value);
+			$glued .= $glue.$manipulator($key, $value);
 		}
 
 		$glued = \substr($glued, \strlen($glue));

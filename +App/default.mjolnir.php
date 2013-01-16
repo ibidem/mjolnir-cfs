@@ -19,9 +19,9 @@ if ( ! \defined('MODPATH'))
 }
 
 /// The directory in which your plugins are located. (typically vendor)
-if ( ! \defined('PLGPATH'))
+if ( ! \defined('VDRPATH'))
 {
-	\define('PLGPATH', \realpath(DOCROOT.'vendor').DIRECTORY_SEPARATOR);
+	\define('VDRPATH', \realpath(DOCROOT.'vendor').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which your mjolnir framework modules are located.
