@@ -88,10 +88,10 @@ class Mjolnir
 		\app\Lang::targetlang_is($system_config['lang']);
 
 		// check all routes
-		\app\Router::check_all();
+		\app\Router::check_all_routes();
 
 		// go though all relays
-		\app\Relay::check_all();
+		\app\Router::check_all_relays();
 
 		// do we have a default theme?
 		if (\app\CFS::config('mjolnir/themes')['theme.default'] !== null)
@@ -163,7 +163,7 @@ class Mjolnir
 		{
 			if ($enabled)
 			{
-				\app\Relay::process("mjolnir:theme/themedriver/$driver.route", $theme, null, $url);
+				\app\Router::process("mjolnir:theme/themedriver/$driver.route", $theme, null, $url);
 			}
 		}
 
