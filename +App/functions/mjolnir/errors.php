@@ -156,8 +156,20 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 			catch (\Exception $e)
 			{
 				\mjolnir\log_exception($e);
-				// potentially headers already sent; attempt to redirect via javascript
-				echo '<script type="text/javascript">window.location = "'.$error_page.'"</script>';
+				
+				$javascript_redirect = true;
+				
+				if (\defined('PUBDIR'))
+				{
+					$base_config = include PUBDIR.'config'.EXT;
+					$javascript_redirect = ! $base_config['development'];
+				}
+				
+				if ($javascript_redirect)
+				{
+					// potentially headers already sent; attempt to redirect via javascript
+					echo '<script type="text/javascript">window.location = "'.$error_page.'"</script>';
+				}
 			}
 		}
 	}
