@@ -142,7 +142,7 @@ class Mjolnir
 		else # no 404 file
 		{
 			\header("HTTP/1.0 404 Not Found");
-			echo '404 - Not Found';
+			echo 'Not Found';
 		}
 
 		exit(1);
@@ -156,20 +156,40 @@ class Mjolnir
 	static function themes($system_config)
 	{
 		$theme = \app\CFS::config('mjolnir/layer-stacks')['theme'];
-		$drivers = \app\CFS::config('mjolnir/theme-drivers');
+		$drivers = \app\CFS::config('mjolnir/theme-drivers')['drivers'];
 		$url = \app\Server::request_uri();
+		$priority = \app\CFS::config('mjolnir/theme-drivers')['priority'];
 		
-		foreach ($drivers as $driver => $enabled)
+		\ksort($priority);
+		
+		$processing = [];
+		foreach ($priority as $key => $priority_level)
 		{
-			if ($enabled)
+			$processing[$key] = [];
+		}
+		
+		foreach ($drivers as $driver => $config)
+		{
+			if ($config['enabled'])
 			{
-				\app\Router::process("mjolnir:theme/themedriver/$driver.route", $theme, null, $url);
+				isset($config['type']) or $config['type'] = 'default';
+				$processing[$config['type']][] = function () use ($driver, $theme, $url)
+					{
+						\app\Router::process("mjolnir:theme/themedriver/$driver.route", $theme, null, $url);
+					};
+			}
+		}
+		
+		foreach ($processing as $key => $processes)
+		{
+			foreach ($processes as $relay)
+			{
+				$relay();
 			}
 		}
 
 		// we failed relays
 		\header("HTTP/1.0 404 Not Found");
-		echo '404 - Media Not Found';
 		exit(1);
 	}
 
