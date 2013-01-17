@@ -2,7 +2,7 @@
 	(
 		'mjolnir\cfs' => array
 			(
-				'major' => '0',
+				'major' => '1',
 				'minor' => '0',
 				'hotfix' => '0',
 			),
