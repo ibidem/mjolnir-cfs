@@ -1,7 +1,7 @@
 {
 	"name": "mjolnir/cfs",
 	"version": "1.0",
-	"description": "Cascading File System based autoloader, with command line support.",
+	"description": "Namespace based Cascading File System autoloader, with command line support.",
 	"keywords": ["autoloader"],
 	"homepage": "https://github.com/ibidem",
 	"type": "library",
