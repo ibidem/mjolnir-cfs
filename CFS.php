@@ -252,26 +252,27 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					if (\stripos($namespace, '\parent') + 7 == \strlen($namespace))
 					{
 						$pivot_ns = \substr($namespace, 0, \strlen($namespace) - 7);
+						$ns_keys = \array_keys(static::$namespaces);
 						$offset = \array_search($pivot_ns, \array_keys(static::$namespaces));
 
 						if ($offset !== false)
 						{
-							for ($idx = $offset + 1; $idx < \count(static::$paths); ++$idx)
+							for ($idx = $offset + 1; $idx < \count($ns_keys); ++$idx)
 							{
-								if (\file_exists(static::$paths[$idx].$target))
+								if (\file_exists(static::$namespaces[$ns_keys[$idx]].'/'.$symbol_name.EXT))
 								{
-									if ( ! static::symbol_exists(static::$namespaces[$idx].'\\'.$symbol_name, false))
+									if ( ! static::symbol_exists($ns_keys[$idx].'\\'.$symbol_name, false))
 									{
 										// found a matching file
-										require static::$paths[$idx].$target;
+										require static::$namespaces[$ns_keys[$idx]].'/'.$symbol_name.EXT;
 									}
 
-									\class_alias(static::$namespaces[$idx].'\\'.$symbol_name, $symbol);
+									\class_alias($ns_keys[$idx].'\\'.$symbol_name, $symbol);
 
 									// cache?
 									if (static::$cache)
 									{
-										static::$cache_load_symbol[$symbol] = static::$paths[$idx];
+										static::$cache_load_symbol[$symbol] = static::$namespaces[$ns_keys[$idx]];
 										static::$cache->set
 											(
 												'\mjolnir\cfs\CFS::load_symbol',
