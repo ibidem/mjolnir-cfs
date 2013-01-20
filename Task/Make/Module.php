@@ -52,7 +52,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 			. "\t(".PHP_EOL
 			. "\t\t'aliaslist' => array".PHP_EOL
 			. "\t\t\t(".PHP_EOL
-			. "\t\t\t\t\app\A12n::guest() => [ '+admin', '+mockup' ],".PHP_EOL
+			. "\t\t\t\t\app\Auth::guest() => [ '+admin', '+mockup' ],".PHP_EOL
 			. "\t\t\t)".PHP_EOL
 			. "\t);"
 			. PHP_EOL
