@@ -24,8 +24,9 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	 */
 	protected static $command_struct = array
 		(
-			'description' => array(),
-			'flags' => array(),
+			'category' => 'etc',
+			'description' => [],
+			'flags' => [],
 		);
 
 	/**
@@ -150,7 +151,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				}
 			}
 			// normalize command
-			$tasks[$command] = static::normalize($tasks[$command]);
+			$tasks[$command] = static::normalize($tasks[$command], $command);
 			// initialize configuration
 			$config = array();
 			foreach ($tasks[$command]['flags'] as $flag => $flaginfo)
@@ -245,6 +246,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	 */
 	function exception(\Exception $exception)
 	{
+		\mjolnir\log_exception($exception);
 		$this->writer->printf('error', $exception->getMessage())->eol();
 	}
 
@@ -254,21 +256,32 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	function helptext()
 	{
 		$stdout = $this->writer;
-		$stdout->printf('title', 'Mjolnir');
+		$stdout->printf('title', 'Overlord');
 		$stdout->writef("    USAGE: ".static::$commandname." [command] [flags]")->eol();
 		$stdout->writef("       eg. ".static::$commandname." example:cmd -i Joe --greeting \"Greetings, Mr.\" --date")->eol()->eol();
 		$stdout->writef("     Help: ".static::$commandname." [command] -h")->eol()->eol()->eol();
-		$stdout->printf('subtitle', 'Commands');
+//		$stdout->printf('subtitle', 'Commands');
+
 		// load config
 		$cli = \app\CFS::config('mjolnir/tasks');
 		\ksort($cli);
+
 		// normalize
 		foreach ($cli as $command => $commandinfo)
 		{
-			$cli[$command] = static::normalize($commandinfo);
+			$cli[$command] = static::normalize($commandinfo, $command);
 		}
+
 		// sort commands
-		# \ksort($cli);
+		\uasort
+			(
+				$cli,
+				function ($a, $b)
+				{
+					return \strcmp($a['category'].$a['commandname'], $b['category'].$b['commandname']);
+				}
+			);
+
 		// determine max length
 		$max_command_length = 4;
 		foreach (\array_keys($cli) as $command)
@@ -279,15 +292,18 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 			}
 		}
 		$command_format = '  %-'.$max_command_length.'s  - ';
-		// internal help command
-		$stdout
-			->writef($command_format, 'help')
-			->writef('Help information. (current command)')
-			->eol();
 
+		$category = null;
 		// configuration commands
 		foreach ($cli as $command => $info)
 		{
+			if ($category !== $info['category'])
+			{
+				$category === null or $stdout->eol();
+				$stdout->printf('subtitle', $info['category']);
+				$category = $info['category'];
+			}
+
 			$stdout
 				->printf
 					(
@@ -312,8 +328,9 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 		$stdout->printf('title', 'Help for '.$commandname);
 		// configuration
 		$cli = \app\CFS::config('mjolnir/tasks');
+
 		// normalize
-		$command = static::normalize($cli[$commandname]);
+		$command = static::normalize($cli[$commandname], $commandname);
 
 		// display quick syntax help
 		$helptext_head = ' '.static::$commandname.' '.$commandname;
@@ -382,9 +399,12 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	 * @param array command
 	 * @return array
 	 */
-	protected static function normalize($command)
+	protected static function normalize($command, $commandname)
 	{
 		$command = \app\CFS::merge(static::$command_struct, $command);
+
+		$command['commandname'] = $commandname;
+
 		if (empty($command['description']))
 		{
 			$command['description'] = array('No description available at this time.');

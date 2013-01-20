@@ -144,31 +144,31 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 		{
 			\mjolnir\log_error($exception);
 
-			try
+			$redirect = true;
+			if (\defined('PUBDIR'))
 			{
-				if (\defined('PUBDIR'))
-				{
-					$base_config = include PUBDIR.'config'.EXT;
-					$error_page = '//'.$base_config['domain'].$base_config['path'].'error'.EXT;
-					\header('Location: '.$error_page);
-				}
+				$base_config = include PUBDIR.'config'.EXT;
+				$redirect = ! $base_config['development'];
 			}
-			catch (\Exception $e)
+
+			if ($redirect)
 			{
-				\mjolnir\log_exception($e);
-				
-				$javascript_redirect = true;
-				
-				if (\defined('PUBDIR'))
+				try
 				{
-					$base_config = include PUBDIR.'config'.EXT;
-					$javascript_redirect = ! $base_config['development'];
+					if (\defined('PUBDIR'))
+					{
+						$base_config = include PUBDIR.'config'.EXT;
+						$error_page = '//'.$base_config['domain'].$base_config['path'].'error'.EXT;
+						\header('Location: '.$error_page);
+					}
 				}
-				
-				if ($javascript_redirect)
+				catch (\Exception $e)
 				{
+					\mjolnir\log_exception($e);
+
 					// potentially headers already sent; attempt to redirect via javascript
 					echo '<script type="text/javascript">window.location = "'.$error_page.'"</script>';
+
 				}
 			}
 		}

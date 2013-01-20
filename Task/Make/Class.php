@@ -138,7 +138,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 	function run()
 	{
 		\app\Task::consolewriter($this->writer);
-		
+
 		$category = $this->get('category');
 		$category = $category ? $category : null;
 
@@ -294,7 +294,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 			);
 
 		// notify
-		$this->writer->status('Info', 'Class created.')->eol();
+		$this->writer->printf('status', 'Info', 'Class created.')->eol();
 
 		// create tests?
 		if ($with_tests)
@@ -317,7 +317,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		}
 
 		// update honeypot
-		$this->writer->status('Info', 'Updating honeypot...')->eol();
+		$this->writer->printf('status', 'Info', 'Updating honeypot...')->eol();
 
 		\app\Task::invoke('honeypot')
 			->set('namespace', $namespace)

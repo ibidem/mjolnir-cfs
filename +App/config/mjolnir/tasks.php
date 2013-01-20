@@ -27,6 +27,7 @@
 		 */
 		'status' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Perform all environment checks.',
@@ -46,6 +47,7 @@
 			),
 		'cleanup' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Cleans system (cache, logs, etc).'
@@ -53,6 +55,7 @@
 			),
 		'compile' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Runs all +compile.rb scripts.'
@@ -150,6 +153,7 @@
 			),
 		'versions' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Print version info, as defined by modules.'
@@ -157,6 +161,7 @@
 			),
 		'honeypot' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Generate honeypot files.',
@@ -234,6 +239,7 @@
 			),
 		'behat' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Search and execute all behat behaviour tests.',

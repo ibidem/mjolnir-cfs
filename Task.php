@@ -34,9 +34,9 @@ class Task
 		$writer->addformat
 			(
 				'status',
-				function ($writer, $status, $requirement)
+				function ($writer, $status, $message)
 				{
-					$writer->writef('%12s %s', '['.$status.']', $requirement);
+					$writer->writef('%12s %s', '['.$status.']', $message);
 				}
 			);
 
@@ -121,6 +121,7 @@ class Task
 					{
 						$firstline = \substr($text, 0, $width);
 						$otherlines = \substr($text, $width);
+
 						if ($otherlines[0] !== ' ')
 						{
 							// imperfect cut
@@ -129,25 +130,31 @@ class Task
 							$firstline = \substr($firstline, 0, $lastspace);
 							$otherlines = $extra.$otherlines;
 						}
+
 						$otherlines = \trim($otherlines);
+
 						if ($nowrap_hint)
 						{
-							$firstline = \str_replace($nowrap_hint, ' ', $firstline);
+							$firstline = \str_replace($nowrap_hint, ' ', $firstline+1);
 						}
+
 						$writer->writef($firstline)->eol();
+
 						$indented_text = \wordwrap
 							(
 								$otherlines,
 								$width - $indent_hint,
-								$this->writer->eolstring().\str_repeat(' ', $indent_hint)
+								$writer->eolstring().\str_repeat(' ', $indent_hint+1)
 							);
+
 						if ($nowrap_hint)
 						{
 							$indented_text = \str_replace($nowrap_hint, ' ', $indented_text);
 						}
-						$this->writef
+
+						$writer->writef
 							(
-								\str_repeat(' ', $indent_hint).
+								\str_repeat(' ', $indent_hint+1).
 								$indented_text
 							);
 					}
@@ -157,8 +164,20 @@ class Task
 						{
 							$text = \str_replace($nowrap_hint, ' ', $text);
 						}
+
 						$writer->writef($text);
 					}
+				}
+			);
+
+		$writer->addformat
+			(
+				'reset',
+				function ($writer)
+				{
+					$writer->writef("\r");
+					$writer->writef(\str_repeat(' ', 80));
+					$writer->writef("\r");
 				}
 			);
 	}

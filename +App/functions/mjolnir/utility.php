@@ -29,26 +29,28 @@ if ( ! \function_exists('\mjolnir\append_to_file'))
 		}
 		catch (\Exception $exception)
 		{
+			\mjolnir\log_exception($exception);
+
 			if (\defined('PUBDIR'))
 			{
 				// attempt to retrieve configuration
 				try
 				{
 					$config = \file_get_contents(PUBDIR.'config.php');
-					
+
 					if ($config['development'])
 					{
 						throw $exception;
 					}
-					
+
 					// non development environment; prevent catastrophic failure
 					return;
 				}
 				catch (\Exception $e)
 				{
-					// we can't do anything at this point but prevent 
+					// we can't do anything at this point but prevent
 					// catastrophic failure
-					
+
 					return;
 				}
 			}
