@@ -24,6 +24,12 @@ if ( ! \defined('VDRPATH'))
 	\define('VDRPATH', \realpath(DOCROOT.'vendor').DIRECTORY_SEPARATOR);
 }
 
+/// The directory in which your plugins are located. (typically vendor)
+if ( ! \defined('ENVFILE'))
+{
+	\define('ENVFILE', \realpath(DOCROOT.'environment'.EXT));
+}
+
 /// The directory in which your mjolnir framework modules are located.
 if ( ! \defined('MJLPATH'))
 {
@@ -67,7 +73,7 @@ if (\defined('PUBDIR'))
 	$pubdir_config = include PUBDIR.'config'.EXT;
 }
 
-$env_config = include DOCROOT.'environment'.EXT;
+$env_config = include ENVFILE;
 
 // setup the modules
 CFS::modules($env_config['modules']);

@@ -154,7 +154,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		if ($ns_div === false)
 		{
 			$this->writer
-				->printf('error', 'You must provide fully qualified '.static::$filetype.' name.')->eol();
+				->writef(' You must provide fully qualified '.static::$filetype.' name.')->eol();
 			return;
 		}
 
@@ -209,7 +209,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		if ( ! isset($namespaces[$namespace]) || ! \file_exists($namespaces[$namespace]))
 		{
 			$this->writer
-				->printf('error', 'Module ['.$namespace.'] doesn\'t exist; you can use make:module to create it')->eol();
+				->writef(' Module ['.$namespace.'] doesn\'t exist; you can use make:module to create it')->eol();
 			return;
 		}
 
@@ -236,13 +236,13 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		if (empty($config) || ! isset($config['author']))
 		{
 			$this->writer
-				->printf('error', 'The [ibidem/project] configuration is empty or missing'
+				->writef(' The [ibidem/project] configuration is empty or missing'
 					. ' required paramters.')
 				->eol();
 
 			$this->writer
-				->printf('status', 'Help', 'This module requires author. Optionally, you '
-					. 'can include also disclaimer and license.')
+				->writef(' Help: This module requires an author. Optionally, you '
+					. 'can include a disclaimer and license.')
 				->eol();
 
 			return;
@@ -276,7 +276,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		if ( ! $forced && \file_exists($module_path.$class_path.$class_file))
 		{
 			$this->writer
-				->printf('error', \ucfirst(static::$filetype).' exists. Use --forced if you want to overwrite.')
+				->writef(' '.\ucfirst(static::$filetype).' exists. Use --forced if you want to overwrite.')
 				->eol();
 
 			return;
@@ -294,7 +294,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 			);
 
 		// notify
-		$this->writer->printf('status', 'Info', 'Class created.')->eol();
+		$this->writer->writef(' Class created.')->eol();
 
 		// create tests?
 		if ($with_tests)
@@ -313,11 +313,11 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 				);
 
 			// notify
-			$this->writer->status('Info', 'Test class created.')->eol();
+			$this->writer->writef(' Test class created.')->eol();
 		}
 
 		// update honeypot
-		$this->writer->printf('status', 'Info', 'Updating honeypot...')->eol();
+		$this->writer->writef(' Updating honeypot...')->eol();
 
 		\app\Task::invoke('honeypot')
 			->set('namespace', $namespace)

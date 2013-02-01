@@ -19,7 +19,7 @@ class Task_Compile extends \app\Instantiatable implements \mjolnir\types\Task
 		\app\Task::consolewriter($this->writer);
 
 		$paths = \app\CFS::paths();
-		$env_config = include DOCROOT.'environment'.EXT;
+		$env_config = include ENVFILE;
 
 		if (isset($env_config['themes']))
 		{

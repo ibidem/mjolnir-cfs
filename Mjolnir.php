@@ -74,7 +74,7 @@ class Mjolnir
 	{
 		if (PHP_VERSION_ID < 50410)
 		{
-			die(' PHP version 5.4.10 or greater required (exception 5.4.11).');
+			die(' PHP version 5.4.10 or greater required (except 5.4.11).');
 		}
 		
 		if (PHP_VERSION_ID == 50411)
@@ -160,7 +160,7 @@ class Mjolnir
 	 */
 	static function themes($system_config)
 	{
-		$theme = \app\CFS::config('mjolnir/layer-stacks')['theme'];
+		$theme = \app\CFS::config('mjolnir/layer-stacks')['resource'];
 		$drivers = \app\CFS::config('mjolnir/theme-drivers')['drivers'];
 		$url = \app\Server::request_uri();
 		$priority = \app\CFS::config('mjolnir/theme-drivers')['priority'];
