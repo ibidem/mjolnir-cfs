@@ -177,6 +177,11 @@
 								'type' => 'text',
 								'default' => '',
 							),
+						'verbose' => array
+							(
+								'description' => 'Print file info.',
+								'short' => 'v',
+							),
 					),
 			),
 		'make:config' => array

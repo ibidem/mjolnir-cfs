@@ -72,9 +72,14 @@ class Mjolnir
 	 */
 	static function www($system_config)
 	{
-		if (PHP_VERSION_ID < 50404)
+		if (PHP_VERSION_ID < 50410)
 		{
-			die(' PHP version 5.4.4 or greater required.');
+			die(' PHP version 5.4.10 or greater required (exception 5.4.11).');
+		}
+		
+		if (PHP_VERSION_ID == 50411)
+		{
+			die(' PHP version 5.4.11 not supported.');
 		}
 
 		// downtime?
