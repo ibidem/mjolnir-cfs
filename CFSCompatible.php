@@ -140,7 +140,7 @@ interface CFSCompatible
 	 *
 	 * @return array matched files
 	 */
-	static function find_files($pattern, array $contexts = null, array & $matches = []);
+	static function find_files($pattern, array $contexts = null, array &$matches = []);
 
 	/**
 	 * Retrieves the module's root path.
@@ -251,7 +251,7 @@ interface CFSCompatible
 	 * @param array base
 	 * @param array overwrite
 	 */
-	static function config_merge(array & $base, array & $overwrite);
+	static function config_merge(array &$base, array &$overwrite);
 
 	/**
 	 * Applies config_merge, but returns array and doesn't alter base.
@@ -260,7 +260,7 @@ interface CFSCompatible
 	 * @param array overwrite
 	 * @return array merged configuration
 	 */
-	static function merge(array $base, array & $overwrite);
+	static function merge(array $base, array &$overwrite);
 
 	// ------------------------------------------------------------------------
 	// Utility

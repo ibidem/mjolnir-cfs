@@ -586,7 +586,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 *
 	 * @return array matched files
 	 */
-	static function find_files($pattern, array $contexts = null, array & $matches = [])
+	static function find_files($pattern, array $contexts = null, array &$matches = [])
 	{
 		if ($contexts === null)
 		{
@@ -817,9 +817,9 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @param array base
 	 * @param array overwrite
 	 */
-	static function config_merge(array & $base, array & $overwrite)
+	static function config_merge(array &$base, array &$overwrite)
 	{
-		foreach ($overwrite as $key => & $value)
+		foreach ($overwrite as $key => &$value)
 		{
 			if (\is_int($key))
 			{
@@ -854,7 +854,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @param array overwrite
 	 * @return array merged configuration
 	 */
-	static function merge(array $base, array & $overwrite)
+	static function merge(array $base, array &$overwrite)
 	{
 		static::config_merge($base, $overwrite);
 		return $base;
