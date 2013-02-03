@@ -217,8 +217,8 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 
 		// load project configuration
 		$project_file = $module_path.DIRECTORY_SEPARATOR
-			. \mjolnir\cfs\CFSCompatible::APPDIR.DIRECTORY_SEPARATOR
-			. \mjolnir\cfs\CFSCompatible::CNFDIR.DIRECTORY_SEPARATOR
+			. \mjolnir\cfs\CFSInterface::APPDIR.DIRECTORY_SEPARATOR
+			. \mjolnir\cfs\CFSInterface::CNFDIR.DIRECTORY_SEPARATOR
 			. 'mjolnir'.DIRECTORY_SEPARATOR.'project'.EXT
 			;
 
@@ -301,7 +301,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		{
 			// create test
 			$test_path = $module_path.DIRECTORY_SEPARATOR
-				. \mjolnir\cfs\CFSCompatible::APPDIR.DIRECTORY_SEPARATOR.'tests'
+				. \mjolnir\cfs\CFSInterface::APPDIR.DIRECTORY_SEPARATOR.'tests'
 				. DIRECTORY_SEPARATOR.\ltrim($class_path, '\\');
 
 			\file_exists($test_path) or \mkdir($test_path, 0777, true);

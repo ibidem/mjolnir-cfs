@@ -15,7 +15,7 @@ if ( ! \defined('EXT'))
  * @author  Ibidem Team
  * @version 1.0
  */
-interface CFSCompatible
+interface CFSInterface
 {
 	/**
 	 * Default path for (non-autoloadable-class) files in modules.
@@ -214,7 +214,7 @@ interface CFSCompatible
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function config_file($key, $ext = EXT);
+	static function configfile($key, $ext = EXT);
 
 	// ------------------------------------------------------------------------
 	// System Information

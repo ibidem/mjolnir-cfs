@@ -6,9 +6,18 @@ if ( ! \defined('EXT'))
 	\define('EXT', '.php');
 }
 
-if ( ! \interface_exists('\mjolnir\cfs\CFSCompatible', false))
+if ( ! \interface_exists('\mjolnir\cfs\CFSInterface', false))
 {
-	require 'CFSCompatible.php';
+	// include interface
+	require 'CFSInterface'.EXT;
+}
+
+if ( ! \class_exists('\app\Benchmark', false))
+{
+	// include default benchmarking
+	require 'Benchmark'.EXT;
+
+	\class_alias('\mjolnir\cfs\Benchmark', 'app\Benchmark');
 }
 
 /**
@@ -25,7 +34,7 @@ if ( ! \interface_exists('\mjolnir\cfs\CFSCompatible', false))
  * @author  Ibidem Team
  * @version 1.0
  */
-class CFS implements \mjolnir\cfs\CFSCompatible
+class CFS implements CFSInterface
 {
 	/**
 	 * System module paths.
@@ -87,6 +96,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 */
 	static function load_symbol($symbol)
 	{
+		$benchmark = \app\Benchmark::token(__METHOD__, 'Mjolnir');
+
 		// normalize
 		$symbol_name = \ltrim($symbol, '\\');
 
@@ -97,6 +108,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 		}
 		else # class belongs to global namespace
 		{
+			\app\Benchmark::stop($benchmark);
+
 			// we don't handle classes of the global namespace
 			return false;
 		}
@@ -112,6 +125,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				$path = static::$cache_load_symbol[$symbol];
 				if ($path === null)
 				{
+					\app\Benchmark::stop($benchmark);
+
 					// failed to load
 					return false;
 				}
@@ -129,6 +144,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 						// alias to app namespace
 						\class_alias($ns.'\\'.$symbol_name, $symbol);
 					}
+
+					\app\Benchmark::stop($benchmark);
 
 					// success
 					return true;
@@ -164,6 +181,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 								);
 						}
 
+						\app\Benchmark::stop($benchmark);
+
 						// success
 						return true;
 					}
@@ -180,6 +199,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 							static::$cache_file_duration
 						);
 				}
+
+				\app\Benchmark::stop($benchmark);
 
 				// didn't find the file
 				return false;
@@ -199,11 +220,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				{
 					require $file;
 
+					\app\Benchmark::stop($benchmark);
+
 					// success
 					return true;
 				}
 				else # file not found
 				{
+					\app\Benchmark::stop($benchmark);
+
 					// pass it to bridge; no other autoloaders will find it FYI
 					// because of the namespace properties
 					return false;
@@ -219,6 +244,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					$path = static::$cache_load_symbol[$symbol];
 					if ($path === null)
 					{
+						\app\Benchmark::stop($benchmark);
+
 						// failed to load
 						return false;
 					}
@@ -232,6 +259,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 						}
 
 						\class_alias($ns.'\\'.$symbol_name, $symbol);
+
+						\app\Benchmark::stop($benchmark);
 
 						// success
 						return true;
@@ -281,6 +310,8 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 											);
 									}
 
+									\app\Benchmark::stop($benchmark);
+
 									// success
 									return true;
 								}
@@ -315,12 +346,16 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 										);
 								}
 
+								\app\Benchmark::stop($benchmark);
+
 								// success
 								return true;
 							}
 						}
 					}
 				}
+
+				\app\Benchmark::stop($benchmark);
 
 				// failed to find class
 				return false;
@@ -662,9 +697,13 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 */
 	static function dir($dir_path)
 	{
+		$benchmark = \app\Benchmark::token(__METHOD__, 'Mjolnir');
+
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_file[$dir_path]))
 		{
+			\app\Benchmark::stop($benchmark);
+
 			return static::$cache_file[$dir_path];
 		}
 		else # no file cache entry
@@ -687,11 +726,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 							);
 					}
 
+					\app\Benchmark::stop($benchmark);
+
 					// success
 					return $path;
 				}
 			}
 		}
+
+		\app\Benchmark::stop($benchmark);
 
 		// failed
 		return null;
@@ -706,7 +749,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 */
 	static function config($key, $ext = EXT)
 	{
-		return static::config_file($key, $ext);
+		return static::configfile($key, $ext);
 	}
 
 	/**
@@ -731,11 +774,15 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function config_file($key, $ext = EXT)
+	static function configfile($key, $ext = EXT)
 	{
+		$benchmark = \app\Benchmark::token(__METHOD__, 'Mjolnir');
+
 		// check if we didn't get asked for it last time; or if it's cached
 		if (isset(static::$cache_config[$key.$ext]))
 		{
+			\app\Benchmark::stop($benchmark);
+
 			return static::$cache_config[$key.$ext];
 		}
 		else # not cached
@@ -746,6 +793,7 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 					static::file_list
 						(static::CNFDIR.DIRECTORY_SEPARATOR.$key, $ext)
 				);
+
 			// merge everything
 			$key .= $ext;
 			static::$cache_config[$key] = [];
@@ -761,12 +809,16 @@ class CFS implements \mjolnir\cfs\CFSCompatible
 				}
 				else # not array
 				{
+					\app\Benchmark::stop($benchmark);
+
 					$corrupt_file = \str_replace(DOCROOT, '', $file);
 					echo 'configuration file ['.$corrupt_file.'] is corrupt';
 					throw new \app\Exception
 						('Corrupt configuration file ['.$corrupt_file.']');
 				}
 			}
+
+			\app\Benchmark::stop($benchmark);
 
 			// if there were no files this will be empty; which is fine
 			return static::$cache_config[$key];

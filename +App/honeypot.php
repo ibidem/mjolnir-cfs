@@ -11,6 +11,7 @@ class Instantiatable extends \mjolnir\cfs\Instantiatable { /** @return \mjolnir\
 class Kohana3_Bridge extends \mjolnir\cfs\Kohana3_Bridge {}
 class Mjolnir extends \mjolnir\cfs\Mjolnir {}
 class Overlord extends \mjolnir\cfs\Overlord { /** @return \mjolnir\cfs\Overlord */ static function instance() { return parent::instance(); } }
+class Profiler extends \mjolnir\cfs\Profiler { /** @return \mjolnir\cfs\Profiler */ static function instance() { return parent::instance(); } }
 class SilentWriter extends \mjolnir\cfs\SilentWriter { /** @return \mjolnir\cfs\SilentWriter */ static function instance() { return parent::instance(); } }
 class Task_Behat extends \mjolnir\cfs\Task_Behat { /** @return \mjolnir\cfs\Task_Behat */ static function instance() { return parent::instance(); } }
 class Task_Cleanup extends \mjolnir\cfs\Task_Cleanup { /** @return \mjolnir\cfs\Task_Cleanup */ static function instance() { return parent::instance(); } }

@@ -76,7 +76,7 @@ class Mjolnir
 		{
 			die(' PHP version 5.4.10 or greater required (except 5.4.11).');
 		}
-		
+
 		if (PHP_VERSION_ID == 50411)
 		{
 			die(' PHP version 5.4.11 not supported.');
@@ -154,25 +154,25 @@ class Mjolnir
 	}
 
 	/**
-	 * Shorthand.
-	 *
-	 * Runs standard theme procedures.
+	 * Theme resources.
 	 */
-	static function themes($system_config)
+	static function resource($system_config)
 	{
+		\app\Benchmark::token(__METHOD__, 'Application', true);
+
 		$theme = \app\CFS::config('mjolnir/layer-stacks')['resource'];
 		$drivers = \app\CFS::config('mjolnir/theme-drivers')['drivers'];
 		$url = \app\Server::request_uri();
 		$priority = \app\CFS::config('mjolnir/theme-drivers')['priority'];
-		
+
 		\ksort($priority);
-		
+
 		$processing = [];
 		foreach ($priority as $key => $priority_level)
 		{
 			$processing[$key] = [];
 		}
-		
+
 		foreach ($drivers as $driver => $config)
 		{
 			if ($config['enabled'])
@@ -184,7 +184,7 @@ class Mjolnir
 					};
 			}
 		}
-		
+
 		foreach ($processing as $key => $processes)
 		{
 			foreach ($processes as $relay)
