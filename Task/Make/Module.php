@@ -126,18 +126,18 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 		// create the directory structure
 		$dir = $module_name;
 		\file_exists($dir) or \mkdir($dir, 0777, true); # base dir
-		$app_dir = $dir.$ds.\mjolnir\cfs\CFSCompatible::APPDIR;
+		$app_dir = $dir.$ds.\mjolnir\cfs\CFSInterface::APPDIR;
 		\file_exists($app_dir) or \mkdir($app_dir, 0777, true); # App dir
-		$config_dir = $app_dir.$ds.\mjolnir\cfs\CFSCompatible::CNFDIR;
+		$config_dir = $app_dir.$ds.\mjolnir\cfs\CFSInterface::CNFDIR;
 		\file_exists($config_dir) or \mkdir($config_dir, 0777, true); # +App/config
 
-		if ( ! $mockup_template && ! $sandbox_template)
-		{
-			$lang_dir = $config_dir.$ds.'lang';
-			\file_exists($lang_dir) or \mkdir($lang_dir, 0777, true); # +App/config/lang
-			$test_dir = $app_dir.$ds.'features';
-			\file_exists($test_dir) or \mkdir($test_dir, 0777, true); # +App/features
-		}
+//		if ( ! $mockup_template && ! $sandbox_template)
+//		{
+//			$lang_dir = $config_dir.$ds.'lang';
+//			\file_exists($lang_dir) or \mkdir($lang_dir, 0777, true); # +App/config/lang
+//			$test_dir = $app_dir.$ds.'features';
+//			\file_exists($test_dir) or \mkdir($test_dir, 0777, true); # +App/features
+//		}
 
 		// create App/config/version
 		\file_put_contents

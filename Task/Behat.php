@@ -76,7 +76,7 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 					$pretty_location = \str_replace
 						(
 							DIRECTORY_SEPARATOR
-								. \mjolnir\cfs\CFSCompatible::APPDIR
+								. \mjolnir\cfs\CFSInterface::APPDIR
 								. DIRECTORY_SEPARATOR
 							,
 							'',
