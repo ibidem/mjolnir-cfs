@@ -270,17 +270,17 @@ class CFS implements CFSInterface
 				{
 					// we attempt to detect a parent namespace; a parent
 					// namespace is specified by following a valid namespace
-					// with the keyword segment "\parent", the symbol will then
+					// with the keyword segment "\next", the symbol will then
 					// be defined as the first valid class bellow the namespace
 					// in the hirarchy
 
-					// recomended syntax: class A extends parent\A { }
-					// note: that's "parent\A" not "\parent\A"; the current
+					// recomended syntax: class A extends next\A { }
+					// note: that's "next\A" not "\next\A"; the current
 					// namespace in the context will be autofilled in by PHP
 
-					if (\stripos($namespace, '\parent') + 7 == \strlen($namespace))
+					if (\stripos($namespace, '\next') + 5 == \strlen($namespace))
 					{
-						$pivot_ns = \substr($namespace, 0, \strlen($namespace) - 7);
+						$pivot_ns = \substr($namespace, 0, \strlen($namespace) - 5);
 						$ns_keys = \array_keys(static::$namespaces);
 						$offset = \array_search($pivot_ns, \array_keys(static::$namespaces));
 
@@ -288,12 +288,12 @@ class CFS implements CFSInterface
 						{
 							for ($idx = $offset + 1; $idx < \count($ns_keys); ++$idx)
 							{
-								if (\file_exists(static::$namespaces[$ns_keys[$idx]].'/'.$symbol_name.EXT))
+								if (\file_exists(static::$namespaces[$ns_keys[$idx]].$target))
 								{
 									if ( ! static::symbol_exists($ns_keys[$idx].'\\'.$symbol_name, false))
 									{
 										// found a matching file
-										require static::$namespaces[$ns_keys[$idx]].'/'.$symbol_name.EXT;
+										require static::$namespaces[$ns_keys[$idx]].$target;
 									}
 
 									\class_alias($ns_keys[$idx].'\\'.$symbol_name, $symbol);
@@ -681,7 +681,7 @@ class CFS implements CFSInterface
 	static function filepath($namespace)
 	{
 		return static::modulepath($namespace)
-			. \mjolnir\cfs\CFSCompatible::APPDIR
+			. \mjolnir\cfs\CFSInterface::APPDIR
 			. DIRECTORY_SEPARATOR;
 	}
 
