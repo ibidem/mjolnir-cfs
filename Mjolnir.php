@@ -98,49 +98,48 @@ class Mjolnir
 		// go though all relays
 		\app\Router::check_all_relays();
 
+		\mjolnir\log('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
+		
 		// do we have a default theme?
 		if (\app\CFS::config('mjolnir/themes')['theme.default'] !== null)
 		{
 			try
 			{
-				\app\Layer::stack
+				$relaynode = \app\RelayNode::instance
+					(
+						[
+							'matcher' => true,
+							'controller' => '\app\Controller_Error',
+							'default.action' => 'process_error',
+							'action' => null,
+							'prefix' => '',
+						]
+					);
+
+				$channel = \app\Channel::instance()
+					->set('relaynode', $relaynode)
+					->set('exception', new \app\Exception_NotFound('The page "'.\app\Server::request_uri().'" ('.\app\Server::request_method().') doesn\'t exist on the server.'));
+				
+				echo \app\Application::stack
 					(
 						\app\Layer_HTTP::instance(),
 						\app\Layer_HTML::instance(),
-						\app\Layer_ErrorHandler::instance()
-							->caller
-							(
-								function ()
-								{
-									try
-									{
-										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
-
-										\app\GlobalEvent::fire('http:status', 'HTTP/1.0 404 Not Found');
-
-										return \app\ThemeView::instance()
-											->errortarget('exception-NotFound')
-											->render();
-									}
-									catch (\Exception $exception)
-									{
-										\mjolnir\log_exception($exception);
-
-										throw new \app\Exception_NotFound
-											(
-												'The page "'.$_SERVER['REQUEST_URI'].'" doesn\'t appear to exist on this server.'
-											);
-									}
-								}
-							)
-					);
+						\app\Layer_Theme::instance(),
+						\app\Layer_MVC::instance()
+					)
+					->channel_is($channel)
+					->render();
+				
+				exit(1);
 			}
 			catch (\Exception $exception)
 			{
 				\mjolnir\log_exception($exception);
 			}
 		}
-		else if (\file_exists(PUBDIR.'404'.EXT))
+		
+		// fallback; in case above fails
+		if (\file_exists(PUBDIR.'404'.EXT))
 		{
 			require PUBDIR.'404'.EXT;
 		}
