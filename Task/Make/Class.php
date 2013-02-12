@@ -36,7 +36,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 			. ' * @package    '.$package.PHP_EOL
 			. ' * @category   '.$category.PHP_EOL
 			. ' * @author     '.$config['author'].PHP_EOL
-			. ' * @copyright  (c) '.\date('Y').', '.$config['author'].' Team'.PHP_EOL
+			. ' * @copyright  (c) '.\date('Y').', '.$config['group'].PHP_EOL
 			;
 
 		if (isset($config['license']) && $config['license'])
