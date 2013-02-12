@@ -2,7 +2,7 @@ To load a configuration "file" the function `CFS::config($key, $ext = EXT)` is
 used. In certain extreme cases you may want to explicitly make sure
 the configuration you are loading is coming from a physical file (and not
 something else, such as a database) in which case you would use
-`CFS::config_file($key, $ext = EXT)`.
+`CFS::configfile($key, $ext = EXT)`.
 
 By default configuration files are mere PHP files which return an array. If
 required a configuration file may be externally loaded via an include as
