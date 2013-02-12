@@ -6,6 +6,12 @@ if ( ! \defined('EXT'))
 	\define('EXT', '.php');
 }
 
+/// The directory in which plugins are located
+if ( ! \defined('PLGPATH'))
+{
+	\define('PLGPATH', DOCROOT.'plugins'.DIRECTORY_SEPARATOR);
+}
+
 /// The directory in which your application specific resources are located.
 if ( ! \defined('APPPATH'))
 {
