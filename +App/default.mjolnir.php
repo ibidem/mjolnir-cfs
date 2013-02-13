@@ -118,7 +118,7 @@ $base_config = CFS::config('mjolnir/base');
 \date_default_timezone_set($base_config['timezone']);
 
 // see: http://php.net/setlocale
-\setlocale(LC_ALL, $base_config['locale.lang'].$base_config['charset']);
+\setlocale(LC_ALL, \app\Lang::idlang($base_config['lang']).$base_config['charset']);
 
 
 # ---- Composer Autoloaders -------------------------------------------------- #

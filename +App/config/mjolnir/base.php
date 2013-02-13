@@ -3,10 +3,10 @@
 		'domain' => null,
 		'path' => '/',
 
+		'protocol' => 'http://', # eg. //, http://, https://
 		'timezone' => 'Europe/London',
 		'charset' => 'UTF8',
-		'locale.lang' => 'en_US',
-		'default.protocol' => 'http://', # eg. //, http://, https://
+		'lang' => 'en-US',
 
 		'development' => false,
 	
