@@ -99,7 +99,7 @@ class Task
 					{
 						$text = \str_replace($nowrap_hint, ' ', $text);
 					}
-
+					
 					$writer->writef('%s', $text);
 				}
 			);
@@ -135,7 +135,7 @@ class Task
 
 						if ($nowrap_hint)
 						{
-							$firstline = \str_replace($nowrap_hint, ' ', $firstline+1);
+							$firstline = \str_replace($nowrap_hint, ' ', $firstline);
 						}
 
 						$writer->writef($firstline)->eol();
@@ -144,7 +144,7 @@ class Task
 							(
 								$otherlines,
 								$width - $indent_hint,
-								$writer->eolstring().\str_repeat(' ', $indent_hint+1)
+								$writer->eolstring().\str_repeat(' ', $indent_hint)
 							);
 
 						if ($nowrap_hint)
@@ -154,7 +154,7 @@ class Task
 
 						$writer->writef
 							(
-								\str_repeat(' ', $indent_hint+1).
+								\str_repeat(' ', $indent_hint).
 								$indented_text
 							);
 					}
