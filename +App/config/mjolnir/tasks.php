@@ -260,4 +260,22 @@
 							),
 					),
 			),
+		'bower' => array
+			(
+				'category' => 'Tools',
+				'description' => array
+					(
+						'Search and execute all brower dependencies',
+						'To be valid a directory must contain both a .bowerrc file and a component.json file.',
+						'The components directory mentioned by the .bowerrc will be purged and bower install will execute in the given context.',
+					),
+				'flags' => array
+					(
+						'install' => array
+							(
+								'description' => 'Perform Install.',
+								'short' => 'i',
+							),
+					),
+			),
 	);
