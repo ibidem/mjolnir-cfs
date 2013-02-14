@@ -248,7 +248,7 @@ class Benchmark implements BenchmarkInterface
 
 			$html .= '<tr>';
 			$html .= '<td rowspan="2" style=""><big>'.$entry['count'].'</big></td>';
-			$html .= '<td rowspan="2" style="text-align: left; padding: 2px 10px"><big>'.($cutnamespaces ? \preg_replace('#^.*\\\#', '', $key) : $key).'</big></td>';
+			$html .= '<td rowspan="2" style="text-align: left; padding: 2px 10px"><big>'.($cutnamespaces ? \preg_replace('#(^| )[a-z0-9_\\\]*\\\#', '', $key) : $key).'</big></td>';
 			$html .= '<td>'.\number_format($entry['min']['time'], 9).'&nbsp;sec</td>';
 			$html .= '<td>'.\number_format($entry['max']['time'], 9).'&nbsp;sec</td>';
 			$html .= '<td>'.\number_format($entry['avg']['time'], 9).'&nbsp;sec</td>';
