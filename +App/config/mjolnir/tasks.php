@@ -278,4 +278,16 @@
 							),
 					),
 			),
+		'devlog' => array
+			(
+				'category' => 'Tools',
+				'description' => array
+					(
+						'tail -f short.log',
+					),
+				'flags' => array
+					(
+						// empty
+					),
+			),
 	);
