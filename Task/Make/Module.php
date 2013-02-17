@@ -24,6 +24,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 			. "\t\t\t(".PHP_EOL
 			. "\t\t\t\t'major' => '1',".PHP_EOL
 			. "\t\t\t\t'minor' => '0',".PHP_EOL
+			. "\t\t\t\t'tag'   => 'liquid',".PHP_EOL
 			. "\t\t\t)".PHP_EOL
 			. "\t);".PHP_EOL
 			;
@@ -52,7 +53,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 			. "\t(".PHP_EOL
 			. "\t\t'aliaslist' => array".PHP_EOL
 			. "\t\t\t(".PHP_EOL
-			. "\t\t\t\t\app\Auth::guest() => [ '+admin', '+mockup' ],".PHP_EOL
+			. "\t\t\t\t\app\Auth::Guest => [ '+admin', '+mockup' ],".PHP_EOL
 			. "\t\t\t)".PHP_EOL
 			. "\t);"
 			. PHP_EOL
@@ -104,7 +105,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 	function run()
 	{
 		\app\Task::consolewriter($this->writer);
-		
+
 		$name = $this->get('name', false);
 		$namespace = $this->get('namespace', '');
 		$forced = $this->get('forced', false);

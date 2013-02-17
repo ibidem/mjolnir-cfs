@@ -94,7 +94,7 @@ setup). In Mjölnir every use of every class is via the `app` namespace so by
 creating a top level class in your application you can replace and/or customize
 any class in the system.
 
-The only direct dependencies to the framework files are the interfaces which
+The only direct dependencies to the library files are the interfaces which
 have been used with explicit namespaces to discourage bad patterns, and
 encourage consistency (more on this in the types section).
 

@@ -4,11 +4,11 @@ current state so that it may be of use, as well as for internal development
 purposes.*
 
 Mjölnir, pronounced "mee-uhl-neer", is an all purpose PHP module-based
-framework (and toolkit) primarily aimed for web development but adept at
-any task otherwise possible though PHP. Based on a (PSR-0 compatible) cascading
-modular class and file system, PHP traits and convention though interfaces, the
-framework is designed to mold itself to your use case. The main design goals
-are, in order:
+library (can also be considered a framework) primarily aimed for web development
+but adept at any task otherwise possible though PHP. Based on a (PSR-0
+compatible) cascading modular class and file system, PHP traits and convention
+though interfaces, the library is designed to mold itself to your use case.
+The main design goals are, in order:
 
  * maintainable code
  * flexible infrastructure
@@ -23,7 +23,7 @@ to be given a purpose, not as a requirement. Files, user interaction, execution,
 request patterns, project structure, are all designed to allow for
 interpretation in the context of the problem at hand.
 
-The framework is based on PHP, because PHP facilitates the frameworks technical
+The library is based on PHP, because PHP facilitates the libraries technical
 requirements via class autoloading, among other features.
 
 The modules are designed around up to date PHP. At this time PHP 5.4.4 and
@@ -41,7 +41,7 @@ other tooling. Even though doc-style comments are almost intentionally omitted
 the code is still commented extensively; in place of machine language,
 paragraphs and examples are written in plain english and detail.
 
-For understanding how the framework works, and how to use it effectively, it is
+For understanding how the library works, and how to use it effectively, it is
 recommended to start with the cascading file system module; and continue to
 the base module. Other modules are all contextual in nature, so after
 understanding how the module system works feel free to skip to any point of

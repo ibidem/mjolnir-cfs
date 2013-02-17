@@ -36,13 +36,13 @@ if ( ! \defined('ENVFILE'))
 	\define('ENVFILE', \realpath(DOCROOT.'environment'.EXT));
 }
 
-/// The directory in which your mjolnir framework modules are located.
+/// The directory in which your mjolnir library modules are located.
 if ( ! \defined('MJLPATH'))
 {
 	\define('MJLPATH', \realpath(PLGPATH.'mjolnir').DIRECTORY_SEPARATOR);
 }
 
-/// The directory in which your mjolnir framework modules are located.
+/// The directory in which your mjolnir library modules are located.
 if ( ! \defined('DRAFTPATH'))
 {
 	\define('DRAFTPATH', \realpath(APPPATH.'drafts').DIRECTORY_SEPARATOR);

@@ -7,7 +7,7 @@ if ( ! \defined('EXT'))
 }
 
 /**
- * This interface is the exception to the frameworks convention of all
+ * This interface is the exception to the library's convention of all
  * interfaces going into mjolnir/types. Also, because the autoloader can't
  * autoload it's own resources the trait conventions also don't apply to this
  * interface.

@@ -15,7 +15,7 @@ class Mjolnir
 	/**
 	 * Searches for setup file and loads it.
 	 *
-	 * The purpose of this is to allow for the framework to auto-bootstrap in
+	 * The purpose of this is to allow for the library to auto-bootstrap in
 	 * (shitty) composer environments that do not support basic concepts such as
 	 * autoloaders.
 	 */
@@ -99,7 +99,7 @@ class Mjolnir
 		\app\Router::check_all_relays();
 
 		\mjolnir\log('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
-		
+
 		// do we have a default theme?
 		if (\app\CFS::config('mjolnir/themes')['theme.default'] !== null)
 		{
@@ -119,7 +119,7 @@ class Mjolnir
 				$channel = \app\Channel::instance()
 					->set('relaynode', $relaynode)
 					->set('exception', new \app\Exception_NotFound('The page "'.\app\Server::request_uri().'" ('.\app\Server::request_method().') doesn\'t exist on the server.'));
-				
+
 				echo \app\Application::stack
 					(
 						\app\Layer_HTTP::instance(),
@@ -129,7 +129,7 @@ class Mjolnir
 					)
 					->channel_is($channel)
 					->render();
-				
+
 				exit(1);
 			}
 			catch (\Exception $exception)
@@ -137,7 +137,7 @@ class Mjolnir
 				\mjolnir\log_exception($exception);
 			}
 		}
-		
+
 		// fallback; in case above fails
 		if (\file_exists(PUBDIR.'404'.EXT))
 		{
