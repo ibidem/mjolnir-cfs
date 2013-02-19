@@ -167,7 +167,7 @@ class Mjolnir
 		\ksort($priority);
 
 		$processing = [];
-		foreach ($priority as $key => $priority_level)
+		foreach ($priority as $key => $info)
 		{
 			$processing[$key] = [];
 		}
