@@ -100,7 +100,8 @@ class Mjolnir
 			{
 				\app\Layer::stack
 					(
-						\app\Layer_HTTP::instance(),
+						\app\Layer_HTTP::instance()
+							->status('HTTP/1.0 404 Not Found'),
 						\app\Layer_HTML::instance(),
 						\app\Layer_ErrorHandler::instance()
 							->caller
@@ -109,8 +110,8 @@ class Mjolnir
 								{
 									try
 									{
-										\mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
-										
+										// \mjolnir\masterlog('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
+
 										return \app\ThemeView::instance()
 											->errortarget('exception-NotFound')
 											->render();
@@ -118,7 +119,7 @@ class Mjolnir
 									catch (\Exception $exception)
 									{
 										\mjolnir\log_exception($exception);
-										
+
 										throw new \app\Exception_NotFound
 											(
 												'The page "'.$_SERVER['REQUEST_URI'].'" doesn\'t appear to exist on this server.'
