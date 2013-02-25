@@ -25,7 +25,7 @@
 		"php": ">=5.4.4",
 		"mjolnir/types"   : "dev-wip/v1.0x2",
 		"mjolnir/testing" : "dev-wip/v1.0x2",
-		"zendframework/zend-reflection": "2.*"
+		"zendframework/zend-server": "2.*"
 	},
 
 	"autoload": {
