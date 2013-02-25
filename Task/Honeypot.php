@@ -99,9 +99,12 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function reflection_strategy($ns, $class)
 	{
-		// @todos
+		throw new \app\Exception_NotImplemented('Reflectin strategy is not currently available.');
 	}
 
 	/**

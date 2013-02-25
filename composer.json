@@ -14,18 +14,9 @@
 		}
 	],
 
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "https://packages.zendframework.com/"
-		}
-	],
-
 	"require": {
 		"php": ">=5.4.4",
-		"mjolnir/types"   : "dev-wip/v1.0x2",
-		"mjolnir/testing" : "dev-wip/v1.0x2",
-		"zendframework/zend-server": "2.*"
+		"mjolnir/types"   : "dev-wip/v1.0x2"
 	},
 
 	"autoload": {
@@ -39,5 +30,5 @@
 			"dev-wip/v1.0": "1.0.x-dev"
 		}
 	}
-	
+
 }
