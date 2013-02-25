@@ -53,104 +53,120 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 				{
 					continue;
 				}
-				
+
 				if ($verbose)
 				{
 					if ($written)
 					{
 						$this->writer->printf('reset');
 					}
-					
+
 					$this->writer->writef(' Reading: '.$file);
 					$written = true;
 				}
-				
+
 				if (\preg_match('#^Trait_#', $file))
 				{
 					$output .= 'trait '.$file.' { use \\'.$ns.'\\'.$file.'; }'.PHP_EOL;
 				}
 				else if ( ! \preg_match('#^Enum_#', $file) && ! \preg_match('#\\\types#', $ns))
 				{
-					if (\method_exists('\\'.$ns.'\\'.$file, 'instance'))
-					{
-						// get method parameters
-						$reflection = new \ReflectionMethod('\\'.$ns.'\\'.$file, 'instance');
-						$params = \app\Arr::implode
-						(
-							', ', 
-							$reflection->getParameters(), 
-							function ($key, $param) 
-							{
-								$param_str = '';
-
-								if ($param->isArray())
-								{
-									$param_str .= 'array ';
-								}
-
-								if ($param->isPassedByReference())
-								{
-									$param_str .= ' & ';
-								}
-
-								$param_str .= '$'.$param->getName();
-								
-								if ($param->isDefaultValueAvailable())
-								{
-									$default = $param->getDefaultValue();
-									if (\is_null($default))
-									{
-										$param_str .= ' = null';
-									}
-									else # not null
-									{
-										$param_str .= ' = '.\var_export($default, true);
-									}
-								}
-
-								return $param_str;
-							}
-						);
-
-						$naked_params = \app\Arr::implode
-							(
-								', ', 
-								$reflection->getParameters(), 
-								function ($key, $param) 
-								{
-									return '$'.$param->getName();
-								}
-							);
-
-						$output .= 'class '.$file.' extends \\'.$ns.'\\'.$file.' { /** @return \\'.$ns.'\\'.$file.' */ static function instance('.$params.') { return parent::instance('.$naked_params.'); } }'.PHP_EOL;
-					}
-					else # class is not instantitable
-					{
-						$output .= 'class '.$file.' extends \\'.$ns.'\\'.$file.' {}'.PHP_EOL;
-					}
+					$output .= $this->crude_strategy($ns, $file);
+//					$output .= $this->reflection_strategy($ns, $file);
 				}
 			}
-			
+
 			$dir = $path.DIRECTORY_SEPARATOR.\app\CFS::APPDIR.DIRECTORY_SEPARATOR;
-			
+
 			if ( ! \is_dir($dir))
 			{
 				\mkdir($dir, 0777, true);
 			}
-			
+
 			\file_put_contents($dir.'honeypot'.EXT, $output);
-			
+
 			if ($written)
 			{
 				$this->writer->printf('reset');
 			}
-			
+
 			$this->writer->writef(' Succesfully created '.\str_replace('\\', '/', \str_replace(DOCROOT, '', $dir.'honeypot'.EXT)))->eol();
 		}
 		else # namespace does not exist
 		{
 			throw new \app\Exception
 				('No such namespace registered; please check your [environment.php] file.');
+		}
+	}
+
+	protected function reflection_strategy($ns, $class)
+	{
+		// @todos
+	}
+
+	/**
+	 * Very basic strategy for computing hinting (ie. return hints).
+	 *
+	 * @return string
+	 */
+	protected function crude_strategy($ns, $file)
+	{
+		if (\method_exists('\\'.$ns.'\\'.$file, 'instance'))
+		{
+			// get method parameters
+			$reflection = new \ReflectionMethod('\\'.$ns.'\\'.$file, 'instance');
+			$params = \app\Arr::implode
+				(
+					', ',
+					$reflection->getParameters(),
+					function ($key, $param)
+					{
+						$param_str = '';
+
+						if ($param->isArray())
+						{
+							$param_str .= 'array ';
+						}
+
+						if ($param->isPassedByReference())
+						{
+							$param_str .= ' & ';
+						}
+
+						$param_str .= '$'.$param->getName();
+
+						if ($param->isDefaultValueAvailable())
+						{
+							$default = $param->getDefaultValue();
+							if (\is_null($default))
+							{
+								$param_str .= ' = null';
+							}
+							else # not null
+							{
+								$param_str .= ' = '.\var_export($default, true);
+							}
+						}
+
+						return $param_str;
+					}
+				);
+
+			$naked_params = \app\Arr::implode
+				(
+					', ',
+					$reflection->getParameters(),
+					function ($key, $param)
+					{
+						return '$'.$param->getName();
+					}
+				);
+
+			return 'class '.$file.' extends \\'.$ns.'\\'.$file.' { /** @return \\'.$ns.'\\'.$file.' */ static function instance('.$params.') { return parent::instance('.$naked_params.'); } }'.PHP_EOL;
+		}
+		else # class is not instantitable
+		{
+			return 'class '.$file.' extends \\'.$ns.'\\'.$file.' {}'.PHP_EOL;
 		}
 	}
 
@@ -164,7 +180,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 		$ext_pattern = '#'.\str_replace('.', '\.', EXT).'$#';
 		$files = \array_diff(\scandir($path), $exclude_pattern);
 		$clean_files = [];
-		
+
 		foreach ($files as $file)
 		{
 			if (\is_dir($path.DIRECTORY_SEPARATOR.$file))
