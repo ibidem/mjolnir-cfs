@@ -15,7 +15,7 @@ if ( ! \defined('PLGPATH'))
 /// The directory in which your application specific resources are located.
 if ( ! \defined('APPPATH'))
 {
-	\define('APPPATH', \realpath(DOCROOT.'+App').DIRECTORY_SEPARATOR);
+	\define('APPPATH', \realpath(DOCROOT.'etc').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which the modules for the current project are located.
