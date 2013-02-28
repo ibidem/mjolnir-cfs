@@ -30,7 +30,7 @@
 				'category' => 'Tools',
 				'description' => array
 					(
-						'Perform all environment checks.',
+						'Perform basic environment checks.',
 						'Modules should provide tests for all their dependencies, that ensure they will function properly in their environement.'
 					),
 				'flags' => array
