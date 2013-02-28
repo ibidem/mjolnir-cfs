@@ -71,8 +71,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 				}
 				else if ( ! \preg_match('#^Enum_#', $file) && ! \preg_match('#\\\types#', $ns))
 				{
-					$output .= $this->crude_strategy($ns, $file);
-//					$output .= $this->reflection_strategy($ns, $file);
+					$output .= $this->reflection_strategy($ns, $file);
 				}
 			}
 
@@ -100,77 +99,92 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 	}
 
 	/**
+	 * Computes hinting tacking into consideration doc comments; this is very
+	 * powerful since it enables autocomplete functionality for fluent
+	 * interfaces.
+	 *
 	 * @return string
 	 */
 	protected function reflection_strategy($ns, $class)
 	{
-		throw new \app\Exception_NotImplemented('Reflectin strategy is not currently available.');
-	}
+		// throw new \app\Exception_NotImplemented('Reflectin strategy is not currently available.');
 
-	/**
-	 * Very basic strategy for computing hinting (ie. return hints).
-	 *
-	 * @return string
-	 */
-	protected function crude_strategy($ns, $file)
-	{
-		if (\method_exists('\\'.$ns.'\\'.$file, 'instance'))
+		$current_class = "\\$ns\\$class";
+		$app_class = "\\app\\$class";
+		$reflection_class = new \ReflectionClass("\\$ns\\$class");
+		$methods = $reflection_class->getMethods();
+
+		$fluency = '';
+		$influence = '';
+		foreach ($methods as $method)
 		{
-			// get method parameters
-			$reflection = new \ReflectionMethod('\\'.$ns.'\\'.$file, 'instance');
-			$params = \app\Arr::implode
-				(
-					', ',
-					$reflection->getParameters(),
-					function ($key, $param)
-					{
-						$param_str = '';
-
-						if ($param->isArray())
+			if (\strpos($method->getDocComment(), '@return static') !== false)
+			{
+				$params = \app\Arr::implode
+					(
+						', ',
+						$method->getParameters(),
+						function ($key, $param)
 						{
-							$param_str .= 'array ';
-						}
+							$param_str = '';
 
-						if ($param->isPassedByReference())
-						{
-							$param_str .= ' & ';
-						}
-
-						$param_str .= '$'.$param->getName();
-
-						if ($param->isDefaultValueAvailable())
-						{
-							$default = $param->getDefaultValue();
-							if (\is_null($default))
+							if ($param->isArray())
 							{
-								$param_str .= ' = null';
+								$param_str .= 'array ';
 							}
-							else # not null
+
+							if ($param->isPassedByReference())
 							{
-								$param_str .= ' = '.\var_export($default, true);
+								$param_str .= ' & ';
 							}
+
+							$param_str .= '$'.$param->getName();
+
+							if ($param->isDefaultValueAvailable())
+							{
+								$default = $param->getDefaultValue();
+								if (\is_null($default))
+								{
+									$param_str .= ' = null';
+								}
+								else # not null
+								{
+									$param_str .= ' = '.\var_export($default, true);
+								}
+							}
+
+							return $param_str;
 						}
+					);
 
-						return $param_str;
-					}
-				);
+				$naked_params = \app\Arr::implode
+					(
+						', ',
+						$method->getParameters(),
+						function ($key, $param)
+						{
+							return '$'.$param->getName();
+						}
+					);
 
-			$naked_params = \app\Arr::implode
-				(
-					', ',
-					$reflection->getParameters(),
-					function ($key, $param)
-					{
-						return '$'.$param->getName();
-					}
-				);
 
-			return 'class '.$file.' extends \\'.$ns.'\\'.$file.' { /** @return \\'.$ns.'\\'.$file.' */ static function instance('.$params.') { return parent::instance('.$naked_params.'); } }'.PHP_EOL;
+				if ( ! $method->isStatic())
+				{
+					$fluency .= " * @method $app_class {$method->name}($params)\n";
+				}
+				else # static method
+				{
+					$influence .= "/** @return $app_class */ static function {$method->name}($params) { return parent::{$method->name}($naked_params); }";
+				}
+			}
 		}
-		else # class is not instantitable
+
+		if ($fluency !== '')
 		{
-			return 'class '.$file.' extends \\'.$ns.'\\'.$file.' {}'.PHP_EOL;
+			$fluency = "/**\n$fluency */\n";
 		}
+
+		return "\n{$fluency}class $class extends $current_class { $influence }\n";
 	}
 
 	/**
