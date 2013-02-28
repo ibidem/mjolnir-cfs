@@ -28,7 +28,7 @@ class Task_Make_Config extends \app\Instantiatable implements \mjolnir\types\Tas
 		}
 		else # configuration not empty
 		{
-			$config_file = APPPATH.\app\CFS::CNFDIR.DIRECTORY_SEPARATOR.$this->config['config'];
+			$config_file = ETCPATH.\app\CFS::CNFDIR.DIRECTORY_SEPARATOR.$this->config['config'];
 			if (\file_exists($config_file.EXT) && ! $this->config['forced'])
 			{
 				$this->writer

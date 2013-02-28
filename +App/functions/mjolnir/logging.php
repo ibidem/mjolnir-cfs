@@ -17,7 +17,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 	function masterlog($level, $message, $replication_path = null, $relative_path = true)
 	{
 		$time = \date('Y-m-d H:i:s');
-		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
+		$logs_path = ETCPATH.'logs'.DIRECTORY_SEPARATOR;
 		$date_path = \date('Y').DIRECTORY_SEPARATOR.\date('m').DIRECTORY_SEPARATOR;
 		$master_logs_path = $logs_path.$date_path;
 		
@@ -99,7 +99,7 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 	function shortlog($level, $message)
 	{
 		$time = \date('Y-m-d H:i:s');
-		$logs_path = APPPATH.'logs'.DIRECTORY_SEPARATOR;
+		$logs_path = ETCPATH.'logs'.DIRECTORY_SEPARATOR;
 		$message = \str_replace(DOCROOT, '', $message);
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 		

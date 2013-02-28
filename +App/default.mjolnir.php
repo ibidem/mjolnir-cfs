@@ -13,9 +13,9 @@ if ( ! \defined('PLGPATH'))
 }
 
 /// The directory in which your application specific resources are located.
-if ( ! \defined('APPPATH'))
+if ( ! \defined('ETCPATH'))
 {
-	\define('APPPATH', \realpath(DOCROOT.'etc').DIRECTORY_SEPARATOR);
+	\define('ETCPATH', \realpath(DOCROOT.'etc').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which the modules for the current project are located.
@@ -45,7 +45,7 @@ if ( ! \defined('MJLPATH'))
 /// The directory in which your mjolnir library modules are located.
 if ( ! \defined('DRAFTPATH'))
 {
-	\define('DRAFTPATH', \realpath(APPPATH.'drafts').DIRECTORY_SEPARATOR);
+	\define('DRAFTPATH', \realpath(DOCROOT.'drafts').DIRECTORY_SEPARATOR);
 }
 
 /// @see http://php.net/error_reporting
@@ -87,7 +87,7 @@ CFS::modules($env_config['modules']);
 // allow application to store and overwrite config files, routes, etc;
 // everything except classes. You should always define your classes in
 // appropriate modules in the MODPATH
-CFS::frontpaths([APPPATH]);
+CFS::frontpaths([ETCPATH]);
 
 // attempt to load private configuration
 if (\defined('PUBDIR'))
@@ -100,7 +100,7 @@ if (\defined('PUBDIR'))
 }
 else # console or other
 {
-	$base_config = include APPPATH.'config/mjolnir/base'.EXT;
+	$base_config = include ETCPATH.'config/mjolnir/base'.EXT;
 	if (\file_exists($base_config['private.files']))
 	{
 		CFS::frontpaths([$base_config['private.files']]);

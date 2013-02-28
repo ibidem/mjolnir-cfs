@@ -26,7 +26,7 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 		# Remove Log files
 		
 		$this->writer->writef(' Removing logs.')->eol();	
-		$log_files = \app\Filesystem::matchingfiles(APPPATH.'logs', '#^[^\.].*$#');
+		$log_files = \app\Filesystem::matchingfiles(ETCPATH.'logs', '#^[^\.].*$#');
 		
 		foreach ($log_files as $file)
 		{
@@ -34,12 +34,12 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 			\unlink($file);
 		}
 		
-		\app\Filesystem::prunedirs(APPPATH.'logs');
+		\app\Filesystem::prunedirs(ETCPATH.'logs');
 		
 		# Remove Cache files
 		
 		$this->writer->writef(' Removing cache files.')->eol();
-		$cache_files = \app\Filesystem::matchingfiles(APPPATH.'cache', '#^[^\.].*$#');
+		$cache_files = \app\Filesystem::matchingfiles(ETCPATH.'cache', '#^[^\.].*$#');
 		
 		foreach ($cache_files as $file)
 		{
@@ -47,12 +47,12 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 			\unlink($file);
 		}
 		
-		\app\Filesystem::prunedirs(APPPATH.'cache');
+		\app\Filesystem::prunedirs(ETCPATH.'cache');
 		
 		# Remove Temporary file
 		
 		$this->writer->writef(' Removing temporary files.')->eol();
-		$tmp_files = \app\Filesystem::matchingfiles(APPPATH.'tmp', '#^[^\.].*$#');
+		$tmp_files = \app\Filesystem::matchingfiles(ETCPATH.'tmp', '#^[^\.].*$#');
 		
 		foreach ($tmp_files as $file)
 		{
@@ -60,7 +60,7 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 			\unlink($file);
 		}
 		
-		\app\Filesystem::prunedirs(APPPATH.'tmp');
+		\app\Filesystem::prunedirs(ETCPATH.'tmp');
 	}
 
 } # class
