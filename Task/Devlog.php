@@ -16,7 +16,7 @@ class Task_Devlog extends \app\Instantiatable implements \mjolnir\types\Task
 	 */
 	function run()
 	{
-		$logpath = DOCROOT.\app\CFSInterface::APPDIR.'/logs/short.log';
+		$logpath = ETCPATH.'logs/short.log';
 		\file_put_contents($logpath, '');
 		\passthru("tail -f $logpath");
 	}
