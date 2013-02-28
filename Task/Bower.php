@@ -52,7 +52,7 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 						$this->writer->eol();
 						$this->writer->writef(" Running bower install in ".\str_replace(DOCROOT, '', \realpath($rootdir)))->eol()->eol();
 						\chdir($rootdir);
-						\passthru("bower install");
+						\passthru("bower install --no-color");
 					}
 					else
 					{
