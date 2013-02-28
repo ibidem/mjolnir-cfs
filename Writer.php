@@ -12,7 +12,7 @@ class Writer extends \app\Instantiatable implements \mjolnir\types\Writer
 	use \app\Trait_Writer;
 
 	/**
-	 * @return \mjolnir\cfs\Writer_Task
+	 * @return static
 	 */
 	static function instance()
 	{

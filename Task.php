@@ -10,7 +10,7 @@
 class Task
 {
 	/**
-	 * @return \mjolnir\types\Task
+	 * @return static
 	 */
 	static function invoke($encoded_task)
 	{
