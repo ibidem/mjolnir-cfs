@@ -46,8 +46,6 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 
 		$file .= ' */'.PHP_EOL;
 
-		$conventions_config = \app\CFS::config('mjolnir/conventions');
-
 		if (\preg_match('#^Trait_.*$#', $class_name))
 		{
 			static::$filetype = 'trait';
@@ -61,26 +59,10 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		else # not library
 		{
 			$extention = '\\app\\Instantiatable';
-			foreach ($conventions_config['base_classes'] as $regex => $class_extention)
-			{
-				if (\preg_match($regex, $class_name))
-				{
-					$extention = $class_extention;
-				}
-			}
-
 			$file .= "class $class_name extends $extention".PHP_EOL;
 		}
 
 		$file .= '{'.PHP_EOL;
-
-		foreach ($conventions_config['autofills'] as $regex => $fill)
-		{
-			if (\preg_match($regex, $class_name))
-			{
-				$file .= $fill.PHP_EOL;
-			}
-		}
 
 		$file .=
 			// the extra . is to avoid IDE's picking this code up unintentionally

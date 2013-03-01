@@ -107,8 +107,6 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 	 */
 	protected function reflection_strategy($ns, $class)
 	{
-		// throw new \app\Exception_NotImplemented('Reflectin strategy is not currently available.');
-
 		$current_class = "\\$ns\\$class";
 		$app_class = "\\app\\$class";
 		$reflection_class = new \ReflectionClass("\\$ns\\$class");
@@ -118,63 +116,81 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 		$influence = '';
 		foreach ($methods as $method)
 		{
+			$params = \app\Arr::implode
+				(
+					', ',
+					$method->getParameters(),
+					function ($key, $param)
+					{
+						$param_str = '';
+
+						if ($param->isArray())
+						{
+							$param_str .= 'array ';
+						}
+
+						if ($param->isPassedByReference())
+						{
+							$param_str .= ' & ';
+						}
+
+						$param_str .= '$'.$param->getName();
+
+						if ($param->isDefaultValueAvailable())
+						{
+							$default = $param->getDefaultValue();
+							if (\is_null($default))
+							{
+								$param_str .= ' = null';
+							}
+							else # not null
+							{
+								$param_str .= ' = '.\var_export($default, true);
+							}
+						}
+
+						return $param_str;
+					}
+				);
+
+			$naked_params = \app\Arr::implode
+				(
+					', ',
+					$method->getParameters(),
+					function ($key, $param)
+					{
+						return '$'.$param->getName();
+					}
+				);
+			
+			$matches = null;
+			$esb = '\\'.'\\'; # escaped back slash
 			if (\strpos($method->getDocComment(), '@return static') !== false)
 			{
-				$params = \app\Arr::implode
-					(
-						', ',
-						$method->getParameters(),
-						function ($key, $param)
-						{
-							$param_str = '';
-
-							if ($param->isArray())
-							{
-								$param_str .= 'array ';
-							}
-
-							if ($param->isPassedByReference())
-							{
-								$param_str .= ' & ';
-							}
-
-							$param_str .= '$'.$param->getName();
-
-							if ($param->isDefaultValueAvailable())
-							{
-								$default = $param->getDefaultValue();
-								if (\is_null($default))
-								{
-									$param_str .= ' = null';
-								}
-								else # not null
-								{
-									$param_str .= ' = '.\var_export($default, true);
-								}
-							}
-
-							return $param_str;
-						}
-					);
-
-				$naked_params = \app\Arr::implode
-					(
-						', ',
-						$method->getParameters(),
-						function ($key, $param)
-						{
-							return '$'.$param->getName();
-						}
-					);
-
-
 				if ( ! $method->isStatic())
 				{
 					$fluency .= " * @method $app_class {$method->name}($params)\n";
 				}
 				else # static method
 				{
-					$influence .= "/** @return $app_class */ static function {$method->name}($params) { return parent::{$method->name}($naked_params); }";
+					$influence .= "\n\t/** @return $app_class */\n\tstatic function {$method->name}($params) { return parent::{$method->name}($naked_params); }";
+				}
+			}
+			else if (\preg_match("#.*@return {$esb}[a-z0-9A-Z_]+{$esb}types{$esb}(?<type>[a-z0-9A-Z{$esb}_]+)[\n| |$]#", $method->getDocComment(), $matches))
+			{
+				// method returns a type, unfortunately most IDEs fail horribly
+				// handling interfaces
+				
+				$type = $matches['type'];
+				$type = \preg_replace("#{$esb}.*{$esb}#", '', $type);
+				
+				if ( ! $method->isStatic())
+				{
+					$fluency .= " * @method \app\\$type {$method->name}($params)\n";
+				}
+				else # static method
+				{
+					$influence .= "\n\t/** @return \app\\$type */\n\tstatic function {$method->name}($params) { return parent::{$method->name}($naked_params); }";
 				}
 			}
 		}
@@ -184,7 +200,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 			$fluency = "/**\n$fluency */\n";
 		}
 
-		return "\n{$fluency}class $class extends $current_class { $influence }\n";
+		return "\n{$fluency}class $class extends $current_class\n{{$influence}\n}\n";
 	}
 
 	/**
