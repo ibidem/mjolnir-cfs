@@ -266,6 +266,12 @@ interface CFSInterface
 	// Utility
 
 	/**
+	 * Saves the current persistable caches. Note that some internal caches such
+	 * as the configuration file cache can not be persisted.
+	 */
+	static function savecache();
+
+	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 *

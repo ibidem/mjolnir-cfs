@@ -70,6 +70,14 @@ class CFS implements CFSInterface
 	 */
 	protected static $cache = null;
 
+	/**
+	 * Some caching mechanisms may be intensive. This property is set to true if
+	 * a cache save is required otherwise it is false.
+	 *
+	 * @var \mjolnir\types\Stash
+	 */
+	protected static $dirtycache = false;
+
 	// ------------------------------------------------------------------------
 	// Inspection & Loading
 
@@ -158,17 +166,8 @@ class CFS implements CFSInterface
 				{
 					if (\file_exists($path.$target))
 					{
-						// cache?
-						if (static::$cache)
-						{
-							static::$cache_load_symbol[$symbol] = $path;
-							static::$cache->set
-								(
-									'\mjolnir\cfs\CFS::load_symbol',
-									static::$cache_load_symbol,
-									static::$cache_file_duration
-								);
-						}
+						static::$cache_load_symbol[$symbol] = $path;
+						static::$dirtycache = true;
 
 						\app\Benchmark::stop($benchmark);
 
@@ -190,17 +189,8 @@ class CFS implements CFSInterface
 					}
 				}
 
-				// cache?
-				if (static::$cache)
-				{
-					static::$cache_load_symbol[$symbol] = null;
-					static::$cache->set
-						(
-							'\mjolnir\cfs\CFS::load_symbol',
-							static::$cache_load_symbol,
-							static::$cache_file_duration
-						);
-				}
+				static::$cache_load_symbol[$symbol] = null;
+				static::$dirtycache = true;
 
 				\app\Benchmark::stop($benchmark);
 
@@ -293,17 +283,8 @@ class CFS implements CFSInterface
 							{
 								if (\file_exists(static::$namespaces[$ns_keys[$idx]].$target))
 								{
-									// cache?
-									if (static::$cache)
-									{
-										static::$cache_load_symbol[$symbol] = static::$namespaces[$ns_keys[$idx]];
-										static::$cache->set
-											(
-												'\mjolnir\cfs\CFS::load_symbol',
-												static::$cache_load_symbol,
-												static::$cache_file_duration
-											);
-									}
+									static::$cache_load_symbol[$symbol] = static::$namespaces[$ns_keys[$idx]];
+									static::$dirtycache = true;
 
 									\app\Benchmark::stop($benchmark);
 
@@ -329,17 +310,8 @@ class CFS implements CFSInterface
 						{
 							if (\strripos($ns, $parent_ns) === 0 && \file_exists($path.$target))
 							{
-								// cache?
-								if (static::$cache)
-								{
-									static::$cache_load_symbol[$symbol] = $path;
-									static::$cache->set
-										(
-											'\mjolnir\cfs\CFS::load_symbol',
-											static::$cache_load_symbol,
-											static::$cache_file_duration
-										);
-								}
+								static::$cache_load_symbol[$symbol] = $path;
+								static::$dirtycache = true;
 
 								\app\Benchmark::stop($benchmark);
 
@@ -595,17 +567,8 @@ class CFS implements CFSInterface
 				}
 			}
 
-			// cache?
-			if (static::$cache)
-			{
-				static::$cache_file_list[$file] = $files;
-				static::$cache->set
-					(
-						'\mjolnir\cfs\CFS::file_list',
-						static::$cache_file_list,
-						static::$cache_file_duration
-					);
-			}
+			static::$cache_file_list[$file] = $files;
+			static::$dirtycache = true;
 
 			return $files;
 		}
@@ -718,16 +681,7 @@ class CFS implements CFSInterface
 				{
 					$path = \realpath($path.$dir_path).DIRECTORY_SEPARATOR;
 					static::$cache_file[$dir_path] = $path;
-					// cache?
-					if (static::$cache)
-					{
-						static::$cache->set
-							(
-								'\mjolnir\cfs\CFS::file',
-								static::$cache_file,
-								static::$cache_file_duration
-							);
-					}
+					static::$dirtycache = true;
 
 					\app\Benchmark::stop($benchmark);
 
@@ -924,6 +878,37 @@ class CFS implements CFSInterface
 	protected static $cache_file_duration = null;
 
 	/**
+	 * Saves the current persistable caches. Note that some internal caches such
+	 * as the configuration file cache can not be persisted.
+	 */
+	static function savecache()
+	{
+		if (static::$cache && static::$dirtycache)
+		{
+			 static::$cache->set
+				(
+					'\mjolnir\cfs\CFS::file',
+					 static::$cache_file,
+					 static::$cache_file_duration
+				);
+
+			 static::$cache->set
+				(
+					 '\mjolnir\cfs\CFS::file_list',
+					 static::$cache_file_list,
+					 static::$cache_file_duration
+				);
+
+			 static::$cache->set
+				(
+					 '\mjolnir\cfs\CFS::load_symbol',
+					 static::$cache_load_symbol,
+					 static::$cache_file_duration
+				);
+		}
+	}
+
+	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 */
@@ -947,6 +932,7 @@ class CFS implements CFSInterface
 			static::$cache_file_duration = $file_duration;
 
 			static::$cache = $cache;
+			static::$dirtycache = false;
 		}
 		else # reset cache
 		{
@@ -960,3 +946,11 @@ class CFS implements CFSInterface
 	}
 
 } # class
+
+\register_shutdown_function
+	(
+		function ()
+		{
+			\app\CFS::savecache();
+		}
+	);
