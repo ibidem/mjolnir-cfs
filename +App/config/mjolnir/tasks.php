@@ -27,7 +27,7 @@
 		 */
 		'status' => array
 			(
-				'category' => 'Tools',
+				'category' => 'Inspection',
 				'description' => array
 					(
 						'Perform basic environment checks.',
@@ -63,6 +63,7 @@
 			),
 		'make:class' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Create class.'
@@ -100,6 +101,7 @@
 			),
 		'make:trait' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Create trait.'
@@ -120,6 +122,7 @@
 			),
 		'make:module' => array
 			(
+				'category' => 'Tools',
 				'description' => array
 					(
 						'Create a basic module.'
@@ -153,7 +156,7 @@
 			),
 		'versions' => array
 			(
-				'category' => 'Tools',
+				'category' => 'Inspection',
 				'description' => array
 					(
 						'Print version info, as defined by modules.'
@@ -184,29 +187,27 @@
 							),
 					),
 			),
-		'make:config' => array
+		'find:config' => array
 			(
+				'category' => 'Inspection',
 				'description' => array
 					(
-						'Create master configuration file.',
-						'Use this command to generate new application level configuration files. The command will merge all configuration files thus computing a full overwrite.',
+						'List config files based on environment.',
+						'eg. the path "version" will list all version files'
 					),
 				'flags' => array
 					(
 						'config' => array
 							(
-								'description' => 'Configuration path.',
+								'description' => 'Path to match cofing to.',
 								'short' => 'c',
 								'type' => 'text',
 							),
-						'forced' => array
-							(
-								'description' => 'Overwrites output file.',
-							),
-					),
+					)
 			),
 		'find:file' => array
 			(
+				'category' => 'Inspection',
 				'description' => array
 					(
 						'List files based on environment.',
@@ -231,6 +232,7 @@
 			),
 		'find:class' => array
 			(
+				'category' => 'Inspection',
 				'description' => array('List class files, based on class.', 'The namespace is assumed to be \app, as in \app\Some_Class.'),
 				'flags' => array
 					(
@@ -280,7 +282,7 @@
 			),
 		'devlog' => array
 			(
-				'category' => 'Tools',
+				'category' => 'Inspection',
 				'description' => array
 					(
 						'tail -f short.log',
