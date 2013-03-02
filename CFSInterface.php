@@ -205,7 +205,7 @@ interface CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function config($key, $ext = EXT);
+	static function &config($key, $ext = EXT);
 
 	/**
 	 * Same as config, only it explicitly only handles files. Which is to say
@@ -214,7 +214,7 @@ interface CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function configfile($key, $ext = EXT);
+	static function &configfile($key, $ext = EXT);
 
 	// ------------------------------------------------------------------------
 	// System Information

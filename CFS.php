@@ -704,7 +704,7 @@ class CFS implements CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function config($key, $ext = EXT)
+	static function &config($key, $ext = EXT)
 	{
 		return static::configfile($key, $ext);
 	}
@@ -731,7 +731,7 @@ class CFS implements CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function configfile($key, $ext = EXT)
+	static function &configfile($key, $ext = EXT)
 	{
 		$benchmark = \app\Benchmark::token(__METHOD__, 'Mjolnir');
 
