@@ -577,8 +577,6 @@ class CFS implements CFSInterface
 	 */
 	static function file_list($file, $ext = EXT)
 	{
-		// \var_dump(static::$cache_file_list);
-
 		// append extention
 		$file = $file.$ext;
 		// find files
