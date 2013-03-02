@@ -88,7 +88,7 @@ class CFS implements CFSInterface
 	/**
 	 * @var array
 	 */
-	private static $cache_load_symbol = [];
+	protected static $cache_load_symbol = [];
 
 	/**
 	 * @param string symbol name with namespace
@@ -133,6 +133,9 @@ class CFS implements CFSInterface
 				else # found path last time
 				{
 					$ns = static::$modules[$path];
+
+					\app\Benchmark::stop($benchmark);
+
 					if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
 					{
 						// found a matching file
@@ -145,8 +148,6 @@ class CFS implements CFSInterface
 						\class_alias($ns.'\\'.$symbol_name, $symbol);
 					}
 
-					\app\Benchmark::stop($benchmark);
-
 					// success
 					return true;
 				}
@@ -157,18 +158,6 @@ class CFS implements CFSInterface
 				{
 					if (\file_exists($path.$target))
 					{
-						if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
-						{
-							// found a matching file
-							require $path.$target;
-						}
-						// module's namespace is app?
-						if ($ns !== 'app')
-						{
-							// alias to app namespace
-							\class_alias($ns.'\\'.$symbol_name, $symbol);
-						}
-
 						// cache?
 						if (static::$cache)
 						{
@@ -182,6 +171,19 @@ class CFS implements CFSInterface
 						}
 
 						\app\Benchmark::stop($benchmark);
+
+						if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+						{
+							// found a matching file
+							require $path.$target;
+						}
+
+						// module's namespace is app?
+						if ($ns !== 'app')
+						{
+							// alias to app namespace
+							\class_alias($ns.'\\'.$symbol_name, $symbol);
+						}
 
 						// success
 						return true;
@@ -218,9 +220,9 @@ class CFS implements CFSInterface
 
 				if (\file_exists($file))
 				{
-					require $file;
-
 					\app\Benchmark::stop($benchmark);
+
+					require $file;
 
 					// success
 					return true;
@@ -252,6 +254,9 @@ class CFS implements CFSInterface
 					else # found path last time
 					{
 						$ns = static::$modules[$path];
+
+						\app\Benchmark::stop($benchmark);
+
 						if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
 						{
 							// found a matching file
@@ -259,8 +264,6 @@ class CFS implements CFSInterface
 						}
 
 						\class_alias($ns.'\\'.$symbol_name, $symbol);
-
-						\app\Benchmark::stop($benchmark);
 
 						// success
 						return true;
@@ -290,14 +293,6 @@ class CFS implements CFSInterface
 							{
 								if (\file_exists(static::$namespaces[$ns_keys[$idx]].$target))
 								{
-									if ( ! static::symbol_exists($ns_keys[$idx].'\\'.$symbol_name, false))
-									{
-										// found a matching file
-										require static::$namespaces[$ns_keys[$idx]].$target;
-									}
-
-									\class_alias($ns_keys[$idx].'\\'.$symbol_name, $symbol);
-
 									// cache?
 									if (static::$cache)
 									{
@@ -311,6 +306,14 @@ class CFS implements CFSInterface
 									}
 
 									\app\Benchmark::stop($benchmark);
+
+									if ( ! static::symbol_exists($ns_keys[$idx].'\\'.$symbol_name, false))
+									{
+										// found a matching file
+										require static::$namespaces[$ns_keys[$idx]].$target;
+									}
+
+									\class_alias($ns_keys[$idx].'\\'.$symbol_name, $symbol);
 
 									// success
 									return true;
@@ -326,14 +329,6 @@ class CFS implements CFSInterface
 						{
 							if (\strripos($ns, $parent_ns) === 0 && \file_exists($path.$target))
 							{
-								if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
-								{
-									// found a matching file
-									require $path.$target;
-								}
-
-								\class_alias($ns.'\\'.$symbol_name, $symbol);
-
 								// cache?
 								if (static::$cache)
 								{
@@ -347,6 +342,14 @@ class CFS implements CFSInterface
 								}
 
 								\app\Benchmark::stop($benchmark);
+
+								if ( ! static::symbol_exists($ns.'\\'.$symbol_name, false))
+								{
+									// found a matching file
+									require $path.$target;
+								}
+
+								\class_alias($ns.'\\'.$symbol_name, $symbol);
 
 								// success
 								return true;
@@ -526,7 +529,7 @@ class CFS implements CFSInterface
 	/**
 	 * @var array
 	 */
-	private static $cache_file = [];
+	protected static $cache_file = [];
 
 	/**
 	 * Returns the first file in the file system that matches. Or null.
@@ -565,7 +568,7 @@ class CFS implements CFSInterface
 	/**
 	 * @var array
 	 */
-	private static $cache_file_list = [];
+	protected static $cache_file_list = [];
 
 	/**
 	 * @param string relative file path
@@ -574,6 +577,8 @@ class CFS implements CFSInterface
 	 */
 	static function file_list($file, $ext = EXT)
 	{
+		// \var_dump(static::$cache_file_list);
+
 		// append extention
 		$file = $file.$ext;
 		// find files
@@ -779,6 +784,7 @@ class CFS implements CFSInterface
 		$benchmark = \app\Benchmark::token(__METHOD__, 'Mjolnir');
 
 		// check if we didn't get asked for it last time; or if it's cached
+		// this is NOT a persistent cache, only a temporary one
 		if (isset(static::$cache_config[$key.$ext]))
 		{
 			\app\Benchmark::stop($benchmark);
@@ -812,7 +818,6 @@ class CFS implements CFSInterface
 					\app\Benchmark::stop($benchmark);
 
 					$corrupt_file = \str_replace(DOCROOT, '', $file);
-					echo 'configuration file ['.$corrupt_file.'] is corrupt';
 					throw new \app\Exception
 						('Corrupt configuration file ['.$corrupt_file.']');
 				}
@@ -918,7 +923,7 @@ class CFS implements CFSInterface
 	/**
 	 * @var int
 	 */
-	private static $cache_file_duration = null;
+	protected static $cache_file_duration = null;
 
 	/**
 	 * Cache object is used on symbol, configuration and file system caching. Or
