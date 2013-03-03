@@ -83,6 +83,18 @@ class Benchmark implements BenchmarkInterface
 		// Stop the benchmark
 		static::$tokens[$token][] = \microtime(true);
 		static::$tokens[$token][] = \memory_get_usage();
+
+		return static::$tokens[$token][5] - static::$tokens[$token][3];
+	}
+
+	/**
+	 * Stop timer and return time for debug purposes.
+	 */
+	static function debug($token)
+	{
+		static::stop($token);
+
+		return static::$tokens[$token][5] - static::$tokens[$token][3];
 	}
 
 	/**
@@ -280,7 +292,7 @@ class Benchmark implements BenchmarkInterface
 			}
 			else # cut namespaces
 			{
-				$counthtml .= " &nbsp;&nbsp; ".\preg_replace('#^.*\\\#', '', $key)." $count";
+				$counthtml .= " &nbsp;&nbsp; ".\preg_replace('#^.*\\\#', '', $counter)." $count";
 			}
 
 		}

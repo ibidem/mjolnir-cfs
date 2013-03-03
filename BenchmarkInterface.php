@@ -26,6 +26,11 @@ interface BenchmarkInterface
 	static function stop($token);
 
 	/**
+	 * Stop timer and return time for debug purposes.
+	 */
+	static function debug($token);
+
+	/**
 	 * Format:
 	 *
 	 *	[
