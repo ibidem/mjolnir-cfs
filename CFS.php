@@ -758,20 +758,19 @@ class CFS implements CFSInterface
 
 			foreach ($files as $file)
 			{
+				\app\Benchmark::count('configuration reads');
 				$file_contents = include $file;
 
 				if (\is_array($file_contents))
 				{
-					static::config_merge
-						(static::$cache_config[$key], $file_contents);
+					static::config_merge(static::$cache_config[$key], $file_contents);
 				}
 				else # not array
 				{
 					\app\Benchmark::stop($benchmark);
 
 					$corrupt_file = \str_replace(DOCROOT, '', $file);
-					throw new \app\Exception
-						('Corrupt configuration file ['.$corrupt_file.']');
+					throw new \app\Exception('Corrupt configuration file ['.$corrupt_file.']');
 				}
 			}
 
