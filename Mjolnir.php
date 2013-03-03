@@ -98,7 +98,7 @@ class Mjolnir
 		// go though all relays
 		\app\Router::check_all_relays();
 
-		\mjolnir\log('Notice', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.', 'Notices/');
+		\mjolnir\log('404', 'Visitor arrived at "'.$_SERVER['REQUEST_URI'].'" and encountered 404.');
 
 		// do we have a default theme?
 		if (\app\CFS::config('mjolnir/themes')['theme.default'] !== null)
