@@ -16,20 +16,14 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 	 */
 	function cache_cleanup()
 	{
-		$base = \app\CFS::config('mjolnir/base');
-		$cache_settings = $base['caching'];
-		$base['caching'] = true;
-
 		$this->writer->writef('  - flushing file cache')->eol();
-		\app\Stash_File::instance()->flush();
+		\app\Stash_File::instance(false)->flush();
 		$this->writer->writef('  - flushing memcache cache')->eol();
-		\app\Stash_Memcache::instance()->flush();
+		\app\Stash_Memcache::instance(false)->flush();
 		$this->writer->writef('  - flushing memcached cache')->eol();
-		\app\Stash_Memcached::instance()->flush();
+		\app\Stash_Memcached::instance(false)->flush();
 		$this->writer->writef('  - flushing apc cache')->eol();
-		\app\Stash_APC::instance()->flush();
-
-		$base['caching'] = $cache_settings;
+		\app\Stash_APC::instance(false)->flush();
 	}
 
 	/**
