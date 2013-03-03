@@ -50,7 +50,15 @@
 				'category' => 'Tools',
 				'description' => array
 					(
-						'Cleans system (cache, logs, etc).'
+						'Cleans system (cache, temporary files, etc). Optionally logs too.'
+					),
+				'flags' => array
+					(
+						'purge-logs' => array
+							(
+								'short' => 'l',
+								'description' => 'Logs will also be deleted.'
+							),
 					),
 			),
 		'compile' => array

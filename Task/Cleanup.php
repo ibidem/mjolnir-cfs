@@ -37,6 +37,8 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 	 */
 	function run()
 	{
+		$pruge_logs = $this->get('purge-logs', false);
+
 		\app\Task::consolewriter($this->writer);
 
 		$this->writer->writef(' Reseting cache')->eol();
@@ -45,23 +47,26 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 
 		# Remove Log files
 
-		$this->writer->writef(' Removing logs')->eol();
-		$log_files = \app\Filesystem::matchingfiles(ETCPATH.'logs', '#^[^\.].*$#');
-
-		foreach ($log_files as $file)
+		if ($pruge_logs)
 		{
-			$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
-			try
-			{
-				\unlink($file);
-			}
-			catch (\Exception $e)
-			{
-				$this->writer->writef('    failed '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
-			}
-		}
+			$this->writer->writef(' Removing logs')->eol();
+			$log_files = \app\Filesystem::matchingfiles(ETCPATH.'logs', '#^[^\.].*$#');
 
-		\app\Filesystem::prunedirs(ETCPATH.'logs');
+			foreach ($log_files as $file)
+			{
+				$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				try
+				{
+					\unlink($file);
+				}
+				catch (\Exception $e)
+				{
+					$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				}
+			}
+
+			\app\Filesystem::prunedirs(ETCPATH.'logs');
+		}
 
 		# Remove Cache files
 
@@ -77,7 +82,7 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 			}
 			catch (\Exception $e)
 			{
-				$this->writer->writef('    failed '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
 			}
 		}
 
@@ -97,7 +102,7 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 			}
 			catch (\Exception $e)
 			{
-				$this->writer->writef('    failed '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
 			}
 		}
 
