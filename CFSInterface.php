@@ -205,7 +205,7 @@ interface CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function &config($key, $ext = EXT);
+	static function config($key, $ext = EXT);
 
 	/**
 	 * Same as config, only it explicitly only handles files. Which is to say
@@ -214,7 +214,7 @@ interface CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function &configfile($key, $ext = EXT);
+	static function configfile($key, $ext = EXT);
 
 	// ------------------------------------------------------------------------
 	// System Information
@@ -251,7 +251,7 @@ interface CFSInterface
 	 * @param array base
 	 * @param array overwrite
 	 */
-	static function config_merge(array &$base, array &$overwrite);
+	static function config_merge(array &$base, array $overwrite);
 
 	/**
 	 * Applies config_merge, but returns array and doesn't alter base.
@@ -260,7 +260,7 @@ interface CFSInterface
 	 * @param array overwrite
 	 * @return array merged configuration
 	 */
-	static function merge(array $base, array &$overwrite);
+	static function merge(array $base, array $overwrite);
 
 	// ------------------------------------------------------------------------
 	// Utility

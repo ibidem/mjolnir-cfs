@@ -145,13 +145,7 @@ class Task_Make_Class extends \app\Instantiatable implements \mjolnir\types\Task
 
 		if ($namespace === 'app')
 		{
-			$namespace = \app\CFS::config('mjolnir/conventions')['app.namespace'];
-
-			if ($namespace === null)
-			{
-				throw new \app\Exception
-					('You need to define what is considered the default namespace in your convention file (key is [app.namespace]).');
-			}
+			throw new \app\Exception('You must provide a namespace.');
 		}
 
 		if ($category === null)

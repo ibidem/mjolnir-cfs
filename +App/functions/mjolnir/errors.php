@@ -108,7 +108,7 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 
 		$base_config = \app\CFS::config('mjolnir/base');
 
-		if ( ! empty($base_config) && \app\CFS::config('mjolnir/base')['development'])
+		if ( ! empty($base_config) && $base_config['development'])
 		{
 			echo 'Uncaught Exception'.PHP_EOL;
 

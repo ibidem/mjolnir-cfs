@@ -16,7 +16,7 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 	 */
 	function cache_cleanup()
 	{
-		$base = &\app\CFS::config('mjolnir/base');
+		$base = \app\CFS::config('mjolnir/base');
 		$cache_settings = $base['caching'];
 		$base['caching'] = true;
 

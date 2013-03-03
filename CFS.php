@@ -704,7 +704,7 @@ class CFS implements CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function &config($key, $ext = EXT)
+	static function config($key, $ext = EXT)
 	{
 		return static::configfile($key, $ext);
 	}
@@ -731,7 +731,7 @@ class CFS implements CFSInterface
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
-	static function &configfile($key, $ext = EXT)
+	static function configfile($key, $ext = EXT)
 	{
 		$benchmark = \app\Benchmark::token(__METHOD__, 'Mjolnir');
 
@@ -825,9 +825,9 @@ class CFS implements CFSInterface
 	 * @param array base
 	 * @param array overwrite
 	 */
-	static function config_merge(array &$base, array &$overwrite)
+	static function config_merge(array &$base, array $overwrite)
 	{
-		foreach ($overwrite as $key => &$value)
+		foreach ($overwrite as $key => $value)
 		{
 			if (\is_int($key))
 			{
@@ -862,7 +862,7 @@ class CFS implements CFSInterface
 	 * @param array overwrite
 	 * @return array merged configuration
 	 */
-	static function merge(array $base, array &$overwrite)
+	static function merge(array $base, array $overwrite)
 	{
 		static::config_merge($base, $overwrite);
 		return $base;

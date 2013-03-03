@@ -89,7 +89,7 @@ if ( ! \function_exists('\mjolnir\array_merge'))
 	/**
 	 * Function version of CFS::config_merge.
 	 */
-	function array_merge(array &$base, array &$overwrite)
+	function array_merge(array &$base, array $overwrite)
 	{
 		foreach ($overwrite as $key => &$value)
 		{
@@ -218,7 +218,7 @@ if ( ! \function_exists('\mjolnir\log_cache'))
 				{
 					$successful = false;
 					$cache = \apc_fetch('mjolnir:log.cache', $successful);
-					
+
 					if ( ! $successful)
 					{
 						$cache = [];
