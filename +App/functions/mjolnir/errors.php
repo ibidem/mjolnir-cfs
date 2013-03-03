@@ -2,7 +2,10 @@
 
 if ( ! \function_exists('\mjolnir\log_exception'))
 {
-	function log_exception(\Exception $exception, $replication_path = 'Exceptions/')
+	/**
+	 * Logging for exceptions.
+	 */
+	function log_exception(\Exception $exception)
 	{
 		$error_diagnostic
 			= $exception->getMessage()
@@ -15,8 +18,8 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 
 		$trace = $exception->getTraceAsString();
 
-		$error_diagnostic
-			.= \str_replace
+		$error_diagnostic_trace
+			= \str_replace
 				(
 					DOCROOT,
 					'',
@@ -31,12 +34,15 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 			;
 
 		// main log
-		\mjolnir\masterlog('Exception', $error_diagnostic, $replication_path);
+		\mjolnir\masterlog('Exception', $error_diagnostic, $error_diagnostic_trace);
 	}
 }
 
 if ( ! \function_exists('\mjolnir\log_error'))
 {
+	/**
+	 * Logging for errors.
+	 */
 	function log_error($error)
 	{
 		if (\is_array($error))
@@ -51,11 +57,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 					. ')'
 					;
 
-				\mjolnir\log('FatalError', $error_diagnostic, 'FatalErrors/');
+				\mjolnir\log('FatalError', $error_diagnostic);
 			}
 			else # unknown format
 			{
-				\mjolnir\log('FatalError', \serialize($error), 'FatalErrors/');
+				\mjolnir\log('FatalError', \serialize($error));
 			}
 		}
 		else if (\is_a('\Exception', $error))
@@ -74,11 +80,11 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 			if (\in_array('getMessage', $error_methods))
 			{
-				\mjolnir\log('FatalError', $error->getMesssage(), 'FatalErrors/');
+				\mjolnir\log('FatalError', $error->getMesssage());
 			}
 			else # unprocessable
 			{
-				\mjolnir\log('FatalError', 'Unprocessable error. Serialization: '.\serialize($error), 'FatalErrors/');
+				\mjolnir\log('FatalError', 'Unprocessable error. Serialization: '.\serialize($error));
 			}
 		}
 	}
@@ -86,9 +92,19 @@ if ( ! \function_exists('\mjolnir\log_error'))
 
 if ( ! \function_exists('\mjolnir\exception_handler'))
 {
+	/**
+	 * System exception handler.
+	 */
 	function exception_handler($exception)
 	{
-		\mjolnir\log_exception($exception);
+		try
+		{
+			\mjolnir\log_exception($exception);
+		}
+		catch (\Exception $e)
+		{
+			die($e->getMessage());
+		}
 
 		$base_config = \app\CFS::config('mjolnir/base');
 
@@ -128,6 +144,9 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 
 if ( ! \function_exists('\mjolnir\error_handler'))
 {
+	/**
+	 * System error handler. We convert them to exceptions.
+	 */
 	function error_handler($errno, $errstr, $errfile, $errline)
 	{
 		 throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
@@ -136,6 +155,9 @@ if ( ! \function_exists('\mjolnir\error_handler'))
 
 if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 {
+	/**
+	 * Shutdown function that ensures user gets proper error page.
+	 */
 	function shutdown_error_checks()
 	{
 		$exception = \error_get_last();

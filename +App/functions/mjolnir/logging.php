@@ -1,7 +1,7 @@
 <?php namespace mjolnir;
 
 #
-# Logging is a function to make sure it's available even in the absence of 
+# Logging is a function to make sure it's available even in the absence of
 # autoloading.
 #
 
@@ -14,13 +14,23 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 	 * relative path is provided the log entry will be duplicated there as well
 	 * for easier reading.
 	 */
-	function masterlog($level, $message, $replication_path = null, $relative_path = true)
+	function masterlog($level, $info, $ancilary_info)
 	{
+		$conf = \mjolnir\log_settings();
+
+		// check dupliction rules, exclude rules, etc
+		if (\mjolnir\log_ignorable($level, $info))
+		{
+			return;
+		}
+
+		$message = $info.$ancilary_info;
+
 		$time = \date('Y-m-d H:i:s');
 		$logs_path = ETCPATH.'logs'.DIRECTORY_SEPARATOR;
 		$date_path = \date('Y').DIRECTORY_SEPARATOR.\date('m').DIRECTORY_SEPARATOR;
 		$master_logs_path = $logs_path.$date_path;
-		
+
 		if (isset($_SERVER, $_SERVER['REMOTE_ADDR']))
 		{
 			$ip = $_SERVER['REMOTE_ADDR'];
@@ -29,7 +39,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		{
 			$ip = 'n/a';
 		}
-		
+
 		if (isset($_SERVER, $_SERVER['REQUEST_URI']))
 		{
 			$uri = $_SERVER['REQUEST_URI'];
@@ -38,7 +48,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		{
 			$uri = 'n/a';
 		}
-		
+
 		if (isset($_SERVER, $_SERVER['HTTP_REFERER']))
 		{
 			$referer = $_SERVER['HTTP_REFERER'];
@@ -47,7 +57,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		{
 			$referer = 'n/a';
 		}
-		
+
 		if (isset($_SERVER, $_SERVER['REQUEST_METHOD']))
 		{
 			$method = $_SERVER['REQUEST_METHOD'];
@@ -56,9 +66,9 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		{
 			$method = 'n/a';
 		}
-		
+
 		// include aditional diagnostic information
-		$message 
+		$message
 			= \rtrim($message, "\n\r")
 			. "\n\t\t-\n"
 			. "\t\tURI: $uri\n"
@@ -66,24 +76,33 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 			. "\t\tReferer: $referer\n"
 			. "\t\tIP: $ip\n"
 			;
-		
+
+		// attempt to add user information
+		try
+		{
+			if (\class_exists('\app\Auth', false))
+			{
+				$message .= "\t\tUser: ".(\app\Auth::id() !== null ? \app\Auth::id() : 'guess')."\n";
+			}
+			else # not applicable
+			{
+				$message .= "\t\tUser: n/a\n";
+			}
+		}
+		catch (\Exception $e)
+		{
+			$message .= "\t\tUser: error\n";
+		}
+
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 
 		// append message to master log
 		\mjolnir\append_to_file($master_logs_path, \date('d').'.log', PHP_EOL.$message);
 
-		if ($replication_path)
+		if ($conf['replication'])
 		{
-			$replication_path = \rtrim($replication_path, '\\/').DIRECTORY_SEPARATOR;
-			
-			if ($relative_path)
-			{
-				\mjolnir\append_to_file($logs_path.$replication_path.$date_path, \date('d').'.log', PHP_EOL.$message);
-			}
-			else # absolute path
-			{
-				\mjolnir\append_to_file($replication_path.$date_path, \date('d').'.log', PHP_EOL.$message);
-			}
+			$replication_path = \rtrim($level, '\\/').DIRECTORY_SEPARATOR;
+			\mjolnir\append_to_file($logs_path.$replication_path.$date_path, \date('d').'.log', PHP_EOL.$message);
 		}
 	}
 }
@@ -92,17 +111,30 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 {
 	/**
 	 * Shortlog stores debug info for tail -f usage.
-	 * 
+	 *
 	 * Do not use shortlog for spammy errors!
 	 * Do not use shortlog with traces!
 	 */
 	function shortlog($level, $message)
 	{
+		// check exclude rules, etc (but do not check for duplication rules)
+		if (\mjolnir\log_ignorable($level, $message, false))
+		{
+			return;
+		}
+
+		$conf = \mjolnir\log_settings();
+
+		if ( ! $conf['short.log'])
+		{
+			return;
+		}
+
 		$time = \date('Y-m-d H:i:s');
 		$logs_path = ETCPATH.'logs'.DIRECTORY_SEPARATOR;
 		$message = \str_replace(DOCROOT, '', $message);
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
-		
+
 		// append message to master log
 		\mjolnir\append_to_file($logs_path, 'short.log', PHP_EOL.$message);
 	}
@@ -111,12 +143,12 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 if ( ! \function_exists('\mjolnir\log'))
 {
 	/**
-	 * Log is a shorthand for quick shortlog followed by masterlog with the same
-	 * parameters.
+	 * Log is a shorthand for quick shortlog followed by masterlog. With the
+	 * exception of ancilary_info the same parameters will be passed on to both.
 	 */
-	function log($level, $message, $replication_path = null, $relative_path = true)
+	function log($level, $message, $ancilary_info = '')
 	{
 		\mjolnir\shortlog($level, $message);
-		\mjolnir\masterlog($level, $message, $replication_path, $relative_path);
+		\mjolnir\masterlog($level, $message, $ancilary_info);
 	}
 }
