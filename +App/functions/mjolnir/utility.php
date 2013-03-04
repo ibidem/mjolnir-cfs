@@ -32,8 +32,6 @@ if ( ! \function_exists('\mjolnir\append_to_file'))
 		}
 		catch (\Exception $exception)
 		{
-			\mjolnir\log_exception($exception);
-
 			if (\defined('PUBDIR'))
 			{
 				// attempt to retrieve configuration

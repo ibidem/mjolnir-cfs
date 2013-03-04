@@ -50,7 +50,7 @@
 				'category' => 'Tools',
 				'description' => array
 					(
-						'Cleans system (cache, temporary files, etc). Optionally logs too.'
+						'Cleans system. Optionally logs too.'
 					),
 				'flags' => array
 					(

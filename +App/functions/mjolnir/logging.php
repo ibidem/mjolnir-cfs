@@ -14,7 +14,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 	 * relative path is provided the log entry will be duplicated there as well
 	 * for easier reading.
 	 */
-	function masterlog($level, $info, $ancilary_info)
+	function masterlog($level, $info, $ancilary_info = '')
 	{
 		$conf = \mjolnir\log_settings();
 
