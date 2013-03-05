@@ -123,10 +123,10 @@ $base_config = CFS::config('mjolnir/base');
 
 # ---- Composer Autoloaders -------------------------------------------------- #
 
-if (\file_exists(PLGPATH.'/autoload'.EXT))
+if (\file_exists(VDRPATH.'/autoload'.EXT))
 {
 	// composer setup
-	require PLGPATH.'/autoload'.EXT;
+	require VDRPATH.'/autoload'.EXT;
 }
 
 // cleanup
