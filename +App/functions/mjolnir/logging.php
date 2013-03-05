@@ -82,7 +82,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		{
 			if (\class_exists('\app\Auth', false))
 			{
-				$message .= "\t\tUser: ".(\app\Auth::id() !== null ? \app\Auth::id() : 'guess')."\n";
+				$message .= "\t\tUser: ".(\app\Auth::id() !== null ? \app\Auth::id() : 'guest')."\n";
 			}
 			else # not applicable
 			{
