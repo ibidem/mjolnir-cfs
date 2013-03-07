@@ -286,6 +286,11 @@
 								'description' => 'Perform Install.',
 								'short' => 'i',
 							),
+						'local' => array
+							(
+								'description' => 'Only check DOCROOT/themes',
+								'short' => 'l',
+							),
 					),
 			),
 		'devlog' => array

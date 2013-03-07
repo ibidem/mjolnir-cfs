@@ -19,10 +19,20 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 		\app\Task::consolewriter($this->writer);
 
 		$install = $this->get('install', false);
+		$local = $this->get('local', false);
+		
+		if ($local)
+		{
+			$maindir = DOCROOT.'themes/';
+		}
+		else # global
+		{
+			$maindir = DOCROOT;
+		}
 
 		if ($install) 
 		{
-			$files = \app\Filesystem::matchingfiles(DOCROOT, '#^\.bowerrc$#');
+			$files = \app\Filesystem::matchingfiles($maindir, '#^\.bowerrc$#');
 			
 			foreach ($files as $file)
 			{
