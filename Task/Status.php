@@ -66,6 +66,7 @@ class Task_Status extends \app\Instantiatable implements \mjolnir\types\Task
 				}
 				catch (\Exception $e)
 				{
+					\mjolnir\log_exception($e);
 					$status = 'untestable';
 				}
 
