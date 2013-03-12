@@ -20,6 +20,8 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 
 		$feature = $this->get('feature', false);
 
+		$behat_flags = ' ';
+		
 		if ($_SERVER['argc'] > 2)
 		{
 			$args = $_SERVER['argv'];
