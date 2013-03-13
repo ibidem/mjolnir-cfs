@@ -69,6 +69,23 @@
 						'Runs all +compile.rb scripts.'
 					),
 			),
+		'config' => array
+			(
+				'category' => 'Inspection',
+				'description' => array
+					(
+						'\print_r configuration.',
+					),
+				'flags' => array
+					(
+						'config' => array
+							(
+								'description' => 'configuration path',
+								'type' => 'text',
+								'short' => 'c',
+							),
+					),
+			),
 		'make:class' => array
 			(
 				'category' => 'Tools',
