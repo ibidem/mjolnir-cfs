@@ -39,7 +39,7 @@ if ( ! \defined('ENVFILE'))
 /// The directory in which your mjolnir library modules are located.
 if ( ! \defined('MJLPATH'))
 {
-	\define('MJLPATH', \realpath(PLGPATH.'mjolnir').DIRECTORY_SEPARATOR);
+	\define('MJLPATH', \realpath(VDRPATH.'mjolnir').DIRECTORY_SEPARATOR);
 }
 
 /// The directory in which your mjolnir library modules are located.
