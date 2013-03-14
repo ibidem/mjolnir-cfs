@@ -68,6 +68,14 @@
 					(
 						'Runs all +compile.rb scripts.'
 					),
+				'flags' => array
+					(
+						'local' => array
+							(
+								'description' => 'Only check DOCROOT/themes',
+								'short' => 'l',
+							),
+					),
 			),
 		'config' => array
 			(
