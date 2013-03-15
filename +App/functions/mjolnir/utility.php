@@ -73,7 +73,11 @@ if ( ! \function_exists('\mjolnir\implode'))
 		$glued = '';
 		foreach ($list as $key => $value)
 		{
-			$glued .= $glue.$manipulator($key, $value);
+			$item = $manipulator($key, $value);
+			if ($item !== false)
+			{
+				$glued .= $glue.$item;
+			}
 		}
 
 		$glued = \substr($glued, \strlen($glue));
