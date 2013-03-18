@@ -62,28 +62,38 @@ class Task_Status extends \app\Instantiatable implements \mjolnir\types\Task
 			{
 				try
 				{
-					 $status = $tester();
+					 $statusinfo = $tester();
 				}
 				catch (\Exception $e)
 				{
 					\mjolnir\log_exception($e);
-					$status = 'untestable';
+					$statusinfo = 'untestable';
 				}
 
+				if (\is_array($statusinfo))
+				{
+					$status = \key($statusinfo);
+					$statushint = \current($statusinfo); 
+				}
+				else # non-array status
+				{
+					$status = $statushint = $statusinfo;
+				}
+				
 				switch ($status)
 				{
 					case 'untestable':
-						$this->writer->printf('status', 'untestable', $requirement)->eol();
+						$this->writer->printf('status', $statushint, $requirement)->eol();
 						! $no_stop or self::error();
 						++$errors;
 						break;
 					case 'error':
-						$this->writer->printf('status', 'error', $requirement)->eol();
+						$this->writer->printf('status', $statushint, $requirement)->eol();
 						! $no_stop or self::error();
 						++$errors;
 						break;
 					case 'failed':
-						$this->writer->printf('status', 'failed', $requirement)->eol();
+						$this->writer->printf('status', $statushint, $requirement)->eol();
 						( ! $strict && ! $no_stop) or self::error();
 						++$failed;
 						break;
