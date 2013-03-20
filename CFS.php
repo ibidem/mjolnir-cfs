@@ -745,6 +745,12 @@ class CFS implements CFSInterface
 		}
 		else # not cached
 		{
+			// check key for \, common windows environment mistake
+			if (\strpos($key, '\\'))
+			{
+				throw new \Exception("Invalid configuration key: $key");
+			}
+			
 			// we start at the bottom since we merge up
 			$files = \array_reverse
 				(
