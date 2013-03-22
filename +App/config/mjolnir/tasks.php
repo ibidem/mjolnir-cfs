@@ -18,8 +18,8 @@
 		 *
 		 * If you need a command along the lines of:
 		 *
-		 *		minion some:command "something"
-		 *		(meaning no flags)
+		 *    minion some:command "something"
+		 *    (meaning no flags)
 		 *
 		 * Just don't give it flags, handle it in the command's execution and explain it
 		 * in the command's documentation (ie. description). Preferably use flags though
