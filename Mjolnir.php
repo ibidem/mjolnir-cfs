@@ -35,9 +35,9 @@ class Mjolnir
 
 		do
 		{
-			if (\file_exists($dir.'mjolnir'.EXT))
+			if (\file_exists($dir.'etc/mjolnir'.EXT))
 			{
-				require_once $dir.'mjolnir'.EXT;
+				require_once $dir.'etc/mjolnir'.EXT;
 				return;
 			}
 
