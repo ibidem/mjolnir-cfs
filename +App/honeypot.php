@@ -6,11 +6,15 @@
 // HowTo: order honeypot -n 'mjolnir\cfs'
 
 
+class BenchmarkInterface extends \mjolnir\cfs\BenchmarkInterface
+{
+}
+
 class Benchmark extends \mjolnir\cfs\Benchmark
 {
 }
 
-class BenchmarkInterface extends \mjolnir\cfs\BenchmarkInterface
+class CFSInterface extends \mjolnir\cfs\CFSInterface
 {
 }
 
@@ -18,8 +22,17 @@ class CFS extends \mjolnir\cfs\CFS
 {
 }
 
-class CFSInterface extends \mjolnir\cfs\CFSInterface
+/**
+ * @method \app\Environment set($key, $value)
+ */
+class Environment extends \mjolnir\cfs\Environment
 {
+}
+
+class Env extends \mjolnir\cfs\Env
+{
+	/** @return \app\Env */
+	static function set($key, $value) { return parent::set($key, $value); }
 }
 
 class Instantiatable extends \mjolnir\cfs\Instantiatable
@@ -117,6 +130,19 @@ class Task_Compile extends \mjolnir\cfs\Task_Compile
 }
 
 /**
+ * @method \app\Task_Config set($name, $value)
+ * @method \app\Task_Config add($name, $value)
+ * @method \app\Task_Config metadata_is(array $metadata = null)
+ * @method \app\Task_Config writer_is($writer)
+ * @method \app\Writer writer()
+ */
+class Task_Config extends \mjolnir\cfs\Task_Config
+{
+	/** @return \app\Task_Config */
+	static function instance() { return parent::instance(); }
+}
+
+/**
  * @method \app\Task_Devlog set($name, $value)
  * @method \app\Task_Devlog add($name, $value)
  * @method \app\Task_Devlog metadata_is(array $metadata = null)
@@ -139,6 +165,19 @@ class Task_Devlog extends \mjolnir\cfs\Task_Devlog
 class Task_Find_Class extends \mjolnir\cfs\Task_Find_Class
 {
 	/** @return \app\Task_Find_Class */
+	static function instance() { return parent::instance(); }
+}
+
+/**
+ * @method \app\Task_Find_Config set($name, $value)
+ * @method \app\Task_Find_Config add($name, $value)
+ * @method \app\Task_Find_Config metadata_is(array $metadata = null)
+ * @method \app\Task_Find_Config writer_is($writer)
+ * @method \app\Writer writer()
+ */
+class Task_Find_Config extends \mjolnir\cfs\Task_Find_Config
+{
+	/** @return \app\Task_Find_Config */
 	static function instance() { return parent::instance(); }
 }
 
@@ -178,19 +217,6 @@ class Task_Honeypot extends \mjolnir\cfs\Task_Honeypot
 class Task_Make_Class extends \mjolnir\cfs\Task_Make_Class
 {
 	/** @return \app\Task_Make_Class */
-	static function instance() { return parent::instance(); }
-}
-
-/**
- * @method \app\Task_Make_Config set($name, $value)
- * @method \app\Task_Make_Config add($name, $value)
- * @method \app\Task_Make_Config metadata_is(array $metadata = null)
- * @method \app\Task_Make_Config writer_is($writer)
- * @method \app\Writer writer()
- */
-class Task_Make_Config extends \mjolnir\cfs\Task_Make_Config
-{
-	/** @return \app\Task_Make_Config */
 	static function instance() { return parent::instance(); }
 }
 

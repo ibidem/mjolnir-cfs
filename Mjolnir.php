@@ -157,7 +157,7 @@ class Mjolnir
 	/**
 	 * Theme resources.
 	 */
-	static function resource($system_config)
+	static function resource($wwwconfig, $wwwpath)
 	{
 		\app\Benchmark::token(__METHOD__, 'Application', true);
 

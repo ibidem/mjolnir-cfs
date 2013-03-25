@@ -27,12 +27,13 @@
 	include $thisdir.'functions/mjolnir/logging'.EXT;
 	include $thisdir.'functions/mjolnir/errors'.EXT;
 
-	// Global exception handler should never be called. It is a global function and
-	// abusing it to manage your exception will get progressively more convoluted.
-	// Handling your exception on the spot in a try / catch or at an abstract level
-	// (ie. Layer_* level) is recomended. Sometimes some exceptions just slip
-	// though; especially in development. This function outputs a readable version
-	// of the message; assuming the environment is not borked.
+	// Global exception handler should never be called. It is a global function 
+	// and abusing it to manage your exception will get progressively more 
+	// convoluted. Handling your exception on the spot in a try / catch or at 
+	// an abstract level (ie. Layer_* level) is recomended. Sometimes some 
+	// exceptions just slip though; especially in development. This function 
+	// outputs a readable version of the message; assuming the environment is 
+	// not borked.
 	\set_exception_handler('\mjolnir\exception_handler');
 	\set_error_handler('\mjolnir\error_handler');
 	\register_shutdown_function('\mjolnir\shutdown_error_checks');
@@ -120,7 +121,7 @@
 	$env = Environment::instance();
 
 	// system root
-	$env->set('sys.path', $wwwconfig['sys.path']);
+	$env->set('sys.path', $syspath);
 	// misc files and general purpose environement configuration files
 	$env->set('etc.path', $etcpath);
 	// application modules
