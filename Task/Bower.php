@@ -20,20 +20,20 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 
 		$install = $this->get('install', false);
 		$local = $this->get('local', false);
-		
+
 		if ($local)
 		{
-			$maindir = DOCROOT.'themes/';
+			$maindir = \app\Env::key('sys.path').'themes/';
 		}
 		else # global
 		{
-			$maindir = DOCROOT;
+			$maindir = \app\Env::key('sys.path');
 		}
 
-		if ($install) 
+		if ($install)
 		{
 			$files = \app\Filesystem::matchingfiles($maindir, '#^\.bowerrc$#');
-			
+
 			foreach ($files as $file)
 			{
 				// read bower config
@@ -41,26 +41,26 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 				if (isset($config['directory']))
 				{
 					$rootdir = \dirname($file);
-					
+
 					if (\file_exists($rootdir.'/component.json'))
 					{
 						$dir = $rootdir.'/'.\ltrim($config['directory'], '\\/');
-						$this->writer->eol()->writef(" Purging ".\str_replace(DOCROOT, '', \realpath($dir)))->eol();
+						$this->writer->eol()->writef(" Purging ".\str_replace(\app\Env::key('sys.path'), '', \realpath($dir)))->eol();
 						$deps = \scandir($dir);
-						
+
 						foreach ($deps as $dep)
 						{
 							// don't touch dot files
 							if ( ! \preg_match('#^\..*$#', $dep))
 							{
 								$fullpath = \realpath(\realpath($dir).'/'.$dep);
-								$this->writer->writef('  removing '.\str_replace(DOCROOT, '', $fullpath))->eol();
+								$this->writer->writef('  removing '.\str_replace(\app\Env::key('sys.path'), '', $fullpath))->eol();
 								\app\Filesystem::delete($fullpath);
 							}
 						}
-						
+
 						$this->writer->eol();
-						$this->writer->writef(" Running bower install in ".\str_replace(DOCROOT, '', \realpath($rootdir)))->eol()->eol();
+						$this->writer->writef(" Running bower install in ".\str_replace(\app\Env::key('sys.path'), '', \realpath($rootdir)))->eol()->eol();
 						\chdir($rootdir);
 						\passthru("bower install --no-color");
 					}
@@ -69,14 +69,14 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 						$this->writer->writef(" No component.json in $rootdir")->eol();
 					}
 				}
-				else # directory property not set 
+				else # directory property not set
 				{
 					$this->writer->writef(" No [directory] specified for [$file]. Ignoring.")->eol();
 				}
 			}
-			
+
 		}
-		else # no command  
+		else # no command
 		{
 			$this->writer->writef(' No command specified, see -h for help.')->eol();
 		}

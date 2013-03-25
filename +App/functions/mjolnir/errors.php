@@ -1,5 +1,21 @@
 <?php namespace mjolnir;
 
+if ( ! \defined('MJOLNIR_LOGGING_SYSPATH'))
+{
+	if (\class_exists('\app\Env'))
+	{
+		\define('MJOLNIR_LOGGING_SYSPATH', \app\Env::key('sys.path'));
+	}
+	else if (isset($syspath))
+	{
+		\define('MJOLNIR_LOGGING_SYSPATH',$syspath);
+	}
+	else # syspath is not available
+	{
+		\define('MJOLNIR_LOGGING_SYSPATH', '');
+	}
+}
+
 if ( ! \function_exists('\mjolnir\log_exception'))
 {
 	/**
@@ -9,7 +25,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 	{
 		$error_diagnostic
 			= $exception->getMessage()
-			. ' ('.\str_replace(DOCROOT, '', $exception->getFile()).' @ Ln '.$exception->getLine().')'
+			. ' ('.\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getFile()).' @ Ln '.$exception->getLine().')'
 			;
 
 		\mjolnir\shortlog('Exception', $error_diagnostic);
@@ -21,7 +37,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 		$error_diagnostic_trace
 			= \str_replace
 				(
-					DOCROOT,
+					MJOLNIR_LOGGING_SYSPATH,
 					'',
 					\str_replace
 						(
@@ -52,7 +68,7 @@ if ( ! \function_exists('\mjolnir\log_error'))
 				$error_diagnostic
 					= $error['message']
 					. '('
-					. \str_replace(DOCROOT, '', $error['file'])
+					. \str_replace(MJOLNIR_LOGGING_SYSPATH, '', $error['file'])
 					. ' @ Ln '.$error['line']
 					. ')'
 					;
@@ -113,26 +129,26 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 			echo 'Uncaught Exception'.PHP_EOL;
 
 			echo $exception->getMessage()
-				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
+				. "\n".\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getTraceAsString());
 		}
 		else # public version
 		{
-			if (\defined('PUBDIR'))
+			if (\app\Env::key('www.path') !== null)
 			{
 				if (\is_a($exception, '\app\Exception_NotFound'))
 				{
-					include PUBDIR.'404'.EXT;
+					include \app\Env::key('www.path').'404'.EXT;
 				}
 				else # general error
 				{
-					include PUBDIR.'error'.EXT;
+					include \app\Env::key('www.path').'error'.EXT;
 				}
 			}
 			else if (\php_sapi_name() === 'cli')
 			{
 				echo 'Uncaught Exception';
 				echo $exception->getMessage()
-				. "\n".\str_replace(DOCROOT, '', $exception->getTraceAsString());
+				. "\n".\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getTraceAsString());
 			}
 			else # unknown
 			{
@@ -167,9 +183,9 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 			\mjolnir\log_error($exception);
 
 			$redirect = true;
-			if (\defined('PUBDIR'))
+			if (\app\Env::key('www.path') !== null)
 			{
-				$base_config = include PUBDIR.'config'.EXT;
+				$base_config = include \app\Env::key('www.path').'config'.EXT;
 				$redirect = ! $base_config['development'];
 			}
 
@@ -177,9 +193,9 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 			{
 				try
 				{
-					if (\defined('PUBDIR'))
+					if (\app\Env::key('www.path') !== null)
 					{
-						$base_config = include PUBDIR.'config'.EXT;
+						$base_config = include \app\Env::key('www.path').'config'.EXT;
 						$error_page = '//'.$base_config['domain'].$base_config['path'].'error'.EXT;
 						\header('Location: '.$error_page);
 					}

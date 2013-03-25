@@ -26,7 +26,7 @@ class Task_Find_Class extends \app\Instantiatable implements \mjolnir\types\Task
 		{
 			if (\file_exists($module.DIRECTORY_SEPARATOR.$classfile))
 			{
-				$files[] = \str_replace(DOCROOT, '', $module.DIRECTORY_SEPARATOR.$classfile);
+				$files[] = \str_replace(\app\Env::key('sys.path'), '', $module.'/'.$classfile);
 			}
 		}
 

@@ -34,10 +34,10 @@ implementation.
 Because configuration files are plain old PHP code, you can have any amount of
 complexity in it. Here are just a few examples:
 
-You can generate a configuration dynamically; for example if PUBDIR is not
-defined you may attempt to resolve the configuration to some other more useful
-value; remember that the configuration files are still plain old PHP files so
-there is very little limitation on what processing they can do.
+You can generate a configuration dynamically; for example if www path is
+not defined you may attempt to resolve the configuration to some other more
+useful value; remember that the configuration files are still plain old PHP
+files so there is very little limitation on what processing they can do.
 
 You can split the configuration into a series of arrays and simply return the
 merged output; for example in the case of a script configuration, you can form
@@ -101,6 +101,6 @@ in a separate file path that sits at the top of the cascading file system and
 outside your `DOCROOT`. The
 [mjolnir-template-app](https://github.com/ibidem/mjolnir-template-app.git) shows
 an example of this: you specify the path to the private files via a
-`private.files` entry in `PUBDIR/config.php` and a `DOCROOT/privatefiles` file
-for CLI access. The `DOCROOT/privatefiles` is ignored via your `.gitignore` and
+`private.files` entry in `WWWPATH/config.php` and a `DOCROOT/.key.path` file
+for CLI access. The `DOCROOT/.key.path` is ignored via your `.gitignore` and
 merely contains a path.

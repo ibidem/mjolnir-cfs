@@ -750,7 +750,7 @@ class CFS implements CFSInterface
 			{
 				throw new \Exception("Invalid configuration key: $key");
 			}
-			
+
 			// we start at the bottom since we merge up
 			$files = \array_reverse
 				(
@@ -775,7 +775,7 @@ class CFS implements CFSInterface
 				{
 					\app\Benchmark::stop($benchmark);
 
-					$corrupt_file = \str_replace(DOCROOT, '', $file);
+					$corrupt_file = \str_replace(\app\Env::key('sys.path'), '', $file);
 					throw new \app\Exception('Corrupt configuration file ['.$corrupt_file.']');
 				}
 			}

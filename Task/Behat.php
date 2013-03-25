@@ -21,7 +21,7 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 		$feature = $this->get('feature', false);
 
 		$behat_flags = ' ';
-		
+
 		if ($_SERVER['argc'] > 2)
 		{
 			$args = $_SERVER['argv'];
@@ -49,9 +49,9 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 		}
 
 		// verify behat is present
-		$composer_config = \json_decode(\file_get_contents(DOCROOT.'composer.json'), true);
-		$bin_dir = \trim($composer_config['config']['bin-dir'], '/');
-		$behat_cmd = DOCROOT.$bin_dir.DIRECTORY_SEPARATOR.'behat';
+		$composer_config = \json_decode(\file_get_contents(\app\Env::key('etc.path').'composer.json'), true);
+		$bindir = \trim($composer_config['config']['bin-dir'], '/');
+		$behat_cmd = \app\Env::key('sys.path').$bindir.'/behat';
 		if ( ! \file_exists($behat_cmd))
 		{
 			$this->writer->printf('error', 'Missing behat runner.')->eol();
@@ -82,7 +82,7 @@ class Task_Behat extends \app\Instantiatable implements \mjolnir\types\Task
 								. DIRECTORY_SEPARATOR
 							,
 							'',
-							\str_replace(DOCROOT, '', $path)
+							\str_replace(\app\Env::key('sys.path'), '', $path)
 						);
 
 					$the_feature = \preg_replace('#^.*[/\\\]features[/\\\]#', '', \dirname($file));

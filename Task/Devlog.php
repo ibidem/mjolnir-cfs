@@ -16,7 +16,7 @@ class Task_Devlog extends \app\Instantiatable implements \mjolnir\types\Task
 	 */
 	function run()
 	{
-		$logpath = ETCPATH.'logs/short.log';
+		$logpath = \app\Env::key('etc.path').'logs/short.log';
 		\file_put_contents($logpath, '');
 		\passthru("tail -f $logpath");
 	}

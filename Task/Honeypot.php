@@ -89,7 +89,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 				$this->writer->printf('reset');
 			}
 
-			$this->writer->writef(' Succesfully created '.\str_replace('\\', '/', \str_replace(DOCROOT, '', $dir.'honeypot'.EXT)))->eol();
+			$this->writer->writef(' Succesfully created '.\str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $dir.'honeypot'.EXT)))->eol();
 		}
 		else # namespace does not exist
 		{
@@ -162,7 +162,7 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 						return '$'.$param->getName();
 					}
 				);
-			
+
 			$matches = null;
 			$esb = '\\'.'\\'; # escaped back slash
 			if (\strpos($method->getDocComment(), '@return static') !== false)
@@ -180,10 +180,10 @@ class Task_Honeypot extends \app\Instantiatable implements \mjolnir\types\Task
 			{
 				// method returns a type, unfortunately most IDEs fail horribly
 				// handling interfaces
-				
+
 				$type = $matches['type'];
 				$type = \preg_replace("#{$esb}.*{$esb}#", '', $type);
-				
+
 				if ( ! $method->isStatic())
 				{
 					$fluency .= " * @method \app\\$type {$method->name}($params)\n";

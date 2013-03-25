@@ -27,9 +27,9 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		$message = $info.$ancilary_info;
 
 		$time = \date('Y-m-d H:i:s');
-		$logs_path = ETCPATH.'logs'.DIRECTORY_SEPARATOR;
-		$date_path = \date('Y').DIRECTORY_SEPARATOR.\date('m').DIRECTORY_SEPARATOR;
-		$master_logs_path = $logs_path.$date_path;
+		$logspath = \app\Env::key('etc.path').'logs/';
+		$datepath = \date('Y').'/'.\date('m').'/';
+		$masterlogs_path = $logspath.$datepath;
 
 		if (isset($_SERVER, $_SERVER['REMOTE_ADDR']))
 		{
@@ -97,12 +97,12 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 
 		// append message to master log
-		\mjolnir\append_to_file($master_logs_path, \date('d').'.log', PHP_EOL.$message);
+		\mjolnir\append_to_file($masterlogs_path, \date('d').'.log', PHP_EOL.$message);
 
 		if ($conf['replication'])
 		{
 			$replication_path = \rtrim($level, '\\/').DIRECTORY_SEPARATOR;
-			\mjolnir\append_to_file($logs_path.$replication_path.$date_path, \date('d').'.log', PHP_EOL.$message);
+			\mjolnir\append_to_file($logspath.$replication_path.$datepath, \date('d').'.log', PHP_EOL.$message);
 		}
 	}
 }
@@ -131,12 +131,12 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 		}
 
 		$time = \date('Y-m-d H:i:s');
-		$logs_path = ETCPATH.'logs'.DIRECTORY_SEPARATOR;
-		$message = \str_replace(DOCROOT, '', $message);
+		$logspath = \app\Env::key('etc.path').'logs/';
+		$message = \str_replace(\app\Env::key('sys.path'), '', $message);
 		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
 
 		// append message to master log
-		\mjolnir\append_to_file($logs_path, 'short.log', PHP_EOL.$message);
+		\mjolnir\append_to_file($logspath, 'short.log', PHP_EOL.$message);
 	}
 }
 

@@ -44,63 +44,63 @@ class Task_Cleanup extends \app\Instantiatable implements \mjolnir\types\Task
 		if ($pruge_logs)
 		{
 			$this->writer->writef(' Removing logs')->eol();
-			$log_files = \app\Filesystem::matchingfiles(ETCPATH.'logs', '#^[^\.].*$#');
+			$log_files = \app\Filesystem::matchingfiles(\app\Env::key('etc.path').'logs', '#^[^\.].*$#');
 
 			foreach ($log_files as $file)
 			{
-				$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $file)))->eol();
 				try
 				{
 					\unlink($file);
 				}
 				catch (\Exception $e)
 				{
-					$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+					$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $file)))->eol();
 				}
 			}
 
-			\app\Filesystem::prunedirs(ETCPATH.'logs');
+			\app\Filesystem::prunedirs(\app\Env::key('etc.path').'logs');
 		}
 
 		# Remove Cache files
 
 		$this->writer->writef(' Removing misc cache files')->eol();
-		$cache_files = \app\Filesystem::matchingfiles(ETCPATH.'cache', '#^[^\.].*$#');
+		$cache_files = \app\Filesystem::matchingfiles(\app\Env::key('etc.path').'cache', '#^[^\.].*$#');
 
 		foreach ($cache_files as $file)
 		{
-			$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+			$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $file)))->eol();
 			try
 			{
 				\unlink($file);
 			}
 			catch (\Exception $e)
 			{
-				$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $file)))->eol();
 			}
 		}
 
-		\app\Filesystem::prunedirs(ETCPATH.'cache');
+		\app\Filesystem::prunedirs(\app\Env::key('etc.path').'cache');
 
 		# Remove Temporary file
 
 		$this->writer->writef(' Removing temporary files')->eol();
-		$tmp_files = \app\Filesystem::matchingfiles(ETCPATH.'tmp', '#^[^\.].*$#');
+		$tmp_files = \app\Filesystem::matchingfiles(\app\Env::key('etc.path').'tmp', '#^[^\.].*$#');
 
 		foreach ($tmp_files as $file)
 		{
-			$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+			$this->writer->writef('  - removing '. \str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $file)))->eol();
 			try
 			{
 				\unlink($file);
 			}
 			catch (\Exception $e)
 			{
-				$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(DOCROOT, '', $file)))->eol();
+				$this->writer->writef('    failed to remove '. \str_replace('\\', '/', \str_replace(\app\Env::key('sys.path'), '', $file)))->eol();
 			}
 		}
 
-		\app\Filesystem::prunedirs(ETCPATH.'tmp');
+		\app\Filesystem::prunedirs(\app\Env::key('etc.path').'tmp');
 	}
 
 } # class

@@ -1,133 +1,160 @@
 <?php namespace app;
 
-/// The default extension for files.
-if ( ! \defined('EXT'))
-{
-	\define('EXT', '.php');
-}
+	#
+	# This configuration is a quick default; the environment setup will use the
+	# default environment, typically 'main' if no other overwrites have
+	# happened.
+	#
 
-/// The directory in which plugins are located
-if ( ! \defined('PLGPATH'))
-{
-	\define('PLGPATH', DOCROOT.'plugins'.DIRECTORY_SEPARATOR);
-}
-
-/// The directory in which your application specific resources are located.
-if ( ! \defined('ETCPATH'))
-{
-	\define('ETCPATH', \realpath(DOCROOT.'etc').DIRECTORY_SEPARATOR);
-}
-
-/// The directory in which the modules for the current project are located.
-if ( ! \defined('MODPATH'))
-{
-	\define('MODPATH', \realpath(DOCROOT.'modules').DIRECTORY_SEPARATOR);
-}
-
-/// The directory in which your plugins are located. (typically vendor)
-if ( ! \defined('VDRPATH'))
-{
-	\define('VDRPATH', \realpath(DOCROOT.'vendor').DIRECTORY_SEPARATOR);
-}
-
-/// The directory in which your plugins are located. (typically vendor)
-if ( ! \defined('ENVFILE'))
-{
-	\define('ENVFILE', \realpath(DOCROOT.'environment'.EXT));
-}
-
-/// The directory in which your mjolnir library modules are located.
-if ( ! \defined('MJLPATH'))
-{
-	\define('MJLPATH', \realpath(VDRPATH.'mjolnir').DIRECTORY_SEPARATOR);
-}
-
-/// The directory in which your mjolnir library modules are located.
-if ( ! \defined('DRAFTPATH'))
-{
-	\define('DRAFTPATH', \realpath(DOCROOT.'drafts').DIRECTORY_SEPARATOR);
-}
-
-/// @see http://php.net/error_reporting
-\error_reporting(-1); # report everything under the sun
-
-/// @see http://php.net/spl_autoload_register
-require \realpath(\dirname(__FILE__)).'/../CFS'.EXT;
-\spl_autoload_register(['\mjolnir\cfs\CFS', 'load_symbol']);
-\class_alias('\mjolnir\cfs\CFS', 'app\CFS');
+	// default extension
+	\defined('EXT') or \define('EXT', '.php');
 
 
-# ---- Additional Configuration ---------------------------------------------- #
+	# ---- Error Reporting --------------------------------------------------- #
 
-// Global exception handler should never be called. It is a global function and
-// abusing it to manage your exception will get progressively more convoluted.
-// Handling your exception on the spot in a try / catch or at an abstract level
-// (ie. Layer_* level) is recomended. Sometimes some exceptions just slip
-// though; especially in development. This function outputs a readable version
-// of the message; assuming the environment is not borked.
-\set_exception_handler('\mjolnir\exception_handler');
-
-\set_error_handler('\mjolnir\error_handler');
-
-\register_shutdown_function('\mjolnir\shutdown_error_checks');
-
-
-# ---- Modules --------------------------------------------------------------- #
-
-if (\defined('PUBDIR'))
-{
-	$pubdir_config = include PUBDIR.'config'.EXT;
-}
-
-$env_config = include ENVFILE;
-
-// setup the modules
-CFS::modules($env_config['modules']);
-
-// allow application to store and overwrite config files, routes, etc;
-// everything except classes. You should always define your classes in
-// appropriate modules in the MODPATH
-CFS::frontpaths([ETCPATH]);
-
-// attempt to load private configuration
-if (\defined('PUBDIR'))
-{
-	$pubdir_config = include PUBDIR.'config'.EXT;
-	if (isset($pubdir_config['private.files']) && \file_exists($pubdir_config['private.files']))
+	// @see http://php.net/error_reporting
+	if (isset($wwwconfig))
 	{
-		CFS::frontpaths([$pubdir_config['private.files']]);
+		\error_reporting($wwwconfig['error-reporting']);
 	}
-}
-else # console or other
-{
-	$base_config = include ETCPATH.'config/mjolnir/base'.EXT;
-	if (\file_exists($base_config['private.files']))
+	else # default
 	{
-		CFS::frontpaths([$base_config['private.files']]);
+		\error_reporting(-1);
 	}
-}
 
-// you are not suppose to overwrite namespaces and abstracts; that's a misuse.
-// hence it makes no sense to search for them in \app\Class calls. Namespaces
-// should always be explicit
-CFS::namespacepaths($env_config['namespaces']);
+	// load logging and error reporting
+	$thisdir = \realpath(__DIR__).'/';
+	include $thisdir.'functions/mjolnir/logging'.EXT;
+	include $thisdir.'functions/mjolnir/errors'.EXT;
 
-$base_config = CFS::config('mjolnir/base');
+	// Global exception handler should never be called. It is a global function and
+	// abusing it to manage your exception will get progressively more convoluted.
+	// Handling your exception on the spot in a try / catch or at an abstract level
+	// (ie. Layer_* level) is recomended. Sometimes some exceptions just slip
+	// though; especially in development. This function outputs a readable version
+	// of the message; assuming the environment is not borked.
+	\set_exception_handler('\mjolnir\exception_handler');
+	\set_error_handler('\mjolnir\error_handler');
+	\register_shutdown_function('\mjolnir\shutdown_error_checks');
 
-// see: http://php.net/timezones
-\date_default_timezone_set($base_config['timezone']);
 
-// see: http://php.net/setlocale
-\setlocale(LC_ALL, \app\Lang::idlang($base_config['lang']).$base_config['charset']);
+	# ---- Autoloading ------------------------------------------------------- #
+
+	// setup additional helper temporary globals
+	$etcpath = \realpath($syspath.'etc').'/';
+	$modpath = \realpath($syspath.'modules').'/';
+	$vdrpath = \realpath($syspath.'vendor').'/';
+	$mjpath  = \realpath($vdrpath.'mjolnir').'/';
+
+	$envfilepath = \realpath($etcpath.'environment'.EXT);
+
+	// Composer
+	if (\file_exists($vdrpath.'/autoload'.EXT))
+	{
+		// composer setup
+		require $vdrpath.'/autoload'.EXT;
+	}
+
+	// Mjolnir
+	require \realpath(__DIR__).'/../CFS'.EXT;
+	\spl_autoload_register(['\mjolnir\cfs\CFS', 'load_symbol']);
+	\class_alias('\mjolnir\cfs\CFS', 'app\CFS');
+
+	$envconfig = include $envfilepath;
+
+	// setup the modules
+	CFS::modules($envconfig['modules']);
+
+	// allow application to store and overwrite config files, routes, etc;
+	// everything except classes. You should always define your classes in
+	// appropriate modules in the module path
+	CFS::frontpaths([ $etcpath ]);
+
+	// attempt to load private configuration; console applications and other
+	// types are responsible for loading it on their own
+	if (isset($wwwconfig, $wwwpath))
+	{
+		\app\Env::set('www.config', $wwwconfig);
+
+		if (isset($wwwconfig['key.path']) && \file_exists($wwwconfig['key.path']))
+		{
+			CFS::frontpaths([ $wwwconfig['key.path'] ]);
+		}
+		else if ($wwwconfig['key.path'] !== null)
+		{
+			if ($wwwconfig['development'])
+			{
+				echo "Key files not at specified location.";
+			}
+			else # public error
+			{
+				include $wwwpath.'500'.EXT;
+			}
+
+			exit(1);
+		}
+		else # not specified
+		{
+			if ($wwwconfig['development'])
+			{
+				echo "Key files not specified (null value).";
+			}
+			else # public error
+			{
+				include $wwwpath.'500'.EXT;
+			}
+
+			exit(1);
+		}
+	}
+
+	// you are not suppose to overwrite namespaces and abstracts; that's a misuse.
+	// hence it makes no sense to search for them in \app\Class calls. Namespaces
+	// should always be explicit
+	CFS::namespacepaths($envconfig['namespaces']);
 
 
-# ---- Composer Autoloaders -------------------------------------------------- #
+	# ---- Environment Setup ------------------------------------------------- #
 
-if (\file_exists(VDRPATH.'/autoload'.EXT))
-{
-	// composer setup
-	require VDRPATH.'/autoload'.EXT;
-}
+	// retrieve default configuration
+	$env = Environment::instance();
 
-// cleanup
-unset($env_config, $base_config);
+	// system root
+	$env->set('sys.path', $wwwconfig['sys.path']);
+	// misc files and general purpose environement configuration files
+	$env->set('etc.path', $etcpath);
+	// application modules
+	$env->set('modules.path', $modpath);
+	// packaged modules
+	$env->set('vendor.path', $vdrpath);
+	// your module configuration
+	$env->set('environment.config', $envconfig);
+	// mjolnir modules
+	$env->set('mjolnir.path', $mjpath);
+	$env->set('drafts.path', \realpath($syspath.'drafts').'/');
+
+	$baseconfig = CFS::config('mjolnir/base');
+
+	// see: http://php.net/timezones
+	\date_default_timezone_set($baseconfig['timezone']);
+
+	// see: http://php.net/setlocale
+	\setlocale(LC_ALL, \app\Lang::idlang($baseconfig['lang']).$baseconfig['charset']);
+
+
+	// cleanup
+	unset
+	(
+		$thisdir,
+
+		$etcpath,
+		$modpath,
+		$vdrpath,
+		$mjpath,
+
+		$envfilepath,
+
+		$env,
+		$envconfig,
+		$baseconfig
+	);

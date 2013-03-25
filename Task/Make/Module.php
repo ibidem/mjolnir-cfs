@@ -113,7 +113,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 		$sandbox_template = $this->get('sandbox-template', false);
 
 		// module exists?
-		$module_name = MODPATH.$name;
+		$module_name = \app\Env::key('module.path').$name;
 		if (\file_exists($module_name) && ! $forced)
 		{
 			$this->writer
@@ -197,7 +197,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 		// print notice
 		$this->writer
 			->printf('status', 'Info', 'Module created!')->eol()
-			->printf('status', 'Help', 'To enable it, in your modules add: MODPATH.\''.$name.'\' => \''.\ltrim($namespace, '\\').'\',')->eol();
+			->printf('status', 'Help', 'To enable it, in your modules add: $modpath.\''.$name.'\' => \''.\ltrim($namespace, '\\').'\',')->eol();
 	}
 
 } # class

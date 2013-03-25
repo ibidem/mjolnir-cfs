@@ -17,7 +17,7 @@ class Task_Compile extends \app\Instantiatable implements \mjolnir\types\Task
 	function run()
 	{
 		\app\Task::consolewriter($this->writer);
-		
+
 		$local = $this->get('local', false);
 
 		if ( ! $local)
@@ -28,8 +28,8 @@ class Task_Compile extends \app\Instantiatable implements \mjolnir\types\Task
 		{
 			$paths = [];
 		}
-		
-		$env_config = include ENVFILE;
+
+		$env_config = \app\Env::key('environment.config');
 
 		if (isset($env_config['themes']))
 		{

@@ -70,7 +70,7 @@ class Mjolnir
 	 *
 	 * Runs standard http procedures.
 	 */
-	static function www($system_config)
+	static function www($wwwconfig, $wwwpath)
 	{
 		if (PHP_VERSION_ID < 50410)
 		{
@@ -83,14 +83,16 @@ class Mjolnir
 		}
 
 		// downtime?
-		if ($system_config['maintanence']['enabled'] && ( ! isset($_GET['passcode']) || $_GET['passcode'] !== $system_config['maintanence']['passcode']))
+		if ($wwwconfig['maintenance']['enabled'] && ( ! isset($_GET['passcode']) || $_GET['passcode'] !== $wwwconfig['maintanence']['passcode']))
 		{
 			require 'downtime.php';
 			exit;
 		}
 
+		\app\Env::ensure('www.config', $wwwconfig);
+
 		// set language
-		\app\Lang::targetlang_is($system_config['lang']);
+		\app\Lang::targetlang_is($wwwconfig['lang']);
 
 		// check all routes
 		\app\Router::check_all_routes();
@@ -139,9 +141,9 @@ class Mjolnir
 		}
 
 		// fallback; in case above fails
-		if (\file_exists(PUBDIR.'404'.EXT))
+		if (\file_exists(\app\Env::key('www.path').'404'.EXT))
 		{
-			require PUBDIR.'404'.EXT;
+			require \app\Env::key('www.path').'404'.EXT;
 		}
 		else # no 404 file
 		{

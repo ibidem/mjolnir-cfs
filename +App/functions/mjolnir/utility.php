@@ -32,14 +32,14 @@ if ( ! \function_exists('\mjolnir\append_to_file'))
 		}
 		catch (\Exception $exception)
 		{
-			if (\defined('PUBDIR'))
+			if (\app\Env::key('www.path') !== null)
 			{
 				// attempt to retrieve configuration
 				try
 				{
-					$config = \file_get_contents(PUBDIR.'config.php');
+					$wwwconfig = \app\Env::key('www.config');
 
-					if ($config['development'])
+					if ($wwwconfig['development'])
 					{
 						throw $exception;
 					}
@@ -207,7 +207,7 @@ if ( ! \function_exists('\mjolnir\log_cache'))
 			}
 			else # file based cache
 			{
-				@\file_put_contents(ETCPATH.'cache/log.cache', \serialize($new_cache));
+				@\file_put_contents(\app\Env::key('etc.path').'cache/log.cache', \serialize($new_cache));
 			}
 
 		}
@@ -228,9 +228,9 @@ if ( ! \function_exists('\mjolnir\log_cache'))
 				}
 				else # file based cache
 				{
-					if (\file_exists(ETCPATH.'cache/log.cache'))
+					if (\file_exists(\app\Env::key('etc.path').'cache/log.cache'))
 					{
-						$cache = \unserialize(\file_get_contents(ETCPATH.'cache/log.cache'));
+						$cache = \unserialize(\file_get_contents(\app\Env::key('etc.path').'cache/log.cache'));
 					}
 					else # empty cache
 					{
