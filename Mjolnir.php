@@ -105,6 +105,7 @@ class Mjolnir
 		// do we have a default theme?
 		if (\app\CFS::config('mjolnir/themes')['theme.default'] !== null)
 		{
+
 			try
 			{
 				$relaynode = \app\RelayNode::instance
