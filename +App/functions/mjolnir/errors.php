@@ -141,7 +141,7 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 				}
 				else # general error
 				{
-					include \app\Env::key('www.path').'error'.EXT;
+					include \app\Env::key('www.path').'500'.EXT;
 				}
 			}
 			else if (\php_sapi_name() === 'cli')
@@ -196,7 +196,7 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 					if (\app\Env::key('www.path') !== null)
 					{
 						$base_config = include \app\Env::key('www.path').'config'.EXT;
-						$error_page = '//'.$base_config['domain'].$base_config['path'].'error'.EXT;
+						$error_page = '//'.$base_config['domain'].$base_config['path'].'500'.EXT;
 						\header('Location: '.$error_page);
 					}
 				}
