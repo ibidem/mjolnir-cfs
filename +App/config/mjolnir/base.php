@@ -1,5 +1,7 @@
 <?php return array
 	(
+		'development' => false,
+	
 		'domain' => null,
 		'path' => '/',
 
@@ -8,13 +10,18 @@
 		'charset' => 'UTF8',
 		'lang' => 'en-US',
 
-		'development' => false,
-
 		// Read & Write for owner, Read for everybody else
 		'default.file.permissions' => 0660,
 
 		// Execution access is required to go into the directory
 		'default.dir.permissions' => 0770,
+	
+		'system' => array
+			(
+				'title' => 'Untitled',
+				'quote' => null,
+				'email' => null,
+			),
 
 		'logging' => array
 			(
