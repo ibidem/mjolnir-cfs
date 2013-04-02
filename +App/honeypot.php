@@ -6,15 +6,17 @@
 // HowTo: order honeypot -n 'mjolnir\cfs'
 
 
-class BenchmarkInterface extends \mjolnir\cfs\BenchmarkInterface
+class Backend_FilePermissions extends \mjolnir\cfs\Backend_FilePermissions
 {
+	/** @return \app\Backend_FilePermissions */
+	static function instance() { return parent::instance(); }
 }
 
 class Benchmark extends \mjolnir\cfs\Benchmark
 {
 }
 
-class CFSInterface extends \mjolnir\cfs\CFSInterface
+class BenchmarkInterface extends \mjolnir\cfs\BenchmarkInterface
 {
 }
 
@@ -22,10 +24,7 @@ class CFS extends \mjolnir\cfs\CFS
 {
 }
 
-/**
- * @method \app\Environment set($key, $value)
- */
-class Environment extends \mjolnir\cfs\Environment
+class CFSInterface extends \mjolnir\cfs\CFSInterface
 {
 }
 
@@ -33,6 +32,13 @@ class Env extends \mjolnir\cfs\Env
 {
 	/** @return \app\Env */
 	static function set($key, $value) { return parent::set($key, $value); }
+}
+
+/**
+ * @method \app\Environment set($key, $value)
+ */
+class Environment extends \mjolnir\cfs\Environment
+{
 }
 
 class Instantiatable extends \mjolnir\cfs\Instantiatable
