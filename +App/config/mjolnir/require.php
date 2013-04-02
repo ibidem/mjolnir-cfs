@@ -32,7 +32,7 @@
 					},
 				'development=false' => function ()
 					{
-						return \app\CFS::config('mjolnir/base')['development'] ? 'satisfied' : 'failed';
+						return \app\CFS::config('mjolnir/base')['development'] == false ? 'satisfied' : 'failed';
 					},
 				'system email' => function ()
 					{
