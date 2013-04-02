@@ -6,19 +6,41 @@
 					{
 						if (PHP_VERSION_ID >= 50410)
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'error';
 					},
-				'NOT broken PHP: 5.4.11, 5.4.12' => function ()
+				
+				'tested PHP version (5.4.13 or lower)' => function ()
+					{
+						if (PHP_VERSION_ID <= 50413)
+						{
+							return 'satisfied';
+						}
+
+						return 'failed';
+					},
+				'stable PHP (unstable versions: 5.4.11, 5.4.12)' => function ()
 					{
 						if (PHP_VERSION_ID != 50411 && PHP_VERSION_ID != 50412)
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'error';
-					}
+					},
+				'development=false' => function ()
+					{
+						return \app\CFS::config('mjolnir/base')['development'] ? 'satisfied' : 'failed';
+					},
+				'system email' => function ()
+					{
+						return \app\CFS::config('mjolnir/base')['system']['email'] !== null ? 'satisfied' : 'failed';
+					},
+				'system title' => function ()
+					{
+						return \app\CFS::config('mjolnir/base')['system']['email'] !== 'Untitled' ? 'satisfied' : 'failed';
+					},
 			),
 	);

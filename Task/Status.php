@@ -82,11 +82,6 @@ class Task_Status extends \app\Instantiatable implements \mjolnir\types\Task
 				
 				switch ($status)
 				{
-					case 'untestable':
-						$this->writer->printf('status', $statushint, $requirement)->eol();
-						! $no_stop or self::error();
-						++$errors;
-						break;
 					case 'error':
 						$this->writer->printf('status', $statushint, $requirement)->eol();
 						! $no_stop or self::error();
@@ -99,6 +94,19 @@ class Task_Status extends \app\Instantiatable implements \mjolnir\types\Task
 						break;
 					case 'available':
 						$this->writer->printf('status', 'passed', $requirement)->eol();
+						break;
+					case 'satisfied':
+						$this->writer->printf('status', 'passed', $requirement)->eol();
+						break;
+					case 'untestable':
+						$this->writer->printf('status', $statushint, $requirement)->eol();
+						! $no_stop or self::error();
+						++$errors;
+						break;
+					default:
+						$this->writer->printf('status', 'untestable', $requirement)->eol();
+						! $no_stop or self::error();
+						++$errors;
 						break;
 				}
 			}
