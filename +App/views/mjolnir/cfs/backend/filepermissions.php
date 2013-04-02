@@ -2,6 +2,9 @@
 	namespace app;
 	
 	/* @var $theme ThemeView */
+	
+	// scanning the filesystem can be intensive
+	\set_time_limit(60);
 ?>
 
 <p>
