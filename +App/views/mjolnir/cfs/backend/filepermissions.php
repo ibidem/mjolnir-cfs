@@ -62,6 +62,7 @@
 					<tr>
 						<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
 						<td><?= $file ?></td>
+						<td><?= Filesystem::permissions($file) ?></td>
 						<td><?= Filesystem::ownername($file) ?></td>
 						<td><?= Filesystem::groupname($file) ?></td>
 					</tr>
@@ -104,6 +105,7 @@
 					<tr>
 						<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
 						<td><?= $file ?></td>
+						<td><?= Filesystem::permissions($file) ?></td>
 						<td><?= Filesystem::ownername($file) ?></td>
 						<td><?= Filesystem::groupname($file) ?></td>
 					</tr>
@@ -145,6 +147,7 @@
 						<tr>
 							<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
 							<td><?= $file ?></td>
+							<td><?= Filesystem::permissions($file) ?></td>
 							<td><?= Filesystem::ownername($file) ?></td>
 							<td><?= Filesystem::groupname($file) ?></td>
 						</tr>
