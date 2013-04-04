@@ -33,7 +33,7 @@
 ?>
 
 <style type="text/css">
-	.perm-fixed-column { width: 50px; }
+	.perm-fixed-column { width: 85px; }
 </style>
 
 <? View::frame() ?>
