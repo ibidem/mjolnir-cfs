@@ -59,7 +59,12 @@
 				<tr><td><i class="text-success">No unreadable files found.</i></td></tr>
 			<? else: # got unreadable files ?>
 				<? foreach ($files as $file): ?>
-					<tr><td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td><td><?= $file ?></td></tr>
+					<tr>
+						<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
+						<td><?= $file ?></td>
+						<td><?= Filesystem::ownername($file) ?></td>
+						<td><?= Filesystem::groupname($file) ?></td>
+					</tr>
 				<? endforeach; ?>
 			<? endif;?>
 		</tbody>
@@ -96,7 +101,12 @@
 				<tr><td><i class="text-success">No unwritable files found.</i></td></tr>
 			<? else: # got unreadable files ?>
 				<? foreach ($files as $file): ?>
-					<tr><td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td><td><?= $file ?></td></tr>
+					<tr>
+						<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
+						<td><?= $file ?></td>
+						<td><?= Filesystem::ownername($file) ?></td>
+						<td><?= Filesystem::groupname($file) ?></td>
+					</tr>
 				<? endforeach; ?>
 			<? endif;?>
 		</tbody>
@@ -132,7 +142,12 @@
 					<tr><td><i class="text-success">No unexecutable files found.</i></td></tr>
 				<? else: # got unreadable files ?>
 					<? foreach ($files as $file): ?>
-						<tr><td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td><td><?= $file ?></td></tr>
+						<tr>
+							<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
+							<td><?= $file ?></td>
+							<td><?= Filesystem::ownername($file) ?></td>
+							<td><?= Filesystem::groupname($file) ?></td>
+						</tr>
 					<? endforeach; ?>
 				<? endif;?>
 			</tbody>
