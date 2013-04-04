@@ -113,7 +113,7 @@ class Task_Make_Module extends \app\Instantiatable implements \mjolnir\types\Tas
 		$sandbox_template = $this->get('sandbox-template', false);
 
 		// module exists?
-		$module_name = \app\Env::key('module.path').$name;
+		$module_name = \app\Env::key('modules.path').$name;
 		if (\file_exists($module_name) && ! $forced)
 		{
 			$this->writer
