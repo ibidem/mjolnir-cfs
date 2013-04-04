@@ -32,6 +32,10 @@
 	$stable = true;
 ?>
 
+<style type="text/css">
+	.perm-fixed-column { width: 50px; }
+</style>
+
 <? View::frame() ?>
 
 	<h2>Unreadable</h2>
@@ -60,11 +64,11 @@
 			<? else: # got unreadable files ?>
 				<? foreach ($files as $file): ?>
 					<tr>
-						<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
+						<td class="perm-fixed-column"><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
 						<td><?= $file ?></td>
-						<td><?= Filesystem::permissions($file) ?></td>
-						<td><?= Filesystem::ownername($file) ?></td>
-						<td><?= Filesystem::groupname($file) ?></td>
+						<td class="perm-fixed-column"><?= Filesystem::permissions($file) ?></td>
+						<td class="perm-fixed-column"><?= Filesystem::ownername($file) ?></td>
+						<td class="perm-fixed-column"><?= Filesystem::groupname($file) ?></td>
 					</tr>
 				<? endforeach; ?>
 			<? endif;?>
@@ -103,11 +107,11 @@
 			<? else: # got unreadable files ?>
 				<? foreach ($files as $file): ?>
 					<tr>
-						<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
+						<td class="perm-fixed-column"><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
 						<td><?= $file ?></td>
-						<td><?= Filesystem::permissions($file) ?></td>
-						<td><?= Filesystem::ownername($file) ?></td>
-						<td><?= Filesystem::groupname($file) ?></td>
+						<td class="perm-fixed-column"><?= Filesystem::permissions($file) ?></td>
+						<td class="perm-fixed-column"><?= Filesystem::ownername($file) ?></td>
+						<td class="perm-fixed-column"><?= Filesystem::groupname($file) ?></td>
 					</tr>
 				<? endforeach; ?>
 			<? endif;?>
@@ -145,11 +149,11 @@
 				<? else: # got unreadable files ?>
 					<? foreach ($files as $file): ?>
 						<tr>
-							<td><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
+							<td class="perm-fixed-column"><?= \is_dir($file) ? '<b>dir</b>' : '' ?></td>
 							<td><?= $file ?></td>
-							<td><?= Filesystem::permissions($file) ?></td>
-							<td><?= Filesystem::ownername($file) ?></td>
-							<td><?= Filesystem::groupname($file) ?></td>
+							<td class="perm-fixed-column"><?= Filesystem::permissions($file) ?></td>
+							<td class="perm-fixed-column"><?= Filesystem::ownername($file) ?></td>
+							<td class="perm-fixed-column"><?= Filesystem::groupname($file) ?></td>
 						</tr>
 					<? endforeach; ?>
 				<? endif;?>
