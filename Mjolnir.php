@@ -167,8 +167,8 @@ class Mjolnir
 		$url = \app\Server::request_uri();
 		$priority = \app\CFS::config('mjolnir/theme-drivers')['priority'];
 
-		\ksort($priority);
-
+		\asort($priority);
+		
 		$processing = [];
 		foreach ($priority as $key => $info)
 		{
