@@ -18,6 +18,8 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 	{
 		\app\Task::consolewriter($this->writer);
 
+		$this->writer->eol()->printf('status', 'Warning', 'Use of bower is not recomended!')->eol()->eol();
+		
 		$install = $this->get('install', false);
 		$local = $this->get('local', false);
 
