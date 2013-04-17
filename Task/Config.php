@@ -7,10 +7,8 @@
  * @copyright  (c) 2013, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Task_Config extends \app\Instantiatable implements \mjolnir\types\Task
+class Task_Config extends \app\Task_Base
 {
-	use \app\Trait_Task;
-
 	/**
 	 * Execute task.
 	 */
