@@ -82,7 +82,7 @@
 				'category' => 'Inspection',
 				'description' => array
 					(
-						'\print_r configuration.',
+						'Print configuration.',
 					),
 				'flags' => array
 					(
@@ -300,7 +300,7 @@
 				'category' => 'Tools',
 				'description' => array
 					(
-						'[Deprecated]',
+						'Deprecated!!',
 						'This task is only available for backwards compatibility. The practices suggested by bower will create a dependency nightmare. Please avoid using bower if at all possible.',
 						'-',
 						'Search and execute all brower dependencies',
