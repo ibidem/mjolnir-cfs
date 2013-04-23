@@ -18,7 +18,7 @@ class Task_Find_Class extends \app\Instantiatable implements \mjolnir\types\Task
 	{
 		\app\Task::consolewriter($this->writer);
 
-		$classfile = \str_replace('_', DIRECTORY_SEPARATOR, $this->config['class']).EXT;
+		$classfile = \str_replace('_', DIRECTORY_SEPARATOR, $this->get('class')).EXT;
 		$modules = \array_keys(\app\CFS::system_modules());
 		// search for class
 		$files = array();
@@ -35,12 +35,12 @@ class Task_Find_Class extends \app\Instantiatable implements \mjolnir\types\Task
 			\sort($files);
 			foreach ($files as $file)
 			{
-				$this->writer->status('File', $file)->eol();
+				$this->writer->printf('status', 'File', $file)->eol();
 			}
 		}
 		else # no files found
 		{
-			$this->writer->error('No files found.')->eol();
+			$this->writer->printf('error', 'No files found.')->eol();
 		}
 	}
 
