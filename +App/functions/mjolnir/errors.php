@@ -28,7 +28,22 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 			. ' ('.\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getFile()).' @ Ln '.$exception->getLine().')'
 			;
 
-		\mjolnir\shortlog('Exception', $error_diagnostic);
+		$type = 'Exception';
+		
+		if (\is_a($exception, '\mjolnir\foundation\Exception_NotFound'))
+		{
+			$type = '404';
+		}
+		else if (\is_a($exception, '\mjolnir\foundation\Exception_NotAllowed'))
+		{
+			$type = '403';
+		}
+		else if (\is_a($exception, '\mjolnir\foundation\Exception_NotApplicable'))
+		{
+			$type = 'NotApplicable';
+		}
+		
+		\mjolnir\shortlog($type, $error_diagnostic);
 
 		// compute stack trace
 
@@ -50,7 +65,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 			;
 
 		// main log
-		\mjolnir\masterlog('Exception', $error_diagnostic, $error_diagnostic_trace);
+		\mjolnir\masterlog($type, $error_diagnostic, $error_diagnostic_trace);
 	}
 }
 

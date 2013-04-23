@@ -7,10 +7,8 @@
  * @copyright  (c) 2012 Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Task_Status extends \app\Instantiatable implements \mjolnir\types\Task
+class Task_Status extends \app\Task_Base
 {
-	use \app\Trait_Task;
-
 	/**
 	 * Attempt to detect php binary location.
 	 *

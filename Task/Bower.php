@@ -7,10 +7,8 @@
  * @copyright  (c) 2013, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
+class Task_Bower extends \app\Task_Base
 {
-	use \app\Trait_Task;
-
 	/**
 	 * Execute task.
 	 */
@@ -18,6 +16,8 @@ class Task_Bower extends \app\Instantiatable implements \mjolnir\types\Task
 	{
 		\app\Task::consolewriter($this->writer);
 
+		$this->writer->eol()->printf('status', 'Warning', 'Use of bower is not recomended!')->eol()->eol();
+		
 		$install = $this->get('install', false);
 		$local = $this->get('local', false);
 

@@ -83,6 +83,12 @@ class SilentWriter extends \mjolnir\cfs\SilentWriter
 	static function instance() { return parent::instance(); }
 }
 
+class Task_Base extends \mjolnir\cfs\Task_Base
+{
+	/** @return \app\Task_Base */
+	static function instance() { return parent::instance(); }
+}
+
 /**
  * @method \app\Task_Behat set($name, $value)
  * @method \app\Task_Behat add($name, $value)
