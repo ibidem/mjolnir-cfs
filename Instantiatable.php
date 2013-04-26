@@ -56,10 +56,10 @@ class Instantiatable implements \mjolnir\types\Instantiatable
 	/**
 	 * This method is easier to explain via an example,
 	 * 
-	 *		\app\SomeClass::fake('\example\SomeOtherClass');
+	 *		\app\SomeClass::fakeclass('\example\SomeOtherClass');
 	 *		\app\SomeClass::instance(); # instance of \example\SomeOtherClass
 	 * 
-	 *		\app\SomeClass::fake(null);
+	 *		\app\SomeClass::fakeclass(null);
 	 *		\app\SomeClass::instance(); # instance of \app\SomeClass
 	 * 
 	 * This method is useful in tests. Note that most static interfaces are 
