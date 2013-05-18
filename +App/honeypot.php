@@ -162,19 +162,6 @@ class Task_Config extends \mjolnir\cfs\Task_Config
 }
 
 /**
- * @method \app\Task_Devlog set($name, $value)
- * @method \app\Task_Devlog add($name, $value)
- * @method \app\Task_Devlog metadata_is(array $metadata = null)
- * @method \app\Task_Devlog writer_is($writer)
- * @method \app\Writer writer()
- */
-class Task_Devlog extends \mjolnir\cfs\Task_Devlog
-{
-	/** @return \app\Task_Devlog */
-	static function instance() { return parent::instance(); }
-}
-
-/**
  * @method \app\Task_Find_Class set($name, $value)
  * @method \app\Task_Find_Class add($name, $value)
  * @method \app\Task_Find_Class metadata_is(array $metadata = null)
@@ -223,6 +210,19 @@ class Task_Find_File extends \mjolnir\cfs\Task_Find_File
 class Task_Honeypot extends \mjolnir\cfs\Task_Honeypot
 {
 	/** @return \app\Task_Honeypot */
+	static function instance() { return parent::instance(); }
+}
+
+/**
+ * @method \app\Task_Log_Short set($name, $value)
+ * @method \app\Task_Log_Short add($name, $value)
+ * @method \app\Task_Log_Short metadata_is(array $metadata = null)
+ * @method \app\Task_Log_Short writer_is($writer)
+ * @method \app\Writer writer()
+ */
+class Task_Log_Short extends \mjolnir\cfs\Task_Log_Short
+{
+	/** @return \app\Task_Log_Short */
 	static function instance() { return parent::instance(); }
 }
 
