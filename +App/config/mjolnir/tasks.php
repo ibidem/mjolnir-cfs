@@ -300,7 +300,23 @@
 				'category' => 'Inspection',
 				'description' => array
 					(
-						'tail -f short.log',
+						'tail -f etc/logs/short.log',
+					),
+				'flags' => array
+					(
+						'erase' => array
+							(
+								'description' => 'Erase log before opening.',
+								'short' => 'e',
+							)
+					),
+			),
+		'log:access' => array
+			(
+				'category' => 'Inspection',
+				'description' => array
+					(
+						'tail -f etc/logs/access.log',
 					),
 				'flags' => array
 					(
