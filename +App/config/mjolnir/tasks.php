@@ -195,6 +195,26 @@
 						'Print version info, as defined by modules.'
 					),
 			),
+		'licenses' => array
+			(
+				'category' => 'Inspection',
+				'description' => array
+					(
+						'Print license info, as defined by modules. May be incomplete.',
+						'Information issued by this command should only be used as a quick reference.',
+						'The command will miss non-standard formatting for license files.'
+					),
+				'flags' => array
+					(
+						'namespace' => array
+							(
+								'description' => 'Namespace of target module.',
+								'short' => 'n',
+								'type' => 'text',
+								'default' => false,
+							),
+					),
+			),
 		'honeypot' => array
 			(
 				'category' => 'Tools',
