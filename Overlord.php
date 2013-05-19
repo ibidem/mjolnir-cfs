@@ -35,9 +35,9 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	protected static $flag_struct = array
 		(
 			'description' => 'Description not avaiable.',
-			'default' => NULL,
+			'default' => null,
 			'type' => 'toggle',
-			'short' => NULL,
+			'short' => null,
 		);
 
 	/**
@@ -260,27 +260,59 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 		$stdout->writef("    USAGE: ".static::$commandname." [command] [flags]")->eol();
 		$stdout->writef("       eg. ".static::$commandname." example:cmd -i Joe --greeting \"Greetings, Mr.\" --date")->eol()->eol();
 		$stdout->writef("     Help: ".static::$commandname." [command] -h")->eol()->eol()->eol();
-//		$stdout->printf('subtitle', 'Commands');
 
 		// load config
 		$cli = \app\CFS::config('mjolnir/tasks');
 		\ksort($cli);
 
+		$taskorder = \app\CFS::config('mjolnir/task-categories');
+		\uasort
+			(
+				$taskorder,
+				function ($a, $b)
+					{
+						return $b['priority'] - $a['priority'];
+					}
+			);
+
+		$orderedcategories = [];
+		foreach ($taskorder as $category => $conf)
+		{
+			$orderedcategories[$category] = [];
+		}
+		$orderedcategories['unsorted'] = [];
+
 		// normalize
 		foreach ($cli as $command => $commandinfo)
 		{
-			$cli[$command] = static::normalize($commandinfo, $command);
+			if (isset($orderedcategories[$commandinfo['category']]))
+			{
+				$orderedcategories[$commandinfo['category']][$command] = static::normalize($commandinfo, $command);
+			}
+			else # unrecognized category
+			{
+				$orderedcategories['unsorted'][$command] = static::normalize($commandinfo, $command);
+			}
 		}
 
-		// sort commands
-		\uasort
-			(
-				$cli,
-				function ($a, $b)
-				{
-					return \strcmp($a['category'].$a['commandname'], $b['category'].$b['commandname']);
-				}
-			);
+		$cli = [];
+		foreach ($orderedcategories as $category => $tasks)
+		{
+			foreach ($tasks as $task => $taskinfo)
+			{
+				$cli[$task] = $taskinfo;
+			}
+		}
+
+//		// sort commands
+//		\uasort
+//			(
+//				$cli,
+//				function ($a, $b)
+//				{
+//					return \strcmp($a['category'].$a['commandname'], $b['category'].$b['commandname']);
+//				}
+//			);
 
 		// determine max length
 		$max_command_length = 4;
