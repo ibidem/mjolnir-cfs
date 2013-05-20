@@ -200,7 +200,7 @@
 				'category' => 'Inspection',
 				'description' => array
 					(
-						'Print license info, as defined by modules. May be incomplete.',
+						'Tries to print license info, as defined by modules.',
 						'Information issued by this command should only be used as a quick reference.',
 						'The command will miss non-standard formatting for license files.'
 					),
