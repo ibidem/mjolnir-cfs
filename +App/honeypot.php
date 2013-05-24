@@ -110,19 +110,6 @@ class Task_Behat extends \mjolnir\cfs\Task_Behat
 }
 
 /**
- * @method \app\Task_Bower set($name, $value)
- * @method \app\Task_Bower add($name, $value)
- * @method \app\Task_Bower metadata_is(array $metadata = null)
- * @method \app\Task_Bower writer_is($writer)
- * @method \app\Writer writer()
- */
-class Task_Bower extends \mjolnir\cfs\Task_Bower
-{
-	/** @return \app\Task_Bower */
-	static function instance() { return parent::instance(); }
-}
-
-/**
  * @method \app\Task_Cleanup set($name, $value)
  * @method \app\Task_Cleanup add($name, $value)
  * @method \app\Task_Cleanup metadata_is(array $metadata = null)
@@ -210,6 +197,32 @@ class Task_Find_File extends \mjolnir\cfs\Task_Find_File
 class Task_Honeypot extends \mjolnir\cfs\Task_Honeypot
 {
 	/** @return \app\Task_Honeypot */
+	static function instance() { return parent::instance(); }
+}
+
+/**
+ * @method \app\Task_Licenses set($name, $value)
+ * @method \app\Task_Licenses add($name, $value)
+ * @method \app\Task_Licenses metadata_is(array $metadata = null)
+ * @method \app\Task_Licenses writer_is($writer)
+ * @method \app\Writer writer()
+ */
+class Task_Licenses extends \mjolnir\cfs\Task_Licenses
+{
+	/** @return \app\Task_Licenses */
+	static function instance() { return parent::instance(); }
+}
+
+/**
+ * @method \app\Task_Log_Access set($name, $value)
+ * @method \app\Task_Log_Access add($name, $value)
+ * @method \app\Task_Log_Access metadata_is(array $metadata = null)
+ * @method \app\Task_Log_Access writer_is($writer)
+ * @method \app\Writer writer()
+ */
+class Task_Log_Access extends \mjolnir\cfs\Task_Log_Access
+{
+	/** @return \app\Task_Log_Access */
 	static function instance() { return parent::instance(); }
 }
 

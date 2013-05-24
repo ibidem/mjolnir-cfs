@@ -233,6 +233,13 @@
 								'type' => 'text',
 								'default' => '',
 							),
+						'prefix' => array
+							(
+								'description' => 'Namespace prefix.',
+								'short' => 'p',
+								'type' => 'text',
+								'default' => '',
+							),
 						'verbose' => array
 							(
 								'description' => 'Print file info.',

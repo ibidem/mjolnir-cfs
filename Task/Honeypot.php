@@ -17,17 +17,21 @@ class Task_Honeypot extends \app\Task_Base
 		\app\Task::consolewriter($this->writer);
 
 		$ns = $this->get('namespace', '');
+		$prefix = $this->get('prefix', '');
 		$verbose = $this->get('verbose', false);
 
 		if (empty($ns))
 		{
 			foreach (\app\CFS::system_modules() as $path => $namespace)
 			{
-				\app\Task::invoke('honeypot')
-					->set('namespace', $namespace)
-					->set('verbose', $verbose)
-					->writer_is($this->writer)
-					->run();
+				if (empty($prefix) || \preg_match('#^'.$prefix.'#', $namespace))
+				{
+					\app\Task::invoke('honeypot')
+						->set('namespace', $namespace)
+						->set('verbose', $verbose)
+						->writer_is($this->writer)
+						->run();
+				}
 			}
 
 			return;
