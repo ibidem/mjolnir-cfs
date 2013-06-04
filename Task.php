@@ -82,7 +82,7 @@ class Task
 				{
 					if ($indent !== 0)
 					{
-						$width = $writer->get('width', 80);
+						$width = $writer->get('width', 79);
 
 						$indent_text = \str_repeat(' ', $indent);
 						$text = \wordwrap
@@ -99,7 +99,7 @@ class Task
 					{
 						$text = \str_replace($nowrap_hint, ' ', $text);
 					}
-					
+
 					$writer->writef('%s', $text);
 				}
 			);

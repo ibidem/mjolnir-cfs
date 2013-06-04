@@ -133,6 +133,19 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 					exit;
 				}
 			}
+			else if (\in_array($command, ['-c', 'category']))
+			{
+				if (isset($this->argv[2])) # specific help topic
+				{
+					$this->helptext($this->argv[2]);
+					exit;
+				}
+				else # category not provided
+				{
+					$this->writer->printf('error', 'Please specify a category.')->eol();
+					exit;
+				}
+			}
 
 			// valid command?
 			if ( ! isset($tasks[$command]))
@@ -253,13 +266,16 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	/**
 	 * General help information.
 	 */
-	function helptext()
+	function helptext($targetcategory = null)
 	{
 		$stdout = $this->writer;
 		$stdout->printf('title', 'Overlord');
 		$stdout->writef("    USAGE: ".static::$commandname." [command] [flags]")->eol();
 		$stdout->writef("       eg. ".static::$commandname." example:cmd -i Joe --greeting \"Greetings, Mr.\" --date")->eol()->eol();
-		$stdout->writef("     Help: ".static::$commandname." [command] -h")->eol()->eol()->eol();
+		$stdout->writef("     Help: ".static::$commandname." help")->eol();
+		$stdout->writef("           ".static::$commandname." [command] -h")->eol();
+		$stdout->writef("           ".static::$commandname." -c [category]")->eol();
+		$stdout->eol()->eol();
 
 		// load config
 		$cli = \app\CFS::config('mjolnir/tasks');
@@ -278,13 +294,21 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 		$orderedcategories = [];
 		foreach ($taskorder as $category => $conf)
 		{
-			$orderedcategories[$category] = [];
+			if ($targetcategory === null || \strtolower($category) == \strtolower($targetcategory))
+			{
+				$orderedcategories[$category] = [];
+			}
 		}
 		$orderedcategories['unsorted'] = [];
 
 		// normalize
 		foreach ($cli as $command => $commandinfo)
 		{
+			if ($targetcategory !== null && \strtolower($commandinfo['category']) != \strtolower($targetcategory))
+			{
+				continue;
+			}
+
 			if (isset($orderedcategories[$commandinfo['category']]))
 			{
 				$orderedcategories[$commandinfo['category']][$command] = static::normalize($commandinfo, $command);
@@ -298,6 +322,11 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 		$cli = [];
 		foreach ($orderedcategories as $category => $tasks)
 		{
+			if ($targetcategory !== null && \strtolower($category) != \strtolower($targetcategory))
+			{
+				continue;
+			}
+
 			foreach ($tasks as $task => $taskinfo)
 			{
 				$cli[$task] = $taskinfo;
@@ -439,7 +468,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 
 		if (empty($command['description']))
 		{
-			$command['description'] = array('No description available at this time.');
+			$command['description'] = ['No description available at this time.'];
 		}
 		$normalizedflags = array();
 		foreach ($command['flags'] as $flag => $flaginfo)
