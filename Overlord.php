@@ -260,7 +260,9 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 	function exception(\Exception $exception)
 	{
 		\mjolnir\log_exception($exception);
-		$this->writer->printf('error', $exception->getMessage())->eol();
+		$this->writer
+			->eol()->eol() // attempt to pass any "\r" or line output
+			->printf('error', $exception->getMessage())->eol();
 	}
 
 	/**
