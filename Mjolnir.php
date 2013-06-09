@@ -168,7 +168,7 @@ class Mjolnir
 		$priority = \app\CFS::config('mjolnir/theme-drivers')['priority'];
 
 		\asort($priority);
-		
+
 		$processing = [];
 		foreach ($priority as $key => $info)
 		{
@@ -213,6 +213,31 @@ class Mjolnir
 			\app\Overlord::instance()
 				->args($_SERVER['argv'])
 				->run();
+		}
+	}
+
+	/**
+	 * Shorthand.
+	 *
+	 * Runs standard command line utility.
+	 */
+	static function weboverlord($wwwconfig, $wwwpath, $args = null)
+	{
+		\app\Env::ensure('www.config', $wwwconfig);
+
+		// set language
+		\app\Lang::targetlang_is($wwwconfig['lang']);
+
+		if ($args !== null)
+		{
+			\app\Overlord::instance()
+				->writer_is(\app\WebWriter::instance())
+				->args($args)
+				->run();
+		}
+		else # no command
+		{
+			echo "<i>Please type in a command.</i>";
 		}
 	}
 

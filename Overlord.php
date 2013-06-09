@@ -110,7 +110,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 			if ($this->argc === 1)
 			{
 				$this->helptext(); # default to help on no command
-				exit;
+				return;
 			}
 
 			// load configuration
@@ -125,12 +125,12 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				if (isset($this->argv[2])) # specific help topic
 				{
 					$this->commandhelp($this->argv[2]);
-					exit;
+					return;
 				}
 				else # general help
 				{
 					$this->helptext();
-					exit;
+					return;
 				}
 			}
 			else if (\in_array($command, ['-c', 'category']))
@@ -138,12 +138,12 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				if (isset($this->argv[2])) # specific help topic
 				{
 					$this->helptext($this->argv[2]);
-					exit;
+					return;
 				}
 				else # category not provided
 				{
 					$this->writer->printf('error', 'Please specify a category.')->eol();
-					exit;
+					return;
 				}
 			}
 
@@ -160,7 +160,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				if ($this->argv[$i] === '--help' || $this->argv[$i] === '-h')
 				{
 					$this->commandhelp($command);
-					exit;
+					return;
 				}
 			}
 			// normalize command
@@ -227,9 +227,17 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 			// run the task
 
 			// clean writer
-			$taskwriter = \app\Writer::instance()
-				->stdout_is($this->writer->stdout())
-				->stderr_is($this->writer->stderr());
+
+			if ($this->writer == null)
+			{
+				$taskwriter = \app\Writer::instance()
+					->stdout_is($this->writer->stdout())
+					->stderr_is($this->writer->stderr());
+			}
+			else # no writer set
+			{
+				$taskwriter = $this->writer;
+			}
 
 			$task = \app\Task::invoke($command)
 				->writer_is($taskwriter);
