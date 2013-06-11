@@ -122,6 +122,23 @@ class CFS implements CFSInterface
 			return false;
 		}
 
+		// are instance.interfaces enabled?
+		$baseconfig = static::config('mjolnir/base');
+		if ($baseconfig['cfs']['instant.interfaces'])
+		{
+			foreach ($baseconfig['cfs']['interface.namespace.matchers'] as $matcher)
+			{
+				if (\preg_match($matcher, "$namespace\\$symbol_name"))
+				{
+					// alias to empty interface; we are intentionally not
+					// dynamically creating empty ones since we have no
+					// hirarchy infromation
+					\class_alias('mjolnir\cfs\EmptyInterface', $symbol);
+					return true;
+				}
+			}
+		}
+
 		if ($namespace === 'app')
 		{
 			$target = DIRECTORY_SEPARATOR.

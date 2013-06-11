@@ -1,7 +1,7 @@
 <?php return array
 	(
 		'development' => false,
-	
+
 		'domain' => null,
 		'path' => '/',
 
@@ -15,12 +15,32 @@
 
 		// Execution access is required to go into the directory
 		'default.dir.permissions' => 0770,
-	
+
 		'system' => array
 			(
 				'title' => 'Untitled',
 				'quote' => null,
 				'email' => null,
+			),
+
+		'cfs' => array
+			(
+				// uses interface.namespace.matchers on namespaces, if matched
+				// the namespace is aliased to an empty interface; this
+				// effectively results in all interfaces being the same
+				// namespace and having no methods on them; ie. emulates
+				// removal of all interface declarations within the system for
+				// namespaces matching rules in interface.namespace.matchers
+				'instant.interfaces' => false,
+
+				// matchers for detecting interfaces; if a namespace does not
+				// match any of the rules bellow the instant.interface rule
+				// will not apply
+				'interface.namespace.matchers' => array
+					(
+						// mjolnir types
+						'#^mjolnir\\\types\\\(!?Trait_)#.*$'
+					),
 			),
 
 		'logging' => array
