@@ -278,7 +278,7 @@ interface CFSInterface
 	 * Passing null will remove the component.
 	 */
 	static function cache (
-			\mjolnir\types\Stash $cache = null,
+			$cache = null,
 			$file_duration = 1800 /* 30 minutes */
 		);
 

@@ -12,6 +12,12 @@ if ( ! \interface_exists('\mjolnir\cfs\CFSInterface', false))
 	require 'CFSInterface'.EXT;
 }
 
+if (! \interface_exists('\mjolnir\cfs\EmptyInterface', false))
+{
+	// include interface
+	require 'EmptyInterface'.EXT;
+}
+
 if ( ! \class_exists('\app\Benchmark', false))
 {
 	// include default benchmarking
@@ -122,13 +128,13 @@ class CFS implements CFSInterface
 			return false;
 		}
 
-		// are instance.interfaces enabled?
+		// are instant.interfaces enabled?
 		$baseconfig = static::config('mjolnir/base');
 		if ($baseconfig['cfs']['instant.interfaces'])
 		{
 			foreach ($baseconfig['cfs']['interface.namespace.matchers'] as $matcher)
 			{
-				if (\preg_match($matcher, "$namespace\\$symbol_name"))
+				if (\preg_match($matcher, $namespace) && ! \preg_match('#^Trait_.*#', $symbol_name))
 				{
 					// alias to empty interface; we are intentionally not
 					// dynamically creating empty ones since we have no
@@ -935,7 +941,7 @@ class CFS implements CFSInterface
 	 * at least that's the intention.
 	 */
 	static function cache (
-			\mjolnir\types\Stash $cache = null,
+			$cache = null,
 			$file_duration = 1800 /* 30 minutes */
 		)
 	{

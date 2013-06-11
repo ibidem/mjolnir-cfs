@@ -39,7 +39,7 @@
 				'interface.namespace.matchers' => array
 					(
 						// mjolnir types
-						'#^mjolnir\\\types\\\(!?Trait_)#.*$'
+						'#mjolnir\\\types#'
 					),
 			),
 

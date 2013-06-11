@@ -49,17 +49,17 @@
 
 	$envfilepath = \realpath($etcpath.'environment'.EXT);
 
-	// Composer
-	if (\file_exists($vdrpath.'/autoload'.EXT))
-	{
-		// composer setup
-		require $vdrpath.'/autoload'.EXT;
-	}
-
 	// Mjolnir
 	require \realpath(__DIR__).'/../CFS'.EXT;
 	\spl_autoload_register(['\mjolnir\cfs\CFS', 'load_symbol']);
 	\class_alias('\mjolnir\cfs\CFS', 'app\CFS');
+	
+//	// Composer
+//	if (\file_exists($vdrpath.'/autoload'.EXT))
+//	{
+//		// composer setup
+//		require $vdrpath.'/autoload'.EXT;
+//	}
 
 	$envconfig = include $envfilepath;
 
@@ -75,8 +75,6 @@
 	// types are responsible for loading it on their own
 	if (isset($wwwconfig, $wwwpath))
 	{
-		\app\Env::set('www.config', $wwwconfig);
-
 		if (isset($wwwconfig['key.path']) && \file_exists($wwwconfig['key.path']))
 		{
 			CFS::frontpaths([ $wwwconfig['key.path'] ]);
@@ -120,6 +118,8 @@
 	// retrieve default configuration
 	$env = Environment::instance();
 
+	// www configuration
+	$env->set('www.config', $wwwconfig);
 	// system root
 	$env->set('sys.path', $syspath);
 	// misc files and general purpose environement configuration files
