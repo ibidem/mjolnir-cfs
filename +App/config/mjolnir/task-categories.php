@@ -20,5 +20,9 @@
 			(
 				'priority' => -999,
 			),
+		'Experimental' => array
+			(
+				'priority' => -900,
+			),
 
 	); # config
