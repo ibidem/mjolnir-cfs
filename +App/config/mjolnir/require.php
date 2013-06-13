@@ -12,9 +12,9 @@
 						return 'error';
 					},
 
-				'tested PHP version (5.4.13 or lower)' => function ()
+				'tested PHP version (5.4.13 or lower) or 5.4.16+' => function ()
 					{
-						if (PHP_VERSION_ID <= 50413 || PHP_VERSION >= 50416)
+						if (PHP_VERSION_ID <= 50413 || PHP_VERSION_ID >= 50416)
 						{
 							return 'satisfied';
 						}
