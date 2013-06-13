@@ -11,10 +11,10 @@
 
 						return 'error';
 					},
-				
+
 				'tested PHP version (5.4.13 or lower)' => function ()
 					{
-						if (PHP_VERSION_ID <= 50413)
+						if (PHP_VERSION_ID <= 50413 || PHP_VERSION >= 50416)
 						{
 							return 'satisfied';
 						}
