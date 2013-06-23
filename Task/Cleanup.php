@@ -22,6 +22,8 @@ class Task_Cleanup extends \app\Task_Base
 		\app\Stash_Memcached::instance(false)->flush();
 		$this->writer->writef('  - flushing apc cache')->eol();
 		\app\Stash_APC::instance(false)->flush();
+		$this->writer->writef('  - flushing temp memory')->eol();
+		\app\Stash_TempMemory::instance(false)->flush();
 	}
 
 	/**
