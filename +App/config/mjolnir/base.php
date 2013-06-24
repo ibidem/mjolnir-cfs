@@ -37,10 +37,10 @@
 				// master log will still hold the errors regardless
 				'replication' => false,
 
-				// the short.log or devlog stores a 1-line version of the error
-				// this is very useful in development where most errors can be
-				// easily identified in a few words and don't need to be stored
-				'short.log' => true,
+				// the devlogs store development friendly messages and are used
+				// during development when the majority of errors are easily
+				// identified or for outputing debug information
+				'devlogs' => true,
 
 				// you may ignore certain types of log errors if you already
 				// an alternative system in place that catches them and reports

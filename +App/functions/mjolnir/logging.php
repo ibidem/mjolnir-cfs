@@ -125,7 +125,7 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 
 		$conf = \mjolnir\log_settings();
 
-		if ( ! $conf['short.log'])
+		if ( ! $conf['devlogs'])
 		{
 			return;
 		}

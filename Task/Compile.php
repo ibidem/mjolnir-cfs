@@ -47,6 +47,7 @@ class Task_Compile extends \app\Task_Base
 
 		foreach ($files as $file)
 		{
+			$file = \str_replace('\\', '/', $file);
 			$this->writer->writef(' Running: '.$file)->eol()->eol();
 			\passthru($file);
 			$this->writer->eol()->eol();
