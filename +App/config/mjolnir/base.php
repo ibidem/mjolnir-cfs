@@ -1,7 +1,7 @@
 <?php return array
 	(
 		'development' => false,
-	
+
 		'domain' => null,
 		'path' => '/',
 
@@ -15,7 +15,7 @@
 
 		// Execution access is required to go into the directory
 		'default.dir.permissions' => 0770,
-	
+
 		'system' => array
 			(
 				'title' => 'Untitled',

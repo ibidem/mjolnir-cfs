@@ -327,7 +327,8 @@
 				'category' => 'Inspection',
 				'description' => array
 					(
-						'tail -f etc/logs/short.log',
+						'Short log of system errors.',
+						'logging -> short.log must be enabled.'
 					),
 				'flags' => array
 					(
@@ -338,20 +339,5 @@
 							)
 					),
 			),
-		'log:access' => array
-			(
-				'category' => 'Inspection',
-				'description' => array
-					(
-						'tail -f etc/logs/access.log',
-					),
-				'flags' => array
-					(
-						'erase' => array
-							(
-								'description' => 'Erase log before opening.',
-								'short' => 'e',
-							)
-					),
-			),
+
 	);
