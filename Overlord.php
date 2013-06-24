@@ -319,7 +319,7 @@ class Overlord extends \app\Instantiatable implements \mjolnir\types\TaskRunner
 				continue;
 			}
 
-			if (isset($orderedcategories[$commandinfo['category']]))
+			if (isset($commandinfo['category'], $orderedcategories[$commandinfo['category']]))
 			{
 				$orderedcategories[$commandinfo['category']][$command] = static::normalize($commandinfo, $command);
 			}
