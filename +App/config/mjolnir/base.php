@@ -61,4 +61,10 @@
 					),
 			),
 
+		// development switches
+		'dev:conf' => array
+			(
+				'raw:js' => false,
+			),
+
 	);
