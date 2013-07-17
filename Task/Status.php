@@ -71,13 +71,13 @@ class Task_Status extends \app\Task_Base
 				if (\is_array($statusinfo))
 				{
 					$status = \key($statusinfo);
-					$statushint = \current($statusinfo); 
+					$statushint = \current($statusinfo);
 				}
 				else # non-array status
 				{
 					$status = $statushint = $statusinfo;
 				}
-				
+
 				switch ($status)
 				{
 					case 'error':

@@ -15,12 +15,12 @@ class Task_Config extends \app\Task_Base
 	function run()
 	{
 		$config = $this->get('config', null);
-		
+
 		if ($config != null)
 		{
-			$config = \app\CFS::config($config); 
+			$config = \app\CFS::config($config);
 		}
-		
+
 		\print_r($config);
 	}
 

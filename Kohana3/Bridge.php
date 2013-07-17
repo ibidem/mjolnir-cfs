@@ -9,7 +9,7 @@ if ( ! \defined('EXT'))
 /**
  * Cascading Class System Bridge
  *
- * This class bridges modules along with their classes from normal kohana to 
+ * This class bridges modules along with their classes from normal kohana to
  * CCS standard classes. When calling bridged classes you should always use
  * the correct namespace qualifier: \kohana\core\HTML, or \app\HTML and NEVER
  * \HTML or \Kohana_HTML that way your code will work perfectly when the global
@@ -34,7 +34,7 @@ final class Kohana3_Bridge
 	{
 		self::$bridges = $bridges;
 	}
-	
+
 	/**
 	 * @param string class name
 	 * @return bool found class?
@@ -50,7 +50,7 @@ final class Kohana3_Bridge
 				. 'classes'.DIRECTORY_SEPARATOR
 				. $bridge['prefix'].DIRECTORY_SEPARATOR
 				. $class_path;
-			
+
 			if (\file_exists($prefix_class_path))
 			{
 				if ( ! \class_exists($bridge['prefix'].'_'.$class_name, false))
@@ -58,37 +58,37 @@ final class Kohana3_Bridge
 					// get the prefix version
 					require $prefix_class_path;
 				}
-				
+
 				if ( ! \class_exists("app\\$class_name"))
 				{
 					// alias to app namespace
 					\class_alias($bridge['prefix'].'_'.$class_name, "app\\$class_name");
 				}
-				
+
 				if ( ! \class_exists($class_name))
 				{
 					// alias back to global namespace; for compatibility
 					\class_alias("app\\$class_name", $class_name);
 				}
-				
+
 				// success
 				return true;
 			}
 		}
-		
+
 		// didn't find it
 		return false;
 	}
-	
+
 	/**
 	 * @param string class name with namespace
 	 * @return bool successfully loaded?
 	 */
 	static function load_class($class)
-	{	
+	{
 		$class_name = \ltrim($class, '\\');
-		
-		if ($ns_pos = \strripos($class_name, '\\')) 
+
+		if ($ns_pos = \strripos($class_name, '\\'))
 		{
 			$namespace = \strtolower(\substr($class_name, 0, $ns_pos));
 			$class_name = \strtolower(\substr($class_name, $ns_pos + 1));
@@ -96,12 +96,12 @@ final class Kohana3_Bridge
 		else # class belongs to global namespace
 		{
 			// we assme it's a kohana class; this should never happen when using
-			// the bridge. You should always call the app version so the 
-			// namespace version is loaded. The only situation this should 
+			// the bridge. You should always call the app version so the
+			// namespace version is loaded. The only situation this should
 			// happen is when internally kohana calls the class
 			$target = DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR
 				. \str_replace('_', DIRECTORY_SEPARATOR, $class_name).EXT;
-			
+
 			foreach (\array_keys(self::$bridges) as $path)
 			{
 				if (\file_exists($path.$target))
@@ -113,7 +113,7 @@ final class Kohana3_Bridge
 					return true;
 				}
 			}
-			
+
 			if (self::prefix_check($class_name))
 			{
 				// found class
@@ -128,11 +128,11 @@ final class Kohana3_Bridge
 				});
 				$normalized = \implode('_', $segments);
 
-				// if we reach this point and we still haven't found the class 
-				// there's one other posibility and that's that the bridged code 
-				// is trying to invoke code in global namespace, 
-				// eg. Controller_Something. 
-				
+				// if we reach this point and we still haven't found the class
+				// there's one other posibility and that's that the bridged code
+				// is trying to invoke code in global namespace,
+				// eg. Controller_Something.
+
 				// We need to check if we can load the class then alias it to
 				// the namespace in question. To do this we invoke the top level
 				// autoloader, like so...
@@ -141,7 +141,7 @@ final class Kohana3_Bridge
 					// now the correct class is loaded, we use black magic on it
 					// so the bridged code understands it
 					\class_alias("app\\$class_name", $class_name);
-					
+
 					// success
 					return true;
 				}
@@ -151,7 +151,7 @@ final class Kohana3_Bridge
 				}
 			}
 		}
-		
+
 		if ($namespace === 'app')
 		{
 			return self::prefix_check($class_name);
@@ -170,7 +170,7 @@ final class Kohana3_Bridge
 						. 'classes'.DIRECTORY_SEPARATOR
 						. $bridge['prefix'].DIRECTORY_SEPARATOR
 						. $class_path;
-					
+
 					if (\file_exists($prefix_class_path))
 					{
 						if ( ! \class_exists($bridge['prefix'].'_'.$class_name, false))
@@ -178,31 +178,31 @@ final class Kohana3_Bridge
 							// get the prefix version
 							require $prefix_class_path;
 						}
-						
+
 						// alias to app namespace
 						\class_alias($bridge['prefix'].'_'.$class_name, "$namespace\\$class_name");
-						
+
 						if ( ! \class_exists($class_name))
 						{
 							// alias back to global namespace; for compatibility
 							\class_alias("app\\$class_name", $class_name);
 						}
-						
+
 						// success
 						return true;
 					}
-					
+
 					// it is possible for there to be more bridges mapped to the
 					// same namespace so if the code above fails to deliver, we
 					// continue the search until all bridges have been tested
 				}
 			}
-			
+
 			// unknown namespace
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @return array paths
 	 */
@@ -214,9 +214,9 @@ final class Kohana3_Bridge
 		{
 			$dir_paths[] = \rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 		}
-		
+
 		return $dir_paths;
 	}
-	
+
 } # class
 

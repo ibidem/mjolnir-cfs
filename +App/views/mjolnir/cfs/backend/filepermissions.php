@@ -1,8 +1,8 @@
 <?
 	namespace app;
-	
+
 	/* @var $theme ThemeView */
-	
+
 	// scanning the filesystem can be intensive
 	\set_time_limit(60);
 ?>
@@ -12,13 +12,13 @@
 <p><i>Thousands of files are scanned when you access this section. Expect longer then normal loading times.</i></p>
 
 <p>
-	Each section in the listings bellow tests for a specific kind of permission problem in all relevant system files. 
+	Each section in the listings bellow tests for a specific kind of permission problem in all relevant system files.
 	Any files that are listed should be inspected for errors and fix'ed or otherwise they will eventually destabilize the system.
 	You should periodically check back to verify no part of the system is writing files with faulty permissions; highly recommended when you install or implement new components.
 </p>
 
 <p>
-	If a directory is unreadable then its contents will be considered unwritable, unreadable and unexecutable due to it breaking blind traversal. 
+	If a directory is unreadable then its contents will be considered unwritable, unreadable and unexecutable due to it breaking blind traversal.
 	By consequence these directories may appear in all listings.
 </p>
 
@@ -50,7 +50,7 @@
 		}
 		$files = Arr::merge($files, Filesystem::find_unreadable(Env::key('www.path'), '#.#'));
 		$files = \array_unique($files);
-		
+
 		if ( ! empty($files))
 		{
 			$stable = false;
@@ -76,13 +76,13 @@
 	</table>
 
 	<h2>Unwritable</h2>
-	
+
 	<p><code>etc.path/tmp</code>, <code>etc.path/logs</code>, <code>etc.path/cache</code>, <code>www.path/uploads</code>, <code>www.path/media</code> must be writable.</p>
 
 	<?
 		// we only check locations that need to be writable by the server,
-		// while technically all system directories need to be writable 
-		// since all those cases also require a console they can be 
+		// while technically all system directories need to be writable
+		// since all those cases also require a console they can be
 		// circumvented by requesting temporary higher access to perform
 		// the operation, or simply logging in though a user with sufficient
 		// privilages
@@ -93,7 +93,7 @@
 		$files = Arr::merge($files, Filesystem::find_unwritable(Env::key('www.path').'uploads/', '#.#'));
 		$files = Arr::merge($files, Filesystem::find_unwritable(Env::key('www.path').'media/', '#.#'));
 		$files = \array_unique($files);
-		
+
 		if ( ! empty($files))
 		{
 			$stable = false;
@@ -119,7 +119,7 @@
 	</table>
 
 	<h2>Unexecutable</h2>
-	
+
 	<p>All <code>+compile.rb</code>, <code>start.rb</code>, files located in <code>sys.path/bin</code> along with all <i>directories</i> in the <code>sys.path</code>, <code>www.path</code> and any additional paths, must be executable.</p>
 
 	<? if (\strtolower(\substr(PHP_OS, 0, 3)) !== 'win'): ?>
@@ -135,7 +135,7 @@
 				$files = Arr::merge($files, Filesystem::find_unexecutabledir($filepath));
 			}
 			$files = \array_unique($files);
-			
+
 			if ( ! empty($files))
 			{
 				$stable = false;
@@ -165,7 +165,7 @@
 		<p class="text-info">The executable status of files and directories can not be reliably tested on windows.</p>
 
 	<? endif; ?>
-		
+
 <? $view = View::endframe() ?>
 
 <? if ($stable): ?>

@@ -21,7 +21,7 @@ class Instantiatable implements \mjolnir\types\Instantiatable
 	 * @var array
 	 */
 	private static $classfakes = null;
-	
+
 	/**
 	 * Private constructor to deny access to it.
 	 */
@@ -52,19 +52,19 @@ class Instantiatable implements \mjolnir\types\Instantiatable
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is easier to explain via an example,
-	 * 
+	 *
 	 *		\app\SomeClass::fakeclass('\example\SomeOtherClass');
 	 *		\app\SomeClass::instance(); # instance of \example\SomeOtherClass
-	 * 
+	 *
 	 *		\app\SomeClass::fakeclass(null);
 	 *		\app\SomeClass::instance(); # instance of \app\SomeClass
-	 * 
-	 * This method is useful in tests. Note that most static interfaces are 
+	 *
+	 * This method is useful in tests. Note that most static interfaces are
 	 * merely aliases to non-static interfaces.
-	 * 
+	 *
 	 * [!!] This method is intentionally not part of the interface.
 	 */
 	static function fakeclass($class)
@@ -76,7 +76,7 @@ class Instantiatable implements \mjolnir\types\Instantiatable
 		else # remove fake
 		{
 			unset(self::$classfakes[\get_called_class()]);
-			
+
 			if (empty(self::$classfakes))
 			{
 				self::$classfakes = null;

@@ -29,7 +29,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 			;
 
 		$type = 'Exception';
-		
+
 		if (\is_a($exception, '\mjolnir\foundation\Exception_NotFound'))
 		{
 			$type = '404';
@@ -42,7 +42,7 @@ if ( ! \function_exists('\mjolnir\log_exception'))
 		{
 			$type = 'NotApplicable';
 		}
-		
+
 		\mjolnir\shortlog($type, $error_diagnostic);
 
 		// compute stack trace
