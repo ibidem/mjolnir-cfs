@@ -50,7 +50,7 @@ class Task_Make_Module extends \app\Task_Base
 			. "\t(".PHP_EOL
 			. "\t\t'aliaslist' => array".PHP_EOL
 			. "\t\t\t(".PHP_EOL
-			. "\t\t\t\t\app\Auth::Guest => [ '+admin', '+mockup' ],".PHP_EOL
+			. "\t\t\t\t// \app\Auth::Guest => [ '+admin', '+mockup' ],".PHP_EOL
 			. "\t\t\t)".PHP_EOL
 			. "\t);"
 			. PHP_EOL
