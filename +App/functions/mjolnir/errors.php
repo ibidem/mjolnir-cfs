@@ -219,9 +219,11 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 				{
 					\mjolnir\log_exception($e);
 
-					// potentially headers already sent; attempt to redirect via javascript
-					echo '<script type="text/javascript">window.location = "'.$error_page.'"</script>';
-
+					if (\php_sapi_name() !== 'cli')
+					{
+						// potentially headers already sent; attempt to redirect via javascript
+						echo '<script type="text/javascript">window.location = "'.$error_page.'"</script>';
+					}
 				}
 			}
 		}
