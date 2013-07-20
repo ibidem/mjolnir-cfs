@@ -709,6 +709,8 @@ class CFS implements CFSInterface
 		return static::configfile($key, $ext);
 	}
 
+	static $cache_static_configs = [];
+
 	/**
 	 * Loads a configuration based on key given. All configuration files
 	 * matching the key are merged down and the resulting array is returned.
@@ -728,6 +730,38 @@ class CFS implements CFSInterface
 	 * already loaded once, but instead return the previously computed
 	 * configuration.
 	 *
+	 * You may configure the way the configuration file is handled by passing
+	 * in the special '@cfs' key.
+	 *
+	 *	eg.
+	 *
+	 *		<?php return array
+	 *			(
+	 *				'@cfs' => array
+	 *					(
+	 *						// cachable tells the CFS that it CAN cache this
+	 *						// configuration file between requests, ie. the
+	 *						// contents of the resulting configuration are
+	 *						// serializable
+	 *						'cachable' => true,
+	 *					),
+	 *
+	 *				'example' => 12,
+	 *
+	 *			); # config
+	 *
+	 * The '@cfs' key is processed after configuration files are merged and
+	 * the key is removed from the output [ 'example' => 12 ] and assuming a
+	 * cache object is provided to the CFS, return said value from cache.
+	 *
+	 * '@cfs' inside other keys is not processed, and if you need to have a
+	 * '@cfs' on the root of the configuration file, as unlikely as that is,
+	 * simply pass it as '\@cfs' and it will be converted to '@cfs' but not
+	 * processed. Having both '\@cfs' and '@cfs' is obviously supported.
+	 *
+	 * The '@cfs' rules SHOULD ONLY be written by the source module of the
+	 * configuration file or modules which overwrite said module.
+	 *
 	 * @param string configuration key (any valid file syntax)
 	 * @return array configuration or empty array
 	 */
@@ -743,9 +777,23 @@ class CFS implements CFSInterface
 
 			return static::$cache_config[$key.$ext];
 		}
-		else # not cached
+		else # not in local cached
 		{
+			// is the configuration static?
+			if (isset(static::$cache_static_configs[$key.$ext]))
+			{
+				// the configuration contains only serializable data and has
+				// been marked and cached previously
+				static::$cache_config[$key.$ext]
+					= static::$cache_static_configs[$key.$ext];
+
+				\app\Benchmark::stop($benchmark);
+
+				return static::$cache_config[$key.$ext];
+			}
+
 			// check key for \, common windows environment mistake
+			// it will work on windows machines; but fail on unix ones
 			if (\strpos($key, '\\'))
 			{
 				throw new \Exception("Invalid configuration key: $key");
@@ -778,6 +826,28 @@ class CFS implements CFSInterface
 					$corrupt_file = \str_replace(\app\Env::key('sys.path'), '', $file);
 					throw new \app\Exception('Corrupt configuration file ['.$corrupt_file.']');
 				}
+			}
+
+			// special configuration?
+			if (isset(static::$cache_config[$key]['@cfs']))
+			{
+				// cleanup
+				$conf = static::$cache_config[$key]['@cfs'];
+				unset(static::$cache_config[$key]['@cfs']);
+
+				// configuration is cachable? ie. static
+				if ($conf['caching'])
+				{
+					static::$cache_static_configs[$key]
+						= static::$cache_config[$key];
+				}
+			}
+
+			// support for using special configuration key
+			if (isset(static::$cache_config[$key]['\@cfs']))
+			{
+				static::$cache_config[$key]['@cfs'] = static::$cache_config[$key]['\@cfs'];
+				unset(static::$cache_config[$key]['\@cfs']);
 			}
 
 			\app\Benchmark::stop($benchmark);
@@ -880,7 +950,7 @@ class CFS implements CFSInterface
 	/**
 	 * @var int
 	 */
-	protected static $cache_file_duration = null;
+	protected static $cache_duration = null;
 
 	/**
 	 * Saves the current persistable caches. Note that some internal caches such
@@ -892,23 +962,30 @@ class CFS implements CFSInterface
 		{
 			 static::$cache->set
 				(
-					'\mjolnir\cfs\CFS::file',
+					'file',
 					 static::$cache_file,
-					 static::$cache_file_duration
+					 static::$cache_duration
 				);
 
 			 static::$cache->set
 				(
-					 '\mjolnir\cfs\CFS::file_list',
+					 'file_list',
 					 static::$cache_file_list,
-					 static::$cache_file_duration
+					 static::$cache_duration
 				);
 
 			 static::$cache->set
 				(
-					 '\mjolnir\cfs\CFS::load_symbol',
+					 'load_symbol',
 					 static::$cache_load_symbol,
-					 static::$cache_file_duration
+					 static::$cache_duration
+				);
+
+			 static::$cache->set
+				(
+					 'static_configs',
+					 static::$cache_static_configs,
+					 static::$cache_duration
 				);
 		}
 	}
@@ -917,24 +994,22 @@ class CFS implements CFSInterface
 	 * Cache object is used on symbol, configuration and file system caching. Or
 	 * at least that's the intention.
 	 */
-	static function cache (
+	static function cache
+		(
 			\mjolnir\types\Stash $cache = null,
-			$file_duration = 1800 /* 30 minutes */
+			$duration = 1800 /* 30 minutes */
 		)
 	{
 		// got cache? or reset?
 		if ($cache)
 		{
-			static::$cache_file = $cache->get
-				('\mjolnir\cfs\CFS::file', []);
+			$cache->prefix('mjolnir:cfs:CFS:');
 
-			static::$cache_file_list = $cache->get
-				('\mjolnir\cfs\CFS::file_list', []);
-
-			static::$cache_load_symbol = $cache->get
-				('\mjolnir\cfs\CFS::load_symbol', []);
-
-			static::$cache_file_duration = $file_duration;
+			static::$cache_file = $cache->get('file', []);
+			static::$cache_file_list = $cache->get('file_list', []);
+			static::$cache_load_symbol = $cache->get	('load_symbol', []);
+			static::$cache_static_configs = $cache->get('static_configs', []);
+			static::$cache_duration = $duration;
 
 			static::$cache = $cache;
 			static::$dirtycache = false;
@@ -944,7 +1019,7 @@ class CFS implements CFSInterface
 			static::$cache_file = [];
 			static::$cache_file_list = [];
 			static::$cache_load_symbol = [];
-			static::$cache_file_duration = null;
+			static::$cache_duration = null;
 
 			static::$cache = null;
 		}
