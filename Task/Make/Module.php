@@ -194,7 +194,7 @@ class Task_Make_Module extends \app\Task_Base
 		// print notice
 		$this->writer
 			->printf('status', 'Info', 'Module created!')->eol()
-			->printf('status', 'Help', 'To enable it, in your modules add: $modpath.\''.$name.'\' => \''.\ltrim($namespace, '\\').'\',')->eol();
+			->printf('status', 'Help', 'To enable it, in the modules section in etc/environment.php add: $modpath.\''.$name.'\' => \''.\ltrim($namespace, '\\').'\',')->eol();
 	}
 
 } # class
