@@ -36,7 +36,7 @@ class Task
 				'status',
 				function ($writer, $status, $message)
 				{
-					$writer->writef('%12s %s', '['.$status.']', $message);
+					$writer->writef('%12s %s', ! empty($status) ? '['.$status.']' : '', $message);
 				}
 			);
 
