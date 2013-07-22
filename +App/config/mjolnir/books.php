@@ -78,7 +78,105 @@
 												'file'  => '-05-Composer-Integration.md',
 												'type'  => 'markdown',
 											),
+										'overwriting-classes' => array
+											(
+												'idx'   => 6,
+												'title' => 'Overwriting Classes',
+												'file'  => '-06-Overwriting-Classes.md',
+												'type'  => 'markdown',
+											),
+										'overwriting-behaviour-in-classes' => array
+											(
+												'idx'   => 7,
+												'title' => 'Overwriting Behaviour in Classes',
+												'file'  => '-07-Overwriting-Behavior-in-Classes.md',
+												'type'  => 'markdown',
+											),
+										'overwriting-configuration-entries' => array
+											(
+												'idx'   => 8,
+												'title' => 'Overwriting Configuration Entries',
+												'file'  => '-08-Overwriting-Configuration-Entries.md',
+												'type'  => 'markdown',
+											),
+										'overwriting-files' => array
+											(
+												'idx'   => 9,
+												'title' => 'Overwriting Files',
+												'file'  => '-09-Overwriting-Files.md',
+												'type'  => 'markdown',
+											),
 									)
+							),
+						'mjolnir-tutorial' => array
+							(
+								'idx' => 1.1,
+
+								// default namespace for following files; may
+								// be overwritten on a per file basis
+								'namespace' => 'mjolnir\cfs',
+
+								'title' => 'Introductory Tutorial',
+
+								'introduction' => array
+									(
+										'type'  => 'markdown',
+										'file'  => 'tutorial/-00-Introduction.md',
+									),
+
+								'chapters' => array
+									(
+										'basic-structure' => array
+											(
+												'idx'   => 1,
+												'title' => 'Basic Structure',
+												'file'  => 'tutorial/-01-Basic-Structure.md',
+												'type'  => 'markdown',
+											),
+										'installing-dependencies' => array
+											(
+												'idx'   => 2,
+												'title' => 'Installing Dependencies',
+												'file'  => 'tutorial/-02-Installing-Dependencies.md',
+												'type'  => 'markdown',
+											),
+										'private-and-public-files' => array
+											(
+												'idx'   => 3,
+												'title' => 'Private and Public Files',
+												'file'  => 'tutorial/-03-Private-and-Public-Files.md',
+												'type'  => 'markdown',
+											),
+										'accessing-the-backend' => array
+											(
+												'idx'   => 4,
+												'title' => 'Accessing the Backend',
+												'file'  => 'tutorial/-04-Accessing-the-Backend.md',
+												'type'  => 'markdown',
+											),
+										'routing-controllers-etc' => array
+											(
+												'idx'   => 5,
+												'title' => 'Routing, Controllers, etc',
+												'file'  => 'tutorial/-05-Routing-Controllers-etc.md',
+												'type'  => 'markdown',
+											),
+										'creating-an-api' => array
+											(
+												'idx'   => 6,
+												'title' => 'Creating an API',
+												'file'  => 'tutorial/-06-Creating-an-API.md',
+												'type'  => 'markdown',
+											),
+										'upgrading' => array
+											(
+												'idx'   => 7,
+												'title' => 'Upgrading',
+												'file'  => 'tutorial/-07-Upgrading.md',
+												'type'  => 'markdown',
+											),
+									),
+
 							),
 					),
 			)

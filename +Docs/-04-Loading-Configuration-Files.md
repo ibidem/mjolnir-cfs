@@ -90,6 +90,30 @@ means you can abuse calls, but it also means you should treat values from
 configuration files as static. A "timer" value will not update for example; but
 you can always use a closure within the configuration for those cases.*
 
+If you wish to cache the resolved configuration file between requests you can
+add a `@cfs` key to the configuration file which will be read by the system post
+merge and settings parsed. By passing cachable the system will be instructed to
+persist the configuration values between requests. The values must be
+serializable for the values to be persisted so if your configuration has
+functions defined avoid making the configuration cachable.
+
+Example configuration using `@cfs`,
+
+	<?php return array
+		(
+			'@cfs' => array
+				(
+					'cachable' => true,
+				),
+
+			'example' => 12,
+
+		); #config
+
+Accessing the configuration will return `[ 'example' => 12 ]` in this case.
+
+If you need the `@cfs` key, simply write it as `\@cfs`.
+
 Please **DO NOT** store security keys, passwords and other sensitive information
 in configuration files located in your source repositories. Not only is it a
 security liability, but it is also a pain for any development outside your
