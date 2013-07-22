@@ -23,7 +23,7 @@ class Task_Make_Class extends \app\Task_Base
 
 		if (isset($config['disclaimer']) && $config['disclaimer'])
 		{
-			$file .= '/* '.\wordwrap($config['disclaimer'], 77, PHP_EOL.' * ')
+			$file .= '/* '.\wordwrap(\preg_replace('#[ ]+#', ' ', \preg_replace('#[\n\r]#', ' ', $config['disclaimer'])), 77, PHP_EOL.' * ')
 				. PHP_EOL.' */'.PHP_EOL.PHP_EOL;
 		}
 
