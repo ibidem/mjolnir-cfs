@@ -197,6 +197,8 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 		{
 			\mjolnir\log_error($exception);
 
+			$error_redirect = \app\Env::key('error-500.redirect', null);
+
 			$redirect = true;
 			if (\app\Env::key('www.path') !== null)
 			{
@@ -210,9 +212,17 @@ if ( ! \function_exists('\mjolnir\shutdown_error_checks'))
 				{
 					if (\app\Env::key('www.path') !== null)
 					{
-						$base_config = include \app\Env::key('www.path').'config'.EXT;
-						$error_page = '//'.$base_config['domain'].$base_config['path'].'500'.EXT;
-						\header('Location: '.$error_page);
+						if ($error_redirect == null)
+						{
+							$base_config = include \app\Env::key('www.path').'config'.EXT;
+							$error_page = '//'.$base_config['domain'].$base_config['path'].'500'.EXT;
+							\header('Location: '.$error_page);
+						}
+						else # a special error page was set for handling 500's
+						{
+							$error_page = $error_redirect;
+							\header('Location: '.$error_page);
+						}
 					}
 				}
 				catch (\Exception $e)

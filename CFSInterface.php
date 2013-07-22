@@ -279,7 +279,7 @@ interface CFSInterface
 	 */
 	static function cache (
 			\mjolnir\types\Stash $cache = null,
-			$file_duration = 1800 /* 30 minutes */
+			$duration = 1800 /* 30 minutes */
 		);
 
 } # interface
