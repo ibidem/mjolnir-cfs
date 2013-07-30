@@ -85,7 +85,7 @@
 		{
 			if ($wwwconfig['development'])
 			{
-				echo "Key files not at specified location.";
+				echo "The key path [{$wwwconfig['key.path']}] does not exist.";
 			}
 			else # public error
 			{
