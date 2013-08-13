@@ -214,19 +214,6 @@ class Task_Licenses extends \mjolnir\cfs\Task_Licenses
 }
 
 /**
- * @method \app\Task_Log_Access set($name, $value)
- * @method \app\Task_Log_Access add($name, $value)
- * @method \app\Task_Log_Access metadata_is(array $metadata = null)
- * @method \app\Task_Log_Access writer_is($writer)
- * @method \app\Writer writer()
- */
-class Task_Log_Access extends \mjolnir\cfs\Task_Log_Access
-{
-	/** @return \app\Task_Log_Access */
-	static function instance() { return parent::instance(); }
-}
-
-/**
  * @method \app\Task_Log_Short set($name, $value)
  * @method \app\Task_Log_Short add($name, $value)
  * @method \app\Task_Log_Short metadata_is(array $metadata = null)
@@ -308,6 +295,24 @@ class Task extends \mjolnir\cfs\Task
 {
 	/** @return \app\Task */
 	static function invoke($encoded_task) { return parent::invoke($encoded_task); }
+}
+
+/**
+ * @method \app\WebWriter eol()
+ * @method \app\WebWriter writef($format)
+ * @method \app\WebWriter stderr_writef($format)
+ * @method \app\WebWriter printf($format)
+ * @method \app\WebWriter addformat($format, $formatter)
+ * @method \app\WebWriter stdout_is($resource)
+ * @method \app\WebWriter stderr_is($resource)
+ * @method \app\WebWriter set($name, $value)
+ * @method \app\WebWriter add($name, $value)
+ * @method \app\WebWriter metadata_is(array $metadata = null)
+ */
+class WebWriter extends \mjolnir\cfs\WebWriter
+{
+	/** @return \app\WebWriter */
+	static function instance() { return parent::instance(); }
 }
 
 /**
