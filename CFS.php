@@ -953,12 +953,17 @@ class CFS implements CFSInterface
 	protected static $cache_duration = null;
 
 	/**
+	 * @var boolean
+	 */
+	protected static $dropcache = false;
+
+	/**
 	 * Saves the current persistable caches. Note that some internal caches such
 	 * as the configuration file cache can not be persisted.
 	 */
 	static function savecache()
 	{
-		if (static::$cache && static::$dirtycache)
+		if (static::$cache && static::$dirtycache && ! static::$dropcache)
 		{
 			 static::$cache->set
 				(
@@ -1023,6 +1028,14 @@ class CFS implements CFSInterface
 
 			static::$cache = null;
 		}
+	}
+
+	/**
+	 * Instructs the system to NOT save the current cache.
+	 */
+	static function dropcache()
+	{
+		static::$dropcache = true;
 	}
 
 } # class

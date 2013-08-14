@@ -14,6 +14,8 @@ class Task_Cleanup extends \app\Task_Base
 	 */
 	function cache_cleanup()
 	{
+		$this->writer->writef('  - dropping CFS cache')->eol();
+		\app\CFS::dropcache();
 		$this->writer->writef('  - flushing file cache')->eol();
 		\app\Stash_File::instance(false)->flush();
 		$this->writer->writef('  - flushing memcache cache')->eol();

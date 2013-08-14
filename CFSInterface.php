@@ -282,4 +282,9 @@ interface CFSInterface
 			$duration = 1800 /* 30 minutes */
 		);
 
+	/**
+	 * Instructs the system to NOT save the current cache.
+	 */
+	static function dropcache();
+
 } # interface
