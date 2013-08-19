@@ -25,11 +25,78 @@ class Assertion extends \app\Instantiatable
 		return $i;
 	}
 
-	function equals($value)
+	/**
+	 * Strict equality check.
+	 */
+	function equals($expected)
 	{
-		if ($this->asserted === $value)
+		if (\is_array($expected))
 		{
-			throw new \app\Exception("Expected [${$this->asserted}] recieved [${$value}]");
+			if (\is_array($this->asserted))
+			{
+				if (\serialize($expected) !== \serialize($this->asserted))
+				{
+					$expected_value = $this->valuedef($expected);
+					$asserted_value = $this->valuedef($this->asserted);
+					throw new \app\Exception("Expected {$expected_value}, recieved {$asserted_value}");
+				}
+			}
+			else # non-array
+			{
+				$asserted_value = $this->valuedef($this->asserted);
+				throw new \app\Exception("Expected Array, recieved {$asserted_value}");
+			}
+		}
+		else if ($expected !== $this->asserted)
+		{
+			$expected_value = $this->valuedef($expected);
+			$asserted_value = $this->valuedef($this->asserted);
+			throw new \app\Exception("Expected {$expected_value}, recieved {$asserted_value}");
+		}
+	}
+
+	/**
+	 * Same as equals, only loose type checks.
+	 */
+	function loosly_equals($expected)
+	{
+		if (\is_array($expected))
+		{
+			return $this->equals($expected);
+		}
+		else if ($expected != $this->asserted)
+		{
+			$expected_value = $this->valuedef($expected);
+			$asserted_value = $this->valuedef($this->asserted);
+			throw new \app\Exception("Expected {$expected_value}, recieved {$asserted_value}");
+		}
+	}
+
+	/**
+	 * @return string normalized value definition
+	 */
+	protected function valuedef($value)
+	{
+		$type = \gettype($value);
+		if ($type === 'NULL')
+		{
+			return '<NULL>';
+		}
+		else if ($type == 'string')
+		{
+			return '"'.$value.'"';
+		}
+		else if ($type == 'boolean')
+		{
+			return '<'.($value ? 'TRUE' : 'FALSE').'>';
+		}
+		else if ($type == 'array')
+		{
+			return '<Array['.\serialize($value).']>';
+		}
+		else # other
+		{
+			return "<{$type}[$value]>";
 		}
 	}
 
