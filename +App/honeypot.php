@@ -6,21 +6,29 @@
 // HowTo: order honeypot -n 'mjolnir\cfs'
 
 
+class Assertion extends \mjolnir\cfs\Assertion
+{
+	/** @return \app\Assertion */
+	static function instance() { return parent::instance(); }
+}
+
+class Assert extends \mjolnir\cfs\Assert
+{
+	/** @return \app\Assert */
+	static function instance() { return parent::instance(); }
+}
+
 class Backend_FilePermissions extends \mjolnir\cfs\Backend_FilePermissions
 {
 	/** @return \app\Backend_FilePermissions */
 	static function instance() { return parent::instance(); }
 }
 
-class Benchmark extends \mjolnir\cfs\Benchmark
-{
-}
-
 class BenchmarkInterface extends \mjolnir\cfs\BenchmarkInterface
 {
 }
 
-class CFS extends \mjolnir\cfs\CFS
+class Benchmark extends \mjolnir\cfs\Benchmark
 {
 }
 
@@ -28,10 +36,8 @@ class CFSInterface extends \mjolnir\cfs\CFSInterface
 {
 }
 
-class Env extends \mjolnir\cfs\Env
+class CFS extends \mjolnir\cfs\CFS
 {
-	/** @return \app\Env */
-	static function set($key, $value) { return parent::set($key, $value); }
 }
 
 /**
@@ -39,6 +45,12 @@ class Env extends \mjolnir\cfs\Env
  */
 class Environment extends \mjolnir\cfs\Environment
 {
+}
+
+class Env extends \mjolnir\cfs\Env
+{
+	/** @return \app\Env */
+	static function set($key, $value) { return parent::set($key, $value); }
 }
 
 class Instantiatable extends \mjolnir\cfs\Instantiatable
@@ -75,6 +87,7 @@ class Overlord extends \mjolnir\cfs\Overlord
  * @method \app\SilentWriter stderr_is($resource)
  * @method \app\SilentWriter set($name, $value)
  * @method \app\SilentWriter add($name, $value)
+ * @method \app\SilentWriter addmeta($name, $values = null)
  * @method \app\SilentWriter metadata_is(array $metadata = null)
  */
 class SilentWriter extends \mjolnir\cfs\SilentWriter
@@ -86,6 +99,7 @@ class SilentWriter extends \mjolnir\cfs\SilentWriter
 /**
  * @method \app\Task_Base set($name, $value)
  * @method \app\Task_Base add($name, $value)
+ * @method \app\Task_Base addmeta($name, $values = null)
  * @method \app\Task_Base metadata_is(array $metadata = null)
  * @method \app\Task_Base writer_is($writer)
  * @method \app\Writer writer()
@@ -99,6 +113,7 @@ class Task_Base extends \mjolnir\cfs\Task_Base
 /**
  * @method \app\Task_Behat set($name, $value)
  * @method \app\Task_Behat add($name, $value)
+ * @method \app\Task_Behat addmeta($name, $values = null)
  * @method \app\Task_Behat metadata_is(array $metadata = null)
  * @method \app\Task_Behat writer_is($writer)
  * @method \app\Writer writer()
@@ -112,6 +127,7 @@ class Task_Behat extends \mjolnir\cfs\Task_Behat
 /**
  * @method \app\Task_Cleanup set($name, $value)
  * @method \app\Task_Cleanup add($name, $value)
+ * @method \app\Task_Cleanup addmeta($name, $values = null)
  * @method \app\Task_Cleanup metadata_is(array $metadata = null)
  * @method \app\Task_Cleanup writer_is($writer)
  * @method \app\Writer writer()
@@ -125,6 +141,7 @@ class Task_Cleanup extends \mjolnir\cfs\Task_Cleanup
 /**
  * @method \app\Task_Compile set($name, $value)
  * @method \app\Task_Compile add($name, $value)
+ * @method \app\Task_Compile addmeta($name, $values = null)
  * @method \app\Task_Compile metadata_is(array $metadata = null)
  * @method \app\Task_Compile writer_is($writer)
  * @method \app\Writer writer()
@@ -138,6 +155,7 @@ class Task_Compile extends \mjolnir\cfs\Task_Compile
 /**
  * @method \app\Task_Config set($name, $value)
  * @method \app\Task_Config add($name, $value)
+ * @method \app\Task_Config addmeta($name, $values = null)
  * @method \app\Task_Config metadata_is(array $metadata = null)
  * @method \app\Task_Config writer_is($writer)
  * @method \app\Writer writer()
@@ -151,6 +169,7 @@ class Task_Config extends \mjolnir\cfs\Task_Config
 /**
  * @method \app\Task_Find_Class set($name, $value)
  * @method \app\Task_Find_Class add($name, $value)
+ * @method \app\Task_Find_Class addmeta($name, $values = null)
  * @method \app\Task_Find_Class metadata_is(array $metadata = null)
  * @method \app\Task_Find_Class writer_is($writer)
  * @method \app\Writer writer()
@@ -164,6 +183,7 @@ class Task_Find_Class extends \mjolnir\cfs\Task_Find_Class
 /**
  * @method \app\Task_Find_Config set($name, $value)
  * @method \app\Task_Find_Config add($name, $value)
+ * @method \app\Task_Find_Config addmeta($name, $values = null)
  * @method \app\Task_Find_Config metadata_is(array $metadata = null)
  * @method \app\Task_Find_Config writer_is($writer)
  * @method \app\Writer writer()
@@ -177,6 +197,7 @@ class Task_Find_Config extends \mjolnir\cfs\Task_Find_Config
 /**
  * @method \app\Task_Find_File set($name, $value)
  * @method \app\Task_Find_File add($name, $value)
+ * @method \app\Task_Find_File addmeta($name, $values = null)
  * @method \app\Task_Find_File metadata_is(array $metadata = null)
  * @method \app\Task_Find_File writer_is($writer)
  * @method \app\Writer writer()
@@ -190,6 +211,7 @@ class Task_Find_File extends \mjolnir\cfs\Task_Find_File
 /**
  * @method \app\Task_Honeypot set($name, $value)
  * @method \app\Task_Honeypot add($name, $value)
+ * @method \app\Task_Honeypot addmeta($name, $values = null)
  * @method \app\Task_Honeypot metadata_is(array $metadata = null)
  * @method \app\Task_Honeypot writer_is($writer)
  * @method \app\Writer writer()
@@ -203,6 +225,7 @@ class Task_Honeypot extends \mjolnir\cfs\Task_Honeypot
 /**
  * @method \app\Task_Licenses set($name, $value)
  * @method \app\Task_Licenses add($name, $value)
+ * @method \app\Task_Licenses addmeta($name, $values = null)
  * @method \app\Task_Licenses metadata_is(array $metadata = null)
  * @method \app\Task_Licenses writer_is($writer)
  * @method \app\Writer writer()
@@ -216,6 +239,7 @@ class Task_Licenses extends \mjolnir\cfs\Task_Licenses
 /**
  * @method \app\Task_Log_Short set($name, $value)
  * @method \app\Task_Log_Short add($name, $value)
+ * @method \app\Task_Log_Short addmeta($name, $values = null)
  * @method \app\Task_Log_Short metadata_is(array $metadata = null)
  * @method \app\Task_Log_Short writer_is($writer)
  * @method \app\Writer writer()
@@ -229,6 +253,7 @@ class Task_Log_Short extends \mjolnir\cfs\Task_Log_Short
 /**
  * @method \app\Task_Make_Class set($name, $value)
  * @method \app\Task_Make_Class add($name, $value)
+ * @method \app\Task_Make_Class addmeta($name, $values = null)
  * @method \app\Task_Make_Class metadata_is(array $metadata = null)
  * @method \app\Task_Make_Class writer_is($writer)
  * @method \app\Writer writer()
@@ -242,6 +267,7 @@ class Task_Make_Class extends \mjolnir\cfs\Task_Make_Class
 /**
  * @method \app\Task_Make_Module set($name, $value)
  * @method \app\Task_Make_Module add($name, $value)
+ * @method \app\Task_Make_Module addmeta($name, $values = null)
  * @method \app\Task_Make_Module metadata_is(array $metadata = null)
  * @method \app\Task_Make_Module writer_is($writer)
  * @method \app\Writer writer()
@@ -255,6 +281,7 @@ class Task_Make_Module extends \mjolnir\cfs\Task_Make_Module
 /**
  * @method \app\Task_Make_Trait set($name, $value)
  * @method \app\Task_Make_Trait add($name, $value)
+ * @method \app\Task_Make_Trait addmeta($name, $values = null)
  * @method \app\Task_Make_Trait metadata_is(array $metadata = null)
  * @method \app\Task_Make_Trait writer_is($writer)
  * @method \app\Writer writer()
@@ -268,6 +295,7 @@ class Task_Make_Trait extends \mjolnir\cfs\Task_Make_Trait
 /**
  * @method \app\Task_Status set($name, $value)
  * @method \app\Task_Status add($name, $value)
+ * @method \app\Task_Status addmeta($name, $values = null)
  * @method \app\Task_Status metadata_is(array $metadata = null)
  * @method \app\Task_Status writer_is($writer)
  * @method \app\Writer writer()
@@ -281,6 +309,7 @@ class Task_Status extends \mjolnir\cfs\Task_Status
 /**
  * @method \app\Task_Versions set($name, $value)
  * @method \app\Task_Versions add($name, $value)
+ * @method \app\Task_Versions addmeta($name, $values = null)
  * @method \app\Task_Versions metadata_is(array $metadata = null)
  * @method \app\Task_Versions writer_is($writer)
  * @method \app\Writer writer()
@@ -307,6 +336,7 @@ class Task extends \mjolnir\cfs\Task
  * @method \app\WebWriter stderr_is($resource)
  * @method \app\WebWriter set($name, $value)
  * @method \app\WebWriter add($name, $value)
+ * @method \app\WebWriter addmeta($name, $values = null)
  * @method \app\WebWriter metadata_is(array $metadata = null)
  */
 class WebWriter extends \mjolnir\cfs\WebWriter
@@ -325,6 +355,7 @@ class WebWriter extends \mjolnir\cfs\WebWriter
  * @method \app\Writer stderr_is($resource)
  * @method \app\Writer set($name, $value)
  * @method \app\Writer add($name, $value)
+ * @method \app\Writer addmeta($name, $values = null)
  * @method \app\Writer metadata_is(array $metadata = null)
  */
 class Writer extends \mjolnir\cfs\Writer
