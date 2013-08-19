@@ -87,7 +87,7 @@ class Task_Cleanup extends \app\Task_Base
 		# Remove Temporary file
 
 		$this->writer->writef(' Removing temporary files')->eol();
-		$tmp_files = \app\Filesystem::matchingfiles(\app\Env::key('etc.path').'tmp', '#^[^\.].*$#');
+		$tmp_files = \app\Filesystem::matchingfiles(\app\Env::key('tmp.path'), '#^[^\.].*$#');
 
 		foreach ($tmp_files as $file)
 		{
@@ -102,7 +102,7 @@ class Task_Cleanup extends \app\Task_Base
 			}
 		}
 
-		\app\Filesystem::prunedirs(\app\Env::key('etc.path').'tmp');
+		\app\Filesystem::prunedirs(\app\Env::key('tmp.path'));
 	}
 
 } # class

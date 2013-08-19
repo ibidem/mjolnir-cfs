@@ -39,7 +39,7 @@ class Mjolnir
 			{
 				if (\file_exists($dir.'.www.path'))
 				{
-					$wwwpath = \trim(\file_get_contents($dir.'.www.path'));
+					$wwwpath = \trim(\app\Filesystem::gets($dir.'.www.path'));
 
 					// load the configuration
 					$wwwconfig = include $wwwpath.'config'.EXT;

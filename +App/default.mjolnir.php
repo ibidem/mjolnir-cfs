@@ -124,6 +124,8 @@
 	$env->set('sys.path', $syspath);
 	// misc files and general purpose environement configuration files
 	$env->set('etc.path', $etcpath);
+	// temporary files
+	$env->set('tmp.path', $etcpath.'tmp/');
 	// application modules
 	$env->set('modules.path', $modpath);
 	// packaged modules
