@@ -48,7 +48,7 @@ class Mjolnir
 				include $dir.'etc/mjolnir'.EXT;
 
 				// set environment path
-				Env::ensure('www.path', $wwwpath);
+				\app\Env::ensure('www.path', $wwwpath);
 
 				return;
 			}
