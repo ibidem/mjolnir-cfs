@@ -80,7 +80,10 @@ if ( ! \function_exists('\mjolnir\implode'))
 			}
 		}
 
-		$glued = \substr($glued, \strlen($glue));
+		if ( ! empty($glued))
+		{
+			$glued = \substr($glued, \strlen($glue));
+		}
 
 		return $glued;
 	}
