@@ -1,11 +1,12 @@
 <?php
 
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException;
+	Behat\Behat\Context\TranslatedContextInterface,
+	Behat\Behat\Context\BehatContext,
+	Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+	Behat\Gherkin\Node\TableNode;
+use app\Assert;
 
 \mjolnir\cfs\Mjolnir::behat();
 
@@ -14,31 +15,32 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 class FeatureContext extends BehatContext
 {
-    /**
-     * Initializes context.
-     * Every scenario gets it's own context object.
-     *
-     * @param array $parameters context parameters (set them up through behat.yml)
-     */
-    public function __construct(array $parameters)
-    {
+	/**
+	 * Initializes context.
+	 * Every scenario gets it's own context object.
+	 *
+	 * @param array $parameters context parameters (set them up through behat.yml)
+	 */
+	function __construct(array $parameters)
+	{
 		// do nothing
 	}
 
 	/**
 	 * @Given /^a class file "([^"]*)" with a method hello_world\.$/
 	 */
-	public function aClassFileWithAMethodHelloWorld($class_file)
+	function aClassFileWithAMethodHelloWorld($class_file)
 	{
-		\app\expects(true)->equals(\file_exists(PLGPATH.'mjolnir/testing/'.$class_file.EXT));
+		$class_exists = \file_exists(\app\CFS::modulepath('mjolnir\testing').$class_file.EXT);
+		Assert::that($class_exists)->equals(true);
 	}
 
 	/**
 	 * @When /^I call "([^"]*)" and invoke "([^"]*)" I should get "hello, world"\.$/
 	 */
-	public function iCallAndInvokeIShouldGetHelloWorld($class, $method)
+	function iCallAndInvokeIShouldGetHelloWorld($class, $method)
 	{
-		\app\expects('hello, world')->equals($class::instance()->$method());
+		Assert::that($class::instance())->$method()->equals('hello, world');
 	}
 
 } # context
