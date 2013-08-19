@@ -37,7 +37,19 @@ class Mjolnir
 		{
 			if (\file_exists($dir.'etc/mjolnir'.EXT))
 			{
-				require_once $dir.'etc/mjolnir'.EXT;
+				if (\file_exists($dir.'.www.path'))
+				{
+					$wwwpath = \trim(\file_get_contents($dir.'.www.path'));
+
+					// load the configuration
+					$wwwconfig = include $wwwpath.'config'.EXT;
+				}
+
+				include $dir.'etc/mjolnir'.EXT;
+
+				// set environment path
+				Env::ensure('www.path', $wwwpath);
+
 				return;
 			}
 
@@ -53,16 +65,8 @@ class Mjolnir
 	 */
 	static function behat()
 	{
-		if ( ! \defined('IS_UNITTEST'))
-		{
-			\define('IS_UNITTEST', true);
-		}
-
 		// bootstrap
 		static::init();
-
-		// load assertion helpers
-		require_once \app\CFS::dir('functions/mjolnir/').'assertions'.EXT;
 	}
 
 	/**
@@ -105,7 +109,6 @@ class Mjolnir
 		// do we have a default theme?
 		if (\app\CFS::config('mjolnir/themes')['theme.default'] !== null)
 		{
-
 			try
 			{
 				$relaynode = \app\RelayNode::instance
