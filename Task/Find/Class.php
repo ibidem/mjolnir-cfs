@@ -33,7 +33,7 @@ class Task_Find_Class extends \app\Task_Base
 			\sort($files);
 			foreach ($files as $file)
 			{
-				$this->writer->printf('status', 'File', $file)->eol();
+				$this->writer->printf('status', 'File', \str_replace(\str_replace('\\', '/', \app\Env::key('sys.path')), '', \str_replace('\\', '/', $file)))->eol();
 			}
 		}
 		else # no files found

@@ -23,7 +23,7 @@ class Task_Find_File extends \app\Task_Base
 			\sort($files);
 			foreach ($files as $file)
 			{
-				$this->writer->printf('status', 'File', \str_replace(\app\Env::key('sys.path'), '', \realpath($file)))->eol();
+				$this->writer->printf('status', 'File', \str_replace(\str_replace('\\', '/', \app\Env::key('sys.path')), '', \str_replace('\\', '/', \realpath($file))))->eol();
 			}
 		}
 		else # no files found

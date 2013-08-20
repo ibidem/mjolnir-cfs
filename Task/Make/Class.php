@@ -56,7 +56,15 @@ class Task_Make_Class extends \app\Task_Base
 		}
 		else # not library
 		{
-			$extention = '\\app\\Instantiatable';
+			if (\class_exists("\app\\$class_name"))
+			{
+				$extention = "next\\$class_name";
+			}
+			else # new class
+			{
+				$extention = '\\app\\Instantiatable';
+			}
+			
 			$file .= "class $class_name extends $extention".PHP_EOL;
 		}
 
