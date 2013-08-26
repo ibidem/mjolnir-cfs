@@ -16,10 +16,7 @@
 
 	"require": {
 		"php": ">=5.4.10",
-		"mjolnir/types"   : "dev-liquid/2.x"
-	},
-
-	"require-dev": {
+		"mjolnir/types"   : "dev-liquid/2.x",
 		"mjolnir/testing" : "dev-liquid/2.x"
 	},
 
