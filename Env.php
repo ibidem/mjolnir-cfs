@@ -11,6 +11,16 @@
  */
 class Env
 {
+	#
+	# This class is a shorthand / alias to the object system.
+	#
+	# We do not ensure tests for this class since it merely mimicks the exact
+	# same interface and tests for it are redundant and would duplicate the
+	# logic in the instantiatable version.
+	#
+
+// @codeCoverageIgnoreStart
+
 	/**
 	 * @return mixed
 	 */
@@ -34,5 +44,7 @@ class Env
 	{
 		return \app\Environment::instance('main')->set($key, $value);
 	}
+
+// @codeCoverageIgnoreEnd
 
 } # class
