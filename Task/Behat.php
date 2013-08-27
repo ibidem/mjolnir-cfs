@@ -1,5 +1,12 @@
 <?php namespace mjolnir\cfs;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder,
+	Symfony\Component\Console\Input\ArrayInput,
+	Symfony\Component\Console\Output\NullOutput;
+
+use Behat\Behat\DependencyInjection\BehatExtension,
+    Behat\Behat\DependencyInjection\Configuration\Loader;
+
 /**
  * @package    mjolnir
  * @category   Cascading File System
@@ -47,17 +54,22 @@ class Task_Behat extends \app\Task_Base
 		}
 
 		// verify behat is present
-		$composer_config = \json_decode(\file_get_contents(\app\Env::key('etc.path').'composer.json'), true);
-		$bindir = \trim('etc/'.$composer_config['config']['bin-dir'], '/');
+		$composer_config = \json_decode(\file_get_contents(\app\Env::key('sys.path').'composer.json'), true);
+		$bindir = \trim($composer_config['config']['bin-dir'], '/');
 		$behat_cmd = \app\Env::key('sys.path').$bindir.'/behat';
 		if ( ! \file_exists($behat_cmd))
 		{
-			$this->writer->printf('error', 'Missing behat runner.')->eol();
+			$this->writer->printf('status', 'Error', 'Missing behat runner.')->eol();
 			$this->writer->printf('status', 'Help', 'Please verify you have behat in your composer file.')->eol();
 			exit(1);
 		}
 
 		$paths = \app\CFS::paths();
+
+		$filter = new \PHP_CodeCoverage_Filter();
+		$filter->addDirectoryToBlacklist(\app\Env::key('sys.path'));
+
+		$behat_commands = [];
 
 		foreach ($paths as $path)
 		{
@@ -90,13 +102,83 @@ class Task_Behat extends \app\Task_Base
 						continue;
 					}
 
-					$this->writer->eol()->printf('title', 'Processing feature "'.$the_feature.'" for '.$pretty_location);
+					// add relevant to filter
+					$filter->addDirectoryToWhitelist(\realpath($path.'../').DIRECTORY_SEPARATOR);
+
+					//$modulepath = \realpath($path.'../');
+					//$filter->addFileToWhitelist($modulepath);
+					//$filter->addDirectoryToBlacklist($modulepath.\mjolnir\cfs\CFSInterface::APPDIR);
+					//$filter->addDirectoryToWhitelist($path.'features');
+					//$filter->addDirectoryToWhitelist($path.'functions');
+
 					$executed_cmd = $behat_cmd.' '.$behat_flags.' --config="'.$file.'"';
-					\passthru($executed_cmd);
+
+					$behat_commands[] = array
+						(
+							'title' => \str_repeat('-', 79).PHP_EOL
+									.  'Processing feature "'.$the_feature.'" for '.$pretty_location.PHP_EOL
+									.  \str_repeat('-', 79).PHP_EOL.PHP_EOL,
+							'exec' => $executed_cmd,
+							'file' => $file
+						);
 				}
 			}
-
 		}
+
+		$coverage = new \PHP_CodeCoverage(null, $filter);
+
+		$this->code_coverage($coverage, $behat_commands);
+
+		$coverage_file_prefix = \app\Env::key('tmp.path')."code-coverage-".\microtime(true);
+		$coverage_file_prefix_pretty = \str_replace(\str_replace('\\', '/', \app\Env::key('sys.path')), '', \str_replace('\\', '/', $coverage_file_prefix));
+
+		$this->writer->eol()->writef('Generating Code Coverage ['.$coverage_file_prefix_pretty.'.cov]');
+		$writer = new \PHP_CodeCoverage_Report_PHP;
+		$writer->process($coverage, $coverage_file_prefix.'.cov');
+
+		$this->writer->eol()->writef('Generating Code Coverage HTML ['.$coverage_file_prefix_pretty.']');
+		$writer = new \PHP_CodeCoverage_Report_HTML;
+		$writer->process($coverage, $coverage_file_prefix);
+	}
+
+	/**
+	 * Code Coverage. Isolating as much as possible to avoid polution.
+	 */
+	protected function code_coverage($coverage, $commands)
+	{
+		\chdir(\app\Env::key('sys.path'));
+		$coverage->start('Mjolnir Behat Test');
+
+		foreach ($commands as $command)
+		{
+			echo PHP_EOL.$command['title'];
+
+			$file = $command['file'];
+			$container = new ContainerBuilder();
+
+			$loader  = new Loader($file);
+			$configs = $loader->loadConfiguration('default');
+
+			$basePath = \realpath(\dirname($file));
+
+			$extension = new BehatExtension($basePath);
+			$extension->load($configs, $container);
+			$container->addObjectResource($extension);
+
+			$container->compile();
+
+
+			$input = new ArrayInput
+				(
+					[
+						'--ansi' => true
+					]
+				);
+
+			$container->get('behat.console.command')->run($input, new NullOutput());
+		}
+
+		$coverage->stop();
 	}
 
 } # class

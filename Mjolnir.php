@@ -21,6 +21,11 @@ class Mjolnir
 	 */
 	static function init()
 	{
+		if (\class_exists('\mjolnir\cfs\CFS', false))
+		{
+			return;
+		}
+
 		// the current directory is <vendor>/mjolnir/base/ where vendor is
 		// whatever the project composer configuration is setup to store
 		// packages in, so...
