@@ -339,5 +339,23 @@
 							)
 					),
 			),
+		'test' => array
+			(
+				'category' => 'Tools',
+				'description' => array
+					(
+						'General command for running unit tests at a given path.'
+					),
+				'flags' => array
+					(
+						'path' => array
+							(
+								'description' => 'Path from where to detect tests.',
+								'short' => 'p',
+								'type' => 'text',
+								'default' => '.'
+							)
+					),
+			),
 
 	);
