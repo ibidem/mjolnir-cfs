@@ -344,7 +344,9 @@
 				'category' => 'Tools',
 				'description' => array
 					(
-						'General command for running unit tests at a given path.'
+						'General command for running unit tests at a given path.',
+						'Command currently runs phpunit tests generates phpunit code coverage.',
+						'When generating coverage you may ask for consistent coverage naming for files so you can simply refresh your browser and such if you\'re constantly running and viewing reports.',
 					),
 				'flags' => array
 					(
@@ -354,7 +356,13 @@
 								'short' => 'p',
 								'type' => 'text',
 								'default' => '.'
-							)
+							),
+
+						'consistent' => array
+							(
+								'description' => 'Command will generate consistent reports.',
+								'short' => 's',
+							),
 					),
 			),
 

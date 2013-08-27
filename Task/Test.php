@@ -15,6 +15,7 @@ class Task_Test extends \app\Task_Base
 	function run()
 	{
 		$path = $this->get('path', '.');
+		$consistent = $this->get('consistent', false);
 
 		// read composer.json
 		$syspath = \app\Env::key('sys.path');
@@ -56,14 +57,19 @@ class Task_Test extends \app\Task_Base
 		$tmppath = $this->tmppath();
 
 		// we ensure the coverage name is legitimate
-		$coveragename = \str_replace(' ', '-', $this->coveragename());
+		$coveragename = \str_replace(' ', '-', $this->coveragename($consistent));
 
 		$bootstrapfile = \str_replace('\\', '/', $etcpath.'mjolnir'.EXT);
 		$coveragefile = \str_replace('\\', '/', $tmppath.$coveragename);
 
 		$cmd = "--coverage-html={$coveragefile} --bootstrap={$bootstrapfile} {$path}";
 		$clean_command = \str_replace(\str_replace('\\', '/', \app\Env::key('sys.path', '')), '', $cmd);
-		
+
+		if (\file_exists($coveragefile))
+		{
+			\app\Filesystem::delete($coveragefile);
+		}
+
 		$this->writer->writef("phpunit $clean_command")->eol()->eol();
 
 		\passthru("$phpunitcmd $cmd");
@@ -88,9 +94,16 @@ class Task_Test extends \app\Task_Base
 	/**
 	 * @return string html coverage directory name
 	 */
-	protected function coveragename()
+	protected function coveragename($consistent)
 	{
-		return 'phpunit-coverage-'.\time();
+		if ($consistent)
+		{
+			return 'phpunit-coverage';
+		}
+		else # ensure unsued name
+		{
+			return 'phpunit-coverage-'.\time();
+		}
 	}
 
 } # class
