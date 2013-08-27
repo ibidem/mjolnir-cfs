@@ -10,7 +10,7 @@
 class Task_Log_Short extends \app\Task_Base
 {
 	/**
-	 * Execute task.
+	 * Shorthand command.
 	 */
 	function run()
 	{
