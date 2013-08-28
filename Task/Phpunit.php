@@ -15,7 +15,7 @@ class Task_Phpunit extends \app\Task_Base
 	function run()
 	{
 		$path = $this->get('path', false);
-		$consistent = $this->get('consistent', false);
+		$consistent = ! $this->get('unique', false);
 
 		if ($path === false)
 		{

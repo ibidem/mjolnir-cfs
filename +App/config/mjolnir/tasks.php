@@ -372,7 +372,6 @@
 				'description' => array
 					(
 						'Run phpunit tests at the given path.',
-						'When generating coverage you may ask for consistent coverage naming for files so you can simply refresh your browser if you\'re constantly running and viewing the reports.',
 					),
 				'flags' => array
 					(
@@ -382,11 +381,10 @@
 								'short' => 'p',
 								'type' => 'text',
 							),
-
-						'consistent' => array
+						'unique' => array
 							(
-								'description' => 'Command will generate consistent reports.',
-								'short' => 's',
+								'description' => 'Command will generate unique reports.',
+								'short' => 'q',
 							),
 					),
 			),
