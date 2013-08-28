@@ -1,0 +1,20 @@
+<?php namespace placeholder\ns\tests;
+
+use \placeholder\ns\Trait_Placeholder;
+
+class Trait_Placeholder_Tester
+{
+	use Trait_Placeholder;
+}
+
+class Trait_PlaceholderTest extends \PHPUnit_Framework_TestCase
+{
+	/** @test */ function
+	can_be_loaded()
+	{
+		$this->assertTrue(\trait_exists('\placeholder\ns\Trait_Placeholder'));
+	}
+
+	// @todo tests for \placeholder\ns\Trait_Placeholder
+
+} # test

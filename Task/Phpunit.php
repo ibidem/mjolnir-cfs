@@ -7,15 +7,20 @@
  * @copyright  (c) 2013, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Task_Test extends \app\Task_Base
+class Task_Phpunit extends \app\Task_Base
 {
 	/**
 	 * Shorthand command.
 	 */
 	function run()
 	{
-		$path = $this->get('path', '.');
+		$path = $this->get('path', false);
 		$consistent = $this->get('consistent', false);
+
+		if ($path === false)
+		{
+			throw new \app\Exception_NotApplicable('You must provide a path.');
+		}
 
 		// read composer.json
 		$syspath = \app\Env::key('sys.path');

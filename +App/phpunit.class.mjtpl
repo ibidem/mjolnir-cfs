@@ -1,0 +1,15 @@
+<?php namespace placeholder\ns\tests;
+
+use \placeholder\ns\Placeholder_Class;
+
+class Placeholder_ClassTest extends \PHPUnit_Framework_TestCase
+{
+	/** @test */ function
+	can_be_loaded()
+	{
+		$this->assertTrue(\class_exists('\placeholder\ns\Placeholder_Class'));
+	}
+
+	// @todo tests for \placeholder\ns\Placeholder_Class
+
+} # test

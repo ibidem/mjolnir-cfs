@@ -339,14 +339,40 @@
 							)
 					),
 			),
-		'test' => array
+
+		'make:phpunit' => array
 			(
 				'category' => 'Tools',
 				'description' => array
 					(
-						'General command for running unit tests at a given path.',
-						'Command currently runs phpunit tests generates phpunit code coverage.',
-						'When generating coverage you may ask for consistent coverage naming for files so you can simply refresh your browser and such if you\'re constantly running and viewing reports.',
+						'Auto-generate any missing test classes for module.',
+					),
+				'flags' => array
+					(
+						'namespace' => array
+							(
+								'description' => 'Namespace',
+								'short' => 'n',
+								'type' => 'text',
+								'default' => ''
+							),
+						'prefix' => array
+							(
+								'description' => 'Namespace prefix',
+								'short' => 'p',
+								'type' => 'text',
+								'default' => ''
+							),
+					),
+			),
+
+		'phpunit' => array
+			(
+				'category' => 'Tools',
+				'description' => array
+					(
+						'Run phpunit tests at the given path.',
+						'When generating coverage you may ask for consistent coverage naming for files so you can simply refresh your browser if you\'re constantly running and viewing the reports.',
 					),
 				'flags' => array
 					(
@@ -355,7 +381,6 @@
 								'description' => 'Path from where to detect tests.',
 								'short' => 'p',
 								'type' => 'text',
-								'default' => '.'
 							),
 
 						'consistent' => array

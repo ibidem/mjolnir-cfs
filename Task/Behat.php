@@ -47,12 +47,12 @@ class Task_Behat extends \app\Task_Base
 		}
 
 		// verify behat is present
-		$composer_config = \json_decode(\file_get_contents(\app\Env::key('etc.path').'composer.json'), true);
-		$bindir = \trim('etc/'.$composer_config['config']['bin-dir'], '/');
+		$composer_config = \json_decode(\file_get_contents(\app\Env::key('sys.path').'composer.json'), true);
+		$bindir = \trim($composer_config['config']['bin-dir'], '/');
 		$behat_cmd = \app\Env::key('sys.path').$bindir.'/behat';
 		if ( ! \file_exists($behat_cmd))
 		{
-			$this->writer->printf('error', 'Missing behat runner.')->eol();
+			$this->writer->printf('status', 'Error', 'Missing behat runner.')->eol();
 			$this->writer->printf('status', 'Help', 'Please verify you have behat in your composer file.')->eol();
 			exit(1);
 		}
