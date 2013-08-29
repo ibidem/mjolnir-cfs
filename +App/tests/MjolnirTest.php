@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Mjolnir;
 
-class MjolnirTest extends \PHPUnit_Framework_TestCase
+class MjolnirTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

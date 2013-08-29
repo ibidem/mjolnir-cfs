@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Env;
 
-class EnvTest extends \PHPUnit_Framework_TestCase
+class EnvTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

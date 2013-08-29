@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\WebWriter;
 
-class WebWriterTest extends \PHPUnit_Framework_TestCase
+class WebWriterTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

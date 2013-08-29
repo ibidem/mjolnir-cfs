@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Task_Cleanup;
 
-class Task_CleanupTest extends \PHPUnit_Framework_TestCase
+class Task_CleanupTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

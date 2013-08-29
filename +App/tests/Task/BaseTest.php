@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Task_Base;
 
-class Task_BaseTest extends \PHPUnit_Framework_TestCase
+class Task_BaseTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

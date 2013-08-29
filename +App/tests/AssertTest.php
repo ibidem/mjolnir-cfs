@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Assert;
 
-class AssertTest extends \PHPUnit_Framework_TestCase
+class AssertTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

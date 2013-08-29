@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Task_Honeypot;
 
-class Task_HoneypotTest extends \PHPUnit_Framework_TestCase
+class Task_HoneypotTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

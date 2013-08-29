@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Task_Versions;
 
-class Task_VersionsTest extends \PHPUnit_Framework_TestCase
+class Task_VersionsTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

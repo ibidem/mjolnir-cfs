@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Overlord;
 
-class OverlordTest extends \PHPUnit_Framework_TestCase
+class OverlordTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

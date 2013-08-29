@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Task_Licenses;
 
-class Task_LicensesTest extends \PHPUnit_Framework_TestCase
+class Task_LicensesTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

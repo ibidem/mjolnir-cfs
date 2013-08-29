@@ -5,7 +5,7 @@ use \mjolnir\cfs\Instantiatable;
 class TheFakeInstantiatableClass extends Instantiatable {}
 class AnotherFakeInstantiatableClass extends Instantiatable {}
 
-class InstantiatableTest extends \PHPUnit_Framework_TestCase
+class InstantiatableTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_faked()

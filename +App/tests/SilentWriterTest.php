@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\SilentWriter;
 
-class SilentWriterTest extends \PHPUnit_Framework_TestCase
+class SilentWriterTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

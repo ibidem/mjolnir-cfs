@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Task_Behat;
 
-class Task_BehatTest extends \PHPUnit_Framework_TestCase
+class Task_BehatTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

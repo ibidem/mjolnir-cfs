@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Backend_FilePermissions;
 
-class Backend_FilePermissionsTest extends \PHPUnit_Framework_TestCase
+class Backend_FilePermissionsTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

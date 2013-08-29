@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Environment;
 
-class EnvironmentTest extends \PHPUnit_Framework_TestCase
+class EnvironmentTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_instantiated()

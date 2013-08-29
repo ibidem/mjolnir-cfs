@@ -2,7 +2,7 @@
 
 use \mjolnir\cfs\Kohana3_Bridge;
 
-class Kohana3_BridgeTest extends \PHPUnit_Framework_TestCase
+class Kohana3_BridgeTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()
