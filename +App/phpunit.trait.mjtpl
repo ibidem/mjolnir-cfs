@@ -7,7 +7,7 @@ class Trait_Placeholder_Tester
 	use Trait_Placeholder;
 }
 
-class Trait_PlaceholderTest extends \PHPUnit_Framework_TestCase
+class Trait_PlaceholderTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()
