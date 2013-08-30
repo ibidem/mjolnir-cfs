@@ -59,6 +59,11 @@
 								'short' => 'l',
 								'description' => 'Logs will also be deleted.'
 							),
+						'cache-only' => array
+							(
+								'short' => 'c',
+								'description' => 'Stop after clearing cache.'
+							),
 					),
 			),
 		'compile' => array
