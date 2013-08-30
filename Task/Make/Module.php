@@ -184,11 +184,11 @@ class Task_Make_Module extends \app\Task_Base
 				);
 		}
 
-		// create honeypot
+		// create .gitignore
 		\file_put_contents
 			(
-				$app_dir.$ds.'honeypot'.EXT,
-				static::honeypot_file($namespace)
+				$dir.$ds.'.gitignore',
+				\mjolnir\cfs\CFSInterface::APPDIR.'/honeypot*'
 			);
 
 		// print notice
