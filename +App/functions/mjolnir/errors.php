@@ -141,14 +141,14 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 
 		if ( ! empty($base_config) && $base_config['development'])
 		{
-			echo 'Uncaught Exception'.PHP_EOL;
+			echo 'Uncaught Exception '.PHP_EOL;
 
 			echo $exception->getMessage()
 				. "\n".\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getTraceAsString());
 		}
 		else # public version
 		{
-			if (\app\Env::key('www.path') !== null)
+			if (\app\Env::key('www.path') !== null && ! \app\Env::key('console-mode', false))
 			{
 				if (\is_a($exception, '\app\Exception_NotFound'))
 				{
@@ -161,7 +161,7 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 			}
 			else if (\php_sapi_name() === 'cli')
 			{
-				echo 'Uncaught Exception';
+				echo 'Uncaught Exception ';
 				echo $exception->getMessage()
 				. "\n".\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getTraceAsString());
 			}
