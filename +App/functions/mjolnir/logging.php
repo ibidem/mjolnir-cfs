@@ -94,7 +94,7 @@ if ( ! \function_exists('\mjolnir\masterlog'))
 			$message .= "\t\tUser: error\n";
 		}
 
-		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
+		$message = \sprintf(" %s --- %-13s | %s", $time, $level, $message);
 
 		// append message to master log
 		\mjolnir\append_to_file($masterlogs_path, \date('d').'.log', PHP_EOL.$message);
@@ -133,7 +133,7 @@ if ( ! \function_exists('\mjolnir\shortlog'))
 		$time = \date('Y-m-d H:i:s');
 		$logspath = \app\Env::key('etc.path').'logs/';
 		$message = \str_replace(\app\Env::key('sys.path'), '', $message);
-		$message = \sprintf(" %s --- %-12s | %s", $time, $level, $message);
+		$message = \sprintf(" %s --- %-13s | %s", $time, $level, $message);
 
 		// append message to master log
 		\mjolnir\append_to_file($logspath, 'short.log', PHP_EOL.$message);
