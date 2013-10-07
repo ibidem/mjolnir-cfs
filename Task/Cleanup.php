@@ -39,12 +39,13 @@ class Task_Cleanup extends \app\Task_Base
 
 		$this->writer->writef(' Reseting cache')->eol();
 		$this->cache_cleanup();
-		$this->writer->eol();
 
 		if ($this->get('cache-only', false))
 		{
 			return;
 		}
+
+		$this->writer->eol();
 
 		# Remove Log files
 
