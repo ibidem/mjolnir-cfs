@@ -141,10 +141,36 @@ if ( ! \function_exists('\mjolnir\exception_handler'))
 
 		if ( ! empty($base_config) && $base_config['development'])
 		{
-			echo 'Uncaught Exception '.PHP_EOL;
+			$clean_syspath = \str_replace('\\', '/', MJOLNIR_LOGGING_SYSPATH);
+			$clean_message = \str_replace('\\', '/', $exception->getMessage());
+			$clean_trace = \str_replace('\\', '/', $exception->getTraceAsString());
+			$trace = \str_replace($clean_syspath, 'sys.path:/', $clean_trace);
+			$message = \str_replace($clean_syspath, 'sys.path:/', $clean_message);
 
-			echo $exception->getMessage()
-				. "\n".\str_replace(MJOLNIR_LOGGING_SYSPATH, '', $exception->getTraceAsString());
+			if (\app\Env::key('www.path') !== null)
+			{
+				$clean_wwwpath = \str_replace('\\', '/', \app\Env::key('www.path'));
+				$trace = \str_replace($clean_wwwpath, 'www.path:/', $trace);
+				$message = \str_replace($clean_wwwpath, 'www.path:/', $message);
+			}
+
+			if (\php_sapi_name() === 'cli')
+			{
+				echo 'Uncaught Exception '.PHP_EOL;
+				echo '--------------------------------------------'.PHP_EOL;
+				echo $message."\n".$trace;
+			}
+			else # assume html context
+			{
+				# we still ensure proper source formatting in case the
+				# exception is viewed via the source and not via the browser's
+				# renderer
+
+				echo '<pre>';
+				echo '<b>Uncaught Exception</b> '.PHP_EOL;
+				echo $message."\n".$trace;
+				echo '</pre>';
+			}
 		}
 		else # public version
 		{
