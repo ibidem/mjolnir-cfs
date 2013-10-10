@@ -15,16 +15,16 @@ if ( ! \function_exists('\mjolnir\append_to_file'))
 		{
 			if ( ! \file_exists($path))
 			{
-				@\mkdir($path, 02775, true);
-				@\chmod($path, 02775);
+				@\mkdir($path, 02770, true);
+				@\chmod($path, 02770);
 
 				if ( ! \file_exists($path.$file))
 				{
-					// Create the log file
+					// create the log file
 					@\file_put_contents($path.$file, PHP_EOL);
 
-					// Allow anyone to write to log files
-					@\chmod($path.$file, 0666);
+					// allow anyone to write to log files
+					@\chmod($path.$file, 0660);
 				}
 			}
 
