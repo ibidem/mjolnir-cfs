@@ -40,7 +40,7 @@ class Task_Cleanup extends \app\Task_Base
 		$this->writer->writef(' Reseting cache')->eol();
 		$this->cache_cleanup();
 
-		if ($this->get('cache-only', false))
+		if ($this->get('cache', false))
 		{
 			return;
 		}
