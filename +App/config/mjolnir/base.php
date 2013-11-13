@@ -67,4 +67,16 @@
 				'raw:js' => false,
 			),
 
+		// honeypot settings
+		'honeypot' => array
+			(
+				// if set to false, universal hints via @method calls will be
+				// purged; this may help with systems where @return static is
+				// natively supported and @method calls are interpreted as
+				// "declarations" (at the time of this writing an example of
+				// such an editor is phpstorm); ideally place your preference
+				// in your private files
+				'fluency' => false,
+			),
+
 	);

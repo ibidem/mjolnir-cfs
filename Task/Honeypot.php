@@ -111,6 +111,12 @@ class Task_Honeypot extends \app\Task_Base
 	{
 		$current_class = "\\$ns\\$class";
 		$app_class = "\\app\\$class";
+
+		if (\interface_exists("\\$ns\\$class"))
+		{
+			return null;
+		}
+
 		$reflection_class = new \ReflectionClass("\\$ns\\$class");
 		$methods = $reflection_class->getMethods();
 
@@ -197,12 +203,31 @@ class Task_Honeypot extends \app\Task_Base
 			}
 		}
 
+		if ( ! \app\CFS::config('mjolnir/base')['honeypot']['fluency'])
+		{
+			$fluency = '';
+		}
+
 		if ($fluency !== '')
 		{
 			$fluency = "/**\n$fluency */\n";
 		}
 
-		return "\n{$fluency}class $class extends $current_class\n{{$influence}\n}\n";
+		if ($reflection_class->isFinal())
+		{
+			return '';
+		}
+
+		if ($reflection_class->isAbstract())
+		{
+			$abstract = 'abstract ';
+		}
+		else # not abstract
+		{
+			$abstract = '';
+		}
+
+		return "\n{$fluency}{$abstract}class $class extends $current_class\n{{$influence}\n}\n";
 	}
 
 	/**
