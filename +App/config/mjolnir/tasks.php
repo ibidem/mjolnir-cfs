@@ -391,6 +391,10 @@
 								'description' => 'Command will generate unique reports.',
 								'short' => 'q',
 							),
+						'no-coverage' => array
+							(
+								'description' => 'Code coverage wont be generated.',
+							),
 					),
 			),
 

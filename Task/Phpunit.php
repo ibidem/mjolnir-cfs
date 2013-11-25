@@ -16,6 +16,7 @@ class Task_Phpunit extends \app\Task_Base
 	{
 		$path = $this->get('path', false);
 		$consistent = ! $this->get('unique', false);
+		$no_coverage = $this->get('no-coverage', false);
 
 		if ($path === false)
 		{
@@ -54,9 +55,9 @@ class Task_Phpunit extends \app\Task_Base
 
 		$etcpath = $this->etcpath();
 
-		if ( ! \file_exists($etcpath.'mjolnir'.EXT))
+		if ( ! \file_exists($etcpath.'phpunit'.EXT))
 		{
-			throw new \app\Exception_NotApplicable('Unable to detect bootstrap file. Looked for ['.$etcpath.'mjolnir'.EXT.'].');
+			throw new \app\Exception_NotApplicable('Unable to detect bootstrap file. Looked for ['.$etcpath.'phpunit'.EXT.'].');
 		}
 
 		$tmppath = $this->tmppath();
@@ -64,10 +65,14 @@ class Task_Phpunit extends \app\Task_Base
 		// we ensure the coverage name is legitimate
 		$coveragename = \str_replace(' ', '-', $this->coveragename($consistent));
 
-		$bootstrapfile = \str_replace('\\', '/', $etcpath.'mjolnir'.EXT);
+		$bootstrapfile = \str_replace('\\', '/', $etcpath.'phpunit'.EXT);
 		$coveragefile = \str_replace('\\', '/', $tmppath.$coveragename);
 
-		$cmd = "--coverage-html={$coveragefile} --bootstrap={$bootstrapfile} {$path}";
+		$cmd = "--bootstrap={$bootstrapfile} {$path}";
+		if ( ! $no_coverage)
+		{
+			$cmd = "--coverage-html={$coveragefile} $cmd";
+		}
 		$clean_command = \str_replace(\str_replace('\\', '/', \app\Env::key('sys.path', '')), '', $cmd);
 
 		if (\file_exists($coveragefile))
