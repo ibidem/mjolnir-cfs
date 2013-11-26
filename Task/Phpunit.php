@@ -17,6 +17,7 @@ class Task_Phpunit extends \app\Task_Base
 		$path = $this->get('path', false);
 		$consistent = ! $this->get('unique', false);
 		$no_coverage = $this->get('no-coverage', false);
+		$stop_on_failure = $this->get('stop-on-failure', false);
 
 		if ($path === false)
 		{
@@ -69,10 +70,17 @@ class Task_Phpunit extends \app\Task_Base
 		$coveragefile = \str_replace('\\', '/', $tmppath.$coveragename);
 
 		$cmd = "--bootstrap={$bootstrapfile} {$path}";
+
 		if ( ! $no_coverage)
 		{
 			$cmd = "--coverage-html={$coveragefile} $cmd";
 		}
+
+		if ($stop_on_failure)
+		{
+			$cmd = "--stop-on-failure $cmd";
+		}
+
 		$clean_command = \str_replace(\str_replace('\\', '/', \app\Env::key('sys.path', '')), '', $cmd);
 
 		if (\file_exists($coveragefile))

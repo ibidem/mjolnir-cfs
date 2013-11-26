@@ -395,6 +395,11 @@
 							(
 								'description' => 'Code coverage wont be generated.',
 							),
+
+						'stop-on-failure' => array
+							(
+								'description' => 'Stop execution on first failure.',
+							),
 					),
 			),
 
