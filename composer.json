@@ -16,8 +16,8 @@
 
 	"require": {
 		"php": ">=5.4.10",
-		"mjolnir/types"   : "dev-liquid/2.x",
-		"mjolnir/testing" : "dev-liquid/2.x"
+		"mjolnir/types"   : "dev-liquid/3.x",
+		"mjolnir/testing" : "dev-liquid/3.x"
 	},
 
 	"autoload": {
