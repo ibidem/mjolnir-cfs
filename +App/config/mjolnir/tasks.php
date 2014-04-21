@@ -77,7 +77,7 @@
 					(
 						'local' => array
 							(
-								'description' => 'Only check DOCROOT/themes',
+								'description' => 'Only check sys.path/themes',
 								'short' => 'l',
 							),
 					),
